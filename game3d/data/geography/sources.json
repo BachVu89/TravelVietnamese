@@ -1,0 +1,24 @@
+{
+  "sources": [
+    {
+      "id": "vn_admin_2026",
+      "title": "Vietnamese Provinces Database",
+      "repository": "https://github.com/ThangLeQuoc/vietnamese-provinces-database",
+      "commit": "8b78ba5118715e1fa81769286724db79346abf52",
+      "path": "json/simplified_json_generated_data_vn_units.json",
+      "license": "MIT",
+      "retrieved": "2026-11-05",
+      "upstream_sha256": "f624138116bde151c860cbd25a84cd6b9b38250e8a049ed371c55dee729ac286",
+      "authority_note": "Bộ dữ liệu cộng đồng có dẫn nguồn danh mục nhà nước; không phải nguồn nhà nước trực tiếp."
+    }
+  ],
+  "coverage": {
+    "province_count": 34,
+    "island_area_count": 13,
+    "all_vietnam_islands_verified": false,
+    "boundary_geometry_included": false,
+    "coordinates_included": false,
+    "terrain": "procedural illustration; not surveyed geography",
+    "missing": "Danh sách đầy đủ đảo thành phần có tên, đường bờ/độ cao, nguồn địa lý có kiểm duyệt và nội dung đặc trưng từng điểm."
+  }
+}

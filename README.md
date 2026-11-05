@@ -1,11 +1,20 @@
-# Dọc miền Việt — APK thử nghiệm 0.1.0
+# Dọc miền Việt — các bản thử nghiệm
 
-[Tải APK cho Android](./doc-mien-viet-0.1.0.apk) — mở file rồi chọn Download raw file nếu GitHub không tải ngay.
+## Bản mới: khám phá 3D 0.2.0
 
-Yêu cầu Android 7.0 trở lên. Hỗ trợ ARM64, ARM 32-bit, x86 và x86_64.
+[⬇ Tải APK Dọc miền Việt 3D](./doc-mien-viet-3d-0.2.0.apk) · [Mã nguồn dự án Godot](./doc-mien-viet-3d-source-0.2.0.zip)
 
-Mã game và nội dung được nhúng trong APK; không cần Expo Go hoặc Metro. Đây là bản release ký debug dành cài thử, chưa phải bản phát hành Google Play. Đã kiểm tra chữ ký APK v2, manifest và bundle nhúng; chưa kiểm thử trên điện thoại thật.
+APK khoảng52MB, Android7+ có OpenGL ES3, ARM64/ARM32. Cài và mở **Dọc miền Việt 3D**; app này cài riêng với bản quiz cũ. Joystick trái để đi bộ, kéo bên phải để xoay camera, đến gần cột mốc để khám phá. Chơi và lưu dữ liệu offline; không cần Expo Go/Metro. Bản release ký khóa thử nghiệm nội bộ.
 
-Sau khi tải, mở APK trên điện thoại và cho phép cài ứng dụng từ nguồn đó nếu Android yêu cầu. Hãy thử bật chế độ máy bay, chơi một chặng, đóng và mở lại game để kiểm tra lưu tiến trình.
+Đã có nhân vật di chuyển, camera, va chạm, POI và47 khu có thể vào (34tỉnh/thành +13vùngđảo). **Các cảnh chủ yếu là minh họa sinh thủ tục, chưa số hóa thực địa.13vùngđảo chưa phải tất cả đảo có tên của Việt Nam.** Đây là nền tảng thử nghiệm theo hướng mới, không phải bản nội dung toàn quốc đã hoàn thiện. Chưa kiểm thử trên điện thoại thật hoặc iOS.
 
-Nhánh này chỉ chứa bản cài thử và checksum, không chứa mã nguồn ứng dụng.
+[Chi tiết kiểm chứng](docs/VALIDATION_3D.md) · [Phạm vi địa lý còn thiếu](docs/GEOGRAPHIC_SCOPE.md)
+
+![Hà Nội mẫu](docs/screenshots3d/hanoi.png)
+![Khu đảo minh họa](docs/screenshots3d/island.png)
+
+## Bản cũ: quiz 0.1.0
+
+[APK prototype quiz cũ](./doc-mien-viet-0.1.0.apk) — giữ để tham khảo, không còn là hướng gameplay chính.
+
+Nếu GitHub mở trang xem file thay vì tải ngay, chọn **Download raw file** (biểu tượng↓). Checksum trong SHA256SUMS.
