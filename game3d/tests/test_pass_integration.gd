@@ -21,6 +21,12 @@ func touch(index: int, position: Vector2, pressed: bool) -> InputEventScreenTouc
 	event.pressed = pressed
 	return event
 
+func inspect_key(game) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.physical_keycode = KEY_F
+	game._unhandled_key_input(event)
+
 func run() -> void:
 	root.size = Vector2i(1280, 720)
 	var store = load("res://scripts/save_store.gd")
@@ -89,14 +95,27 @@ func run() -> void:
 		for i in 30:
 			await physics_frame
 		check(not game.interact() and game.state.visited.size() == stamps_before.size() + stop_index, "riding through stop cannot interact or auto-award stamp: " + str(stop))
+		inspect_key(game)
+		check(not game.description_dialog.visible and game.state.visited.size() == stamps_before.size() + stop_index, "keyboard F cannot inspect a viewpoint while riding: " + str(stop))
 		game.world.bike.speed = 0.51
 		check(not game.toggle_pass_vehicle(), "main cannot bypass dismount speed guard: " + str(stop))
 		game.world.bike.speed = 0
 		check(game.toggle_pass_vehicle() and not game.world.riding, "main dismounts inside stationary layby: " + str(stop))
 		game._process(0.016)
 		check(not game.controls.drive_mode and game.world.player.camera.current, "dismount switches touch/camera to walking: " + str(stop))
+		game.world.player.position = route.at(stop, 0.0) + Vector3.UP * 0.2
+		inspect_key(game)
+		check(not game.description_dialog.visible and game.state.visited.size() == stamps_before.size() + stop_index, "keyboard F cannot bypass walking POI proximity guard: " + str(stop))
 		game.world.player.position = game.world.pois[stop_index].position + Vector3.UP * 0.2
-		check(game.interact() and game.state.visited.has(game.world.pois[stop_index].id), "walking at viewpoint records its unique stamp: " + str(stop))
+		game.open_settings()
+		inspect_key(game)
+		check(not game.description_dialog.visible and game.state.visited.size() == stamps_before.size() + stop_index, "keyboard F cannot inspect nearby POI through open settings modal: " + str(stop))
+		game.settings_dialog.hide()
+		game._process(0.016)
+		await process_frame
+		check(game.vehicle_button.visible and game.interact_button.visible and not game.vehicle_button.get_global_rect().intersects(game.interact_button.get_global_rect()), "walking remount and interact button rectangles do not overlap at 1280x720: " + str(stop))
+		inspect_key(game)
+		check(game.description_dialog.visible and game.state.visited.has(game.world.pois[stop_index].id), "keyboard F inspects nearby walking viewpoint and records its unique stamp: " + str(stop))
 		game.description_dialog.hide()
 		var stamp_count: int = game.state.visited.size()
 		check(game.interact() and game.state.visited.size() == stamp_count, "revisiting viewpoint does not duplicate stamp: " + str(stop))

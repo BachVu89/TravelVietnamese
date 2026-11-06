@@ -161,3 +161,34 @@ Kế hoạch bổ sung, chưa coi là kết quả đã đạt. Cảnh đường 
 | Legacy | Golden fixtures 0.2 và 0.3 giữ region/positions/visited, onboarding và preferences cũ khi không có road state; không nhập demo vào registry địa lý |
 
 Fixture mới `game3d/tests/fixtures/progress-v0.3.json` đóng băng save 0.3 đã skip tutorial và tùy chọn shadows off/sensitivity 1,4. Fixture 0.2 được giữ nguyên. Chưa chạy hoặc công bố FPS, đa chạm trên điện thoại, cài đè APK hay iOS trong kế hoạch headless này.
+
+### Kết quả kỹ thuật đang chốt cho 0.4
+
+Các suite mới đã thực thi trong Godot headless; chưa thay cho cửa desktop render hoặc APK do agent chính phụ trách:
+
+| Suite | Assertion đạt / lỗi | Bằng chứng |
+| --- | --- | --- |
+| `test_pass_route.gd` | 17 / 0 | Centerline 3D lấy mẫu dài **778,003 đơn vị scene** trong khoảng 700–800; station parameter là 750. Đường liên tục/có cua/cao độ; hai layby; inverse station/lateral round-trip sai số ≤0,05 theo ngưỡng SA |
+| `test_pass_save.gd` | 28 / 0 | Validator road riêng, dữ liệu lỗi về checkpoint an toàn; golden 0.2/0.3 giữ core/tutorial/settings; legacy ±41 vẫn chặn dữ liệu sai; road state và dấu reload từ file thật |
+| `test_pass_physics.gd` | 14 / 0 | Ga/phanh/thả ga/lái đồng thời, tốc độ hữu hạn, physics floor; xe traffic thật và vật cản chặn bike; hai lần simulation 180 bước 1/60 giây cùng trạng thái đầu cho vị trí sai khác ≤0,0001 |
+| `test_pass_touch.gd` | 11 / 0 | Ga+lái và phanh+lái bằng các pointer riêng, phanh ưu tiên khi ga đang giữ, UI blocked rect, modal disable và chuyển walking hủy pedal |
+| `test_pass_world.gd` | 49 / 0 | Bike đứng trên mesh/collider tại sáu station; camera clamp/SpringArm; **rail và endpoint barrier của cảnh thật chặn bike**; hai stop có nội dung riêng, speed/zone guard, nhân vật xuống xe đứng/đi được, không drift khi đứng yên, remount cùng bike; pause/reset và chín ví dụ/checkpoint boundary PO đã chốt |
+| `test_pass_integration.gd` | 41 / 0 | Main giữ registry 47; touch thật vào handler làm bike chạy, ba ngón phanh ưu tiên; modal dừng cả traffic, mất focus hủy ga; hai vòng stop/walk/POI/remount, dấu không lặp; keyboard F có guard riding/proximity/modal và ghi dấu khi hợp lệ; nút lên xe/tương tác không chồng nhau; road save không lọt vào positions cũ; restart và về cảnh cũ |
+
+Đã chạy lại sáu suite regression của 0.3 sau tích hợp road: **257 assertion đạt, 0 lỗi** (`test_batch03_rules`, `test_player_tutorial`, `test_batch03_integration`, `test_controls_player`, `test_save_transitions`, `test_licenses`). Không chạy lại suite 502 world địa lý cũ vì generator đó không đổi. Kết quả trên đang là mốc trước khi chốt các nội dung review cuối của PO/root.
+
+PO đã chốt reset về checkpoint an toàn gần nhất **đã đi qua theo tiến độ**, không phải điểm có khoảng cách tuyệt đối nhỏ nhất. Sau sửa strict boundary, các ví dụ 100/220/229→đầu tuyến, 230/231/470/540→230 và 551/570→550 đều đạt. Sau khi Developer thêm nội dung riêng cho hai viewpoint, avatar đi bộ riêng cho road và strict checkpoint, cùng main thêm keyboard F và tránh chồng nút, QA chạy lại world **49/49** và main integration **41/41**, exit code 0 và không có ERROR/FAIL; log `/tmp/travel-test_pass_world-04-final.log` và `/tmp/travel-test_pass_integration-04-final.log`. Tổng kỹ thuật tại mốc này là **160 assertion mới + 257 regression = 417 assertion đạt, 0 lỗi**. Chỉ chạy lại hai suite chịu ảnh hưởng của các thay đổi cuối; không chạy lặp 257 regression khi không có thay đổi logic liên quan. Chưa gọi artifact 0.4 ready khi chưa có APK/hash/signature do agent chính xác minh.
+
+Lệnh cho suite 0.4: từ repository dùng `godot --headless --path game3d --script tests/test_pass_<tên>.gd`, đặt XDG_DATA_HOME/CONFIG_HOME/CACHE_HOME vào `/tmp/travel-qa04/<tên>/{data,config,cache}` để tách save test. Log hiện tại ở `/tmp/travel-pass-{save,physics,touch,world,integration}.log` và `/tmp/travel-04-test_pass_route.log`; regression ở `/tmp/travel-04-<test_suite>.log`. Exit code phải kiểm riêng, không chỉ tìm dòng PASS.
+
+### Artifact Android 0.4.0 và desktop gate
+
+Agent chính đã thực thi và chuyển kết quả cuối cho QA ghi nhận:
+
+- APK `artifacts/doc-mien-viet-3d-0.4.0.apk`: **51.685.158 byte**; SHA-256 `69fc06ac2577ea223080d7adccf233556f9126474a86b315fd08db9fc160bfa4`.
+- Kiểm tra tĩnh đạt: chữ ký v2/v3, zipalign 16 KiB, không có quyền `INTERNET`; chứa bytecode mountain pass, route, bike, traffic, scenery, art/materials và road save cùng JSON 47 địa danh và giấy phép.
+- Đối chiếu artifact với 0.3: cùng package/certificate; versionCode tăng 3→4. Chưa cài đè trên thiết bị thực, nên chưa kết luận save được giữ sau nâng cấp APK thực tế.
+- Desktop GUI fresh **PASS04** sau sửa avatar mũ bảo hiểm, phím F và vùng nút không chồng nhau. Agent chính thực hiện cửa render/input riêng với các kết quả headless phía trên.
+- Công cụ QA điều khiển vật lý theo script đi từ station 5 đến **738,02** qua **5.916 bước simulation cố định**, không ghi nhận va chạm trong lượt đó. Đây là pilot của công cụ kiểm thử, **không phải tính năng tự lái của game**, không phải số đo FPS, thời gian chơi thực hoặc bằng chứng hiệu năng điện thoại.
+
+Tại mốc này có bằng chứng APK 0.4 đã build và xác minh tĩnh ở local. Chưa coi việc đẩy source Git là phát hành APK remote; việc tải artifact remote cần agent chính xác nhận riêng. Các cửa Android/iOS thực, đa chạm trên điện thoại, FPS/RAM/nhiệt và nâng cấp cài đè vẫn chưa chạy.

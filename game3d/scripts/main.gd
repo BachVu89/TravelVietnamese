@@ -169,6 +169,7 @@ func _process(delta: float) -> void:
 	vehicle_button.visible = pass_active and not paused
 	reset_button.text = "Về điểm dừng" if pass_active else "Về lối vào"
 	if pass_active:
+		vehicle_button.offset_right = 790 if riding else 630
 		vehicle_button.text = "Xuống xe · E" if riding and road_hud.can_exit else "Phanh và vào vịnh dừng để xuống xe" if riding else "Lên xe · E" if road_hud.can_mount else "Đến gần xe để lên xe"
 		vehicle_button.disabled = not bool(road_hud.can_exit if riding else road_hud.can_mount)
 	controls.blocked_rectangles.clear()
@@ -218,8 +219,10 @@ func return_to_entry() -> void:
 		save_now()
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_E:
-		if toggle_pass_vehicle():
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.physical_keycode == KEY_E and toggle_pass_vehicle():
+			get_viewport().set_input_as_handled()
+		elif event.physical_keycode == KEY_F and not _is_modal_open() and not application_suspended and interact():
 			get_viewport().set_input_as_handled()
 
 func interact() -> bool:
@@ -363,7 +366,7 @@ func _build_ui() -> void:
 	status.add_theme_font_size_override("font_size", 13)
 	footer.add_child(status)
 	var instructions := Label.new()
-	instructions.text = "Joystick trái / WASD: đi bộ · Kéo phải / giữ chuột phải: xoay camera"
+	instructions.text = "Joystick / WASD: đi bộ · Kéo phải / chuột phải: camera · F: khám phá"
 	instructions.add_theme_font_size_override("font_size", 13)
 	footer.add_child(instructions)
 	interact_button = Button.new()

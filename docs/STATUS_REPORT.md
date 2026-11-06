@@ -2,7 +2,7 @@
 
 **Ngày cập nhật: 06/11/2026 — giờ Việt Nam (UTC+7).**
 
-**Bản đã giao gần nhất là 3D 0.3. Bản đang làm là 0.4:** lái xe máy trên một đoạn đèo minh họa, dừng xe và xuống đi bộ tham quan. Source/tài liệu đã được commit và đẩy lên nhánh phát triển **`codex-work`**. Nhánh phân phối APK là **`apk-download`**. Hai nhánh này có vai trò và tình trạng khác nhau, xem phần Git bên dưới.
+**Bản đã phân phối gần nhất là 3D 0.3; bản 0.4 đã có APK local được kiểm tra, QA và vòng chơi desktop đạt.** Bản 0.4 cho lái xe máy trên đèo minh họa, đỗ, xuống xe tham quan rồi tiếp tục. **Chưa xác nhận APK 0.4 được đăng lên GitHub tại thời điểm cập nhật này; chưa kiểm trên điện thoại thực.** Source được quản lý ở nhánh **`codex-work`**, APK phân phối ở **`apk-download`**.
 
 ## 1. Team đã làm được gì?
 
@@ -11,7 +11,7 @@
 | **0.1 — prototype cũ** | Game mobile theo tuyến du lịch, câu hỏi văn hóa, dấu hộ chiếu và lưu tiến trình; có APK thử nghiệm. | Là bản quiz/Expo để tham khảo lịch sử. Không phải hướng khám phá 3D hiện tại. |
 | **0.2 — nền game 3D** | Chuyển sang Godot: điều khiển nhân vật đi bộ, camera góc nhìn thứ ba, địa hình/va chạm, POI, lưu offline và đổi địa điểm. Danh mục 47 mục gồm 34 tỉnh/thành và 13 vùng đảo, mỗi mục vào được cảnh minh họa có ba POI. Có APK và gói source. | Phần lớn nội dung sinh bằng thuật toán; Hà Nội có khu mẫu riêng. Đây không phải toàn bộ địa hình hoặc công trình của mỗi tỉnh/đảo. |
 | **0.3 — cải thiện trải nghiệm** | Hướng dẫn ba thao tác thật; chỉ tới POI chưa thăm gần nhất; bật/tắt bóng và ba mức nhạy camera; giữ save 0.2. Có APK/gói source đã phân phối trên GitHub. | PO nghiệm thu phạm vi logic/desktop. Chưa xác minh cảm ứng, hiệu năng hoặc cài đè trên điện thoại thực. |
-| **0.4 — đang triển khai** | Đã viết các module đường đèo, xe máy, traffic, điểm dừng, tài nguyên minh họa, lưu checkpoint và tích hợp HUD/touch. | Đang kiểm tra tích hợp và vòng chơi render; chưa nghiệm thu toàn bộ, chưa có APK 0.4 để giao tại thời điểm báo cáo. |
+| **0.4 — bản thử local sẵn sàng** | Đường đèo, xe máy, ba xe traffic, hai điểm dừng, đi bộ tham quan, checkpoint và HUD/touch đã tích hợp. QA 417 kiểm tra đạt; vòng chơi render desktop mới đạt. Có APK local đã kiểm tra. | Đang hoàn tất checkpoint source/báo cáo và phân phối; chưa xác nhận APK remote, chưa mobile/iOS verified. Hình ảnh là prototype cách điệu, chưa đạt ảnh tham chiếu. |
 
 Bên cạnh mã game, team đã lập tài liệu yêu cầu và điều kiện nghiệm thu, kiến trúc, UX/mỹ thuật, phạm vi dữ liệu địa lý, nghiên cứu định tính có nguồn, backlog và bộ kiểm thử. Nghiên cứu PO là đối chiếu sản phẩm công khai; chưa phải khảo sát thị trường đại diện hoặc bằng chứng người chơi thật.
 
@@ -32,22 +32,32 @@ APK local: `artifacts/doc-mien-viet-3d-0.3.0.apk`, **51.642.944 byte**, SHA-256:
 
 **Chưa kiểm chứng:** Android/iPhone thực, đa chạm và safe area trên thiết bị, mở lạnh ở chế độ máy bay trên điện thoại, FPS/RAM/nhiệt/pin và bản iOS đã ký/chạy. Kiểm thử desktop và artifact APK không thay thế các bước này.
 
-## 3. Bản 0.4 đang làm cụ thể những gì?
+## 3. Bản 0.4 đã đạt những gì?
 
 Phạm vi đã chốt là một **mẫu riêng khoảng 750 đơn vị scene**, cửa nghiệm thu chiều dài centerline 700–800; không phải đo đường thực hoặc tái dựng GIS đèo Khánh Lê. Giữ Godot hiện tại để kiểm chứng trước khi cân nhắc thay engine.
 
 | Hạng mục | Hiện trạng tại thời điểm báo cáo |
 | --- | --- |
-| Tuyến đường đèo | Đã có module tuyến cong, cao độ, mặt đường và bố cục cảnh; cấu hình mục tiêu 750 đơn vị. Còn kiểm geometry thực và chạy hết tuyến. |
-| Xe máy/nhân vật | Đã có module ga, phanh, lái, vật lý/va chạm và hình nhân vật trên xe. Còn kiểm vòng chơi tích hợp và cảm giác điều khiển. |
-| Giao thông | Đã có ba xe traffic theo tuyến; còn kiểm va chạm, fixed-step và tình huống thực trong vòng render. |
-| Dừng và tham quan | Đã có hai điểm dừng và logic chuyển xe/đi bộ. AC yêu cầu dừng trong vùng, tốc độ ≤0,5 đơn vị/giây, xuống xe rồi đủ gần mới tương tác. Chưa tuyên bố toàn bộ AC đạt. |
-| Hình ảnh | Đã có tài nguyên/vật liệu tạo bằng thuật toán để dựng cảnh. Chưa đạt hoặc được nghiệm thu photoreal như ảnh tham chiếu. |
-| HUD và input | Root đã tích hợp HUD/touch vào vòng chính, kiểm parse; đang chạy kiểm tra render/tích hợp đầy đủ. |
-| Lưu checkpoint | Đã có helper save riêng cho mẫu đèo; cần QA xác nhận restart và giữ nguyên save 0.2/0.3, tutorial/settings/dấu cũ. |
-| APK/thiết bị | Chưa có artifact 0.4 đã hoàn tất kiểm tra để giao; chưa benchmark điện thoại/iOS. |
+| Tuyến đường đèo | Có tuyến cong/cao độ/mặt đường và cảnh minh họa, mục tiêu 750 đơn vị scene. Công cụ QA đã điều khiển xe thực theo vật lý từ mốc 5 tới **738,02**, qua **5.916 fixed ticks**, không ghi nhận va chạm trong lượt đó. Đây là kịch bản kiểm thử, không phải chức năng tự lái trong game hoặc phép đo FPS. |
+| Xe máy/nhân vật | Ga, phanh, lái, camera và chuyển xe/đi bộ hoạt động trong vòng render desktop; nhân vật đi bộ có mũ bảo hiểm. |
+| Giao thông | Có ba xe traffic; logic, fixed-step và va chạm nằm trong phạm vi QA. Lượt pilot không va chạm không có nghĩa game không có collider hoặc mọi tình huống giao thông đã được kiểm trên điện thoại. |
+| Dừng và tham quan | Đã kiểm vòng lái → dừng trong vùng → xuống đi bộ → tương tác → lên xe tại **cả hai điểm dừng**. Guard yêu cầu tốc độ ≤0,5 đơn vị/giây khi đỗ, sau đó đi bộ đủ gần mới nhận dấu; không tự nhận khi chạy qua. |
+| Hình ảnh | Cảnh/tài nguyên procedural theo phong cách prototype cách điệu. **Chưa đạt photoreal hoặc chất lượng ảnh tham chiếu**; gameplay đạt không đồng nghĩa mỹ thuật đã đạt mục tiêu tham chiếu. |
+| HUD và input | Đã tích hợp HUD/touch/keyboard. Fresh render smoke đạt `PASS04_VISUAL_PASS` sau khi sửa vùng hiển thị F/Inspect. Đa chạm trên thiết bị thật vẫn chưa xác minh. |
+| Lưu checkpoint | Đã có kiểm thử save/checkpoint và tương thích dữ liệu cũ. Reset về mốc an toàn đã đi qua gần nhất theo tuyến: 0/230/550; ví dụ đang ở 470 trở về 230, không nhảy tới 550. |
+| APK/thiết bị | APK 0.4 local đã kiểm tra hash/chữ ký/alignment/tài nguyên. Chưa xác nhận file 0.4 trên nhánh phân phối; chưa chạy thử điện thoại/iOS hoặc đo FPS/RAM/nhiệt. |
 
-Photo mode/album được **hoãn khỏi cửa nghiệm thu 0.4**. Các module đã viết không đồng nghĩa phiên bản đã QA xong hoặc sẵn sàng phát hành. Tiêu chí chi tiết ở [PRODUCT.md — phần 0.4](PRODUCT.md) và [PO-10 trong backlog](PRODUCT_BACKLOG.md).
+**Bằng chứng mới:** Tester báo **417 kiểm tra đạt**. Root chạy lại render trên mã hiện tại, hoàn thành hai vòng dừng–đi bộ–tương tác–lên xe, kết quả `PASS04_VISUAL_PASS`. Kịch bản pilot chạy xe bằng simulation vật lý là bằng chứng tuyến đi được trong điều kiện thử; không thay thế playtest người chơi hoặc profiling điện thoại.
+
+**APK 0.4 local:** `artifacts/doc-mien-viet-3d-0.4.0.apk`, **51.685.158 byte**, SHA-256:
+
+```text
+69fc06ac2577ea223080d7adccf233556f9126474a86b315fd08db9fc160bfa4
+```
+
+Đã kiểm tra chữ ký v2/v3, ZIP và alignment 16 KiB; không quyền INTERNET; đóng gói tám module đường đèo cùng JSON/giấy phép của registry 47 mục. Chứng thư khớp 0.3, versionCode tăng 3 → 4. Đây là **artifact local đã kiểm**, chưa phải xác nhận cài đè thật trên Android hoặc đã xuất bản remote.
+
+Photo mode/album tiếp tục **hoãn khỏi cửa nghiệm thu 0.4**. Tiêu chí chi tiết ở [PRODUCT.md — phần 0.4](PRODUCT.md) và [PO-10 trong backlog](PRODUCT_BACKLOG.md). Các kiểm tra logic/render đạt không tự xác nhận mọi tình huống, chất lượng hình ảnh tham chiếu hay khả năng chạy trên thiết bị.
 
 ## 4. Phạm vi Việt Nam và đảo: đã đủ chưa?
 
@@ -63,11 +73,13 @@ Team giữ rõ khoảng trống này trong [GEOGRAPHIC_SCOPE.md](GEOGRAPHIC_SCOP
 
 | Nơi | Tên/trạng thái | Ý nghĩa |
 | --- | --- | --- |
-| Workspace phát triển và GitHub | **`codex-work`**, đã có commit và remote xác nhận. | Chứa source/tài liệu prototype cùng các thay đổi 0.4 đang phát triển; đây là nhánh để theo dõi công việc hiện tại. |
+| Workspace phát triển và GitHub | **`codex-work`**, đã có commit và remote xác nhận. | Chứa source/tài liệu và quá trình phát triển 0.4; root đang hoàn tất commit cuối cho phần tích hợp/báo cáo. Đây là nhánh để theo dõi công việc hiện tại. |
 | Nhánh phân phối | **`apk-download`**. | Chứa APK, ZIP source 0.3 và tài liệu của lần phân phối; không phải nhánh source đang phát triển. |
 | Nhánh `main` | **Chưa tồn tại trên remote** tại lần kiểm tra. | Không dùng `main` để tìm source hiện tại. |
 
 Checkpoint source đầu tiên được push: [`35e7deceeb2d9d1986dcf93ac1bac8ed172931ee`](https://github.com/BachVu89/TravelVietnamese/commit/35e7deceeb2d9d1986dcf93ac1bac8ed172931ee), nội dung commit: `Checkpoint 3D prototype and mountain-pass development`. Trước checkpoint, workspace ở tên nhánh local `work` chưa có commit; tình trạng chưa bảo vệ source bằng commit này đã được xử lý. Cache, khóa ký và artifact build không đưa vào commit source.
+
+Mốc `codex-work` remote root xác nhận trước lần hoàn thiện báo cáo này là [`dde165b`](https://github.com/BachVu89/TravelVietnamese/commit/dde165b). Source cuối và báo cáo sẽ có commit tiếp theo; không coi mốc này tự chứa mọi cập nhật chưa commit.
 
 Mốc phân phối 0.3 đã kiểm tra trên `apk-download`: `2f0346d5d417ee6f21fe0d1c41560b71376e1cc3`. Gói source ZIP 0.3 không chứa các thay đổi 0.4 mới. **Commit source đang phát triển không phải nghiệm thu hoặc phát hành 0.4**; báo cáo này có thể được cập nhật bằng commit tài liệu tiếp theo.
 
@@ -78,7 +90,8 @@ Mốc phân phối 0.3 đã kiểm tra trên `apk-download`: `2f0346d5d417ee6f21
 - [Nhánh phân phối GitHub `apk-download`](https://github.com/BachVu89/TravelVietnamese/tree/apk-download): bản 0.3 đã giao cùng APK, ZIP source và tài liệu. Đây là nơi xem/tải bản đã phân phối; source ZIP là snapshot đóng gói, không phải lịch sử commit source đang phát triển.
 - [Tải APK 0.3 đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.3.0.apk).
 - [Tải source ZIP 0.3 đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-source-0.3.0.zip).
-- File APK local: `artifacts/doc-mien-viet-3d-0.3.0.apk`.
+- APK mới **local, chưa xác nhận link remote**: `artifacts/doc-mien-viet-3d-0.4.0.apk`.
+- File APK 0.3 local: `artifacts/doc-mien-viet-3d-0.3.0.apk`.
 - Gói source local: `artifacts/doc-mien-viet-3d-source-0.3.0.zip`.
 - [Báo cáo kiểm thử 0.3](VALIDATION_0.3.md), [yêu cầu sản phẩm](PRODUCT.md), [backlog](PRODUCT_BACKLOG.md), [kiến trúc](ARCHITECTURE.md) và [phạm vi địa lý](GEOGRAPHIC_SCOPE.md).
 
@@ -96,8 +109,8 @@ Mốc phân phối 0.3 đã kiểm tra trên `apk-download`: `2f0346d5d417ee6f21
 
 Đây là team tác nhân AI theo vai trò, không mặc nhiên có studio nghệ thuật 3D hoặc phòng thử thiết bị chuyên nghiệp. Chi tiết tại [TEAM.md](TEAM.md).
 
-Mốc gần nhất: hoàn thành kiểm tra vòng **lái → dừng → đi bộ/tương tác → trở lại xe**, QA cả hai điểm dừng, traffic/va chạm, save cũ và checkpoint; sau đó mới build/kiểm APK 0.4 và giao bản thử. Kiểm thử điện thoại Android/iOS và hiệu năng thực vẫn là cửa riêng, chưa có ngày/chi phí được cam kết. Các trạng thái trong báo cáo là snapshot, không phải hứa hẹn đã hoàn tất những bước còn chạy.
+Mốc gần nhất: hoàn tất commit source/báo cáo, đăng APK 0.4 đã kiểm lên nhánh phân phối và xác nhận file remote. QA và vòng chơi desktop nêu trên đã đạt; APK local đã có. Sau phân phối tiếp tục playtest trên điện thoại, đánh giá chất lượng hình ảnh và cải thiện nội dung theo backlog. Kiểm thử điện thoại Android/iOS và hiệu năng thực vẫn là cửa riêng, chưa có ngày/chi phí được cam kết. Các trạng thái trong báo cáo là snapshot, không phải hứa hẹn đã hoàn tất những bước còn chạy.
 
 ---
 
-**Nguồn báo cáo:** kiểm tra Git do root xác nhận; `game3d/scripts/main.gd`, `mountain_pass.gd`, `pass/`, `road_save.gd`, `pass_materials.gd`; danh sách artifact local; `VALIDATION_0.3.md`, `PRODUCT.md`, `PRODUCT_BACKLOG.md`, `TEAM.md` và `GEOGRAPHIC_SCOPE.md`. Báo cáo này không thay đổi app code hoặc tự xuất bản source.
+**Nguồn báo cáo:** kết quả Git, QA 417 kiểm tra, fresh visual smoke và APK 0.4 do root/Tester xác nhận; `game3d/scripts/main.gd`, `mountain_pass.gd`, `pass/`, `road_save.gd`, `pass_materials.gd`; danh sách artifact local; `VALIDATION_0.3.md`, `PRODUCT.md`, `PRODUCT_BACKLOG.md`, `TEAM.md` và `GEOGRAPHIC_SCOPE.md`. Báo cáo này không thay đổi app code hoặc tự xuất bản source.

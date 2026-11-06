@@ -26,6 +26,7 @@ func run() -> void:
 	world.build({"id": "mountain_pass_demo", "name": "Đèo mẫu", "type": "demo"})
 	check(world.traffic.size() >= 2, "demo contains at least two physical traffic vehicles")
 	check(world.pois.size() >= 2 and world.pois[0].title != world.pois[1].title, "two stop POIs have distinct names")
+	check(world.pois[0].description != world.pois[1].description and world.pois[0].description.length() > 100 and world.pois[1].description.length() > 100, "two viewpoints include distinct substantive descriptions rather than renamed generic content")
 	check(world.riding and world.active_avatar() == world.bike and not world.player.visible, "demo starts on motorbike with active vehicle camera")
 	for vehicle in world.traffic:
 		vehicle.paused = true
@@ -86,9 +87,11 @@ func run() -> void:
 		var original_bike = world.bike
 		check(world.toggle_vehicle() and world.riding and world.bike == original_bike, "remount reuses same vehicle and restores riding at stop %.0f" % stop)
 		check(world.nearest_poi().is_empty(), "riding past viewpoint cannot interact or auto-award a visit at stop %.0f" % stop)
-	world.bike.reset_to_distance(570.0)
-	world.bike.speed = 10
-	world.return_to_start()
+	for checkpoint_case in [[100.0, 0.0], [220.0, 0.0], [229.0, 0.0], [230.0, 230.0], [231.0, 230.0], [470.0, 230.0], [540.0, 230.0], [551.0, 550.0], [570.0, 550.0]]:
+		world.bike.reset_to_distance(checkpoint_case[0])
+		world.bike.speed = 10
+		world.return_to_start()
+		check(world.checkpoint == checkpoint_case[1] and absf(route.distance_at(world.bike.position) - maxf(5.0, checkpoint_case[1])) < 0.05, "reset uses latest passed safe checkpoint at station %.0f → %.0f" % checkpoint_case)
 	check(world.bike.speed == 0 and route.in_layby(world.bike.position), "reset returns moving bike to safe stop with zero speed")
 	var captured: Dictionary = world.capture_road_state()
 	check(captured.has("bike_s") and captured.has("lateral") and captured.has("checkpoint"), "world captures separate station/lateral road state")

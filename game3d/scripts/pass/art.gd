@@ -100,3 +100,25 @@ static func bike_model(parent: Node3D) -> Node3D:
 		limb(rider,Vector3(side*0.32,0.8,-0.05),Vector3(side*0.27,0.48,0.3),0.09,denim)
 		box(rider,Vector3(side*0.27,0.43,0.19),Vector3(0.18,0.13,0.35),rubber)
 	return model
+
+static func walker_model(parent: Node3D) -> Node3D:
+	var model := Node3D.new()
+	model.name = "AnWalkingRider"
+	parent.add_child(model)
+	var cloth := material("536B59")
+	var denim := material("283C50")
+	var boots := material("151B1D")
+	var skin := material("CCA889")
+	box(model,Vector3(0,1.15,0),Vector3(0.47,0.6,0.29),cloth)
+	# Same helmet, visor and touring jacket as the rider, now standing upright.
+	ellipsoid(model,Vector3(0,1.69,0),Vector3(0.5,0.53,0.5),material("E7DDBA",0.35))
+	box(model,Vector3(0,1.69,0.21),Vector3(0.37,0.14,0.08),material("22363C",0.2))
+	box(model,Vector3(0,1.14,-0.17),Vector3(0.34,0.42,0.16),material("384B3D"))
+	for side: float in [-1,1]:
+		limb(model,Vector3(side*0.25,1.36,0),Vector3(side*0.31,1.02,0.03),0.085,cloth)
+		limb(model,Vector3(side*0.31,1.02,0.03),Vector3(side*0.31,0.79,0.08),0.065,cloth)
+		ellipsoid(model,Vector3(side*0.31,0.75,0.08),Vector3(0.13,0.19,0.13),skin)
+		limb(model,Vector3(side*0.13,0.88,0),Vector3(side*0.14,0.48,0.02),0.105,denim)
+		limb(model,Vector3(side*0.14,0.48,0.02),Vector3(side*0.14,0.14,0.01),0.09,denim)
+		box(model,Vector3(side*0.14,0.1,0.08),Vector3(0.19,0.16,0.34),boots)
+	return model

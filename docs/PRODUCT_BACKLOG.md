@@ -88,14 +88,14 @@ Root xác minh artifact: APK không khai báo INTERNET, đóng gói 47 JSON/lice
 
 ## PO-10 — Vertical slice đèo và xe máy, iteration 0.4
 
-**Trạng thái: Ready; P0 / L.** Người dùng đã duyệt bước khả thi của BA: chứng minh vòng **lái → dừng → tham quan** trên một đoạn đèo bằng xe máy. Quyết định này đưa PO-10 lên trước việc mở rộng PO-04/05; các yêu cầu địa lý/đảo vẫn còn trong backlog, không được ghi hoàn tất bởi slice. Hướng hình ảnh bán hiện thực theo cảm giác ảnh tham chiếu đèo Khánh Lê; đây là cảnh minh họa procedural, không phải bản sao GIS hoặc lời hứa photoreal.
+**Trạng thái: Technical prototype accepted; P0 / L; art/device gates còn mở.** Người dùng đã duyệt bước khả thi của BA: chứng minh vòng **lái → dừng → tham quan** trên một đoạn đèo bằng xe máy. Quyết định này đưa PO-10 lên trước việc mở rộng PO-04/05; các yêu cầu địa lý/đảo vẫn còn trong backlog, không được ghi hoàn tất bởi slice. Hướng hình ảnh bán hiện thực theo cảm giác ảnh tham chiếu đèo Khánh Lê; đây là cảnh minh họa procedural, không phải bản sao GIS hoặc lời hứa photoreal.
 
 ### Phạm vi và AC chốt để triển khai
 
 | AC | Điều kiện kiểm chứng |
 | --- | --- |
 | PO-10.A Đường và cảnh | Khu mẫu riêng, không thêm tỉnh thứ 48 hoặc đổi bounds của 47 cảnh địa lý hiện có. Một tuyến liên tục có chiều dài centerline **700–800 đơn vị scene**, mục tiêu 750, đi được từ đầu đến cuối. HUD/tài liệu gọi khoảng cách trong cảnh minh họa; không ghi chiều dài thực địa. Có khúc cua, thay đổi cao độ, mặt đường, sườn núi và mép đường/lan can có thể đọc được khi lái. Không cộng đường này vào coverage GIS hoặc toàn tỉnh. |
-| PO-10.B Xe máy | Người chơi chủ động tăng ga, phanh và lái trái/phải; thả ga không làm tăng tốc, phanh từ vận tốc chạy làm giảm tốc tới dừng. Lái đổi hướng/vị trí; tốc độ hữu hạn theo cấu hình. Có reset về checkpoint an toàn khi kẹt, không mất dấu tham quan. Không yêu cầu mô phỏng cân bằng/ngã xe chân thực trong proof này. |
+| PO-10.B Xe máy | Người chơi chủ động tăng ga, phanh và lái trái/phải; thả ga không làm tăng tốc, phanh từ vận tốc chạy làm giảm tốc tới dừng. Lái đổi hướng/vị trí; tốc độ hữu hạn theo cấu hình. Có reset về checkpoint an toàn gần nhất **đã đi qua theo tiến độ dọc tuyến** khi kẹt, không mất dấu tham quan. Không chọn checkpoint phía trước chưa tới chỉ vì gần hơn về khoảng cách; ví dụ checkpoint 0/230/550 và đang ở d=470 thì reset về 230, chưa qua 230 thì về 0, đã qua 550 thì về 550. Không yêu cầu mô phỏng cân bằng/ngã xe chân thực trong proof này. |
 | PO-10.C Camera và input | Camera bám xe và nhìn được hướng chạy/khúc cua; có thao tác nhìn hoặc reset camera rõ. Keyboard có ga/phanh/trái/phải/tương tác; màn hình ngang có touch tương đương và hỗ trợ đồng thời ga+lái/phanh+lái. Mở modal hoặc mất focus hủy input đang giữ, không để xe tự nhận ga sau khi đóng. Giữ giới hạn camera hợp lệ và không nhìn xuyên địa hình nghiêm trọng tại các góc kiểm thử. |
 | PO-10.D Traffic | Có ít nhất **2 xe traffic** vận hành trên tuyến định sẵn với seed/trạng thái ban đầu cố định; cùng seed và chuỗi bước simulation tạo cùng vị trí trong sai số kiểm thử đã nêu. Traffic không cần mạng. Collider thực khiến xe người chơi bị chặn/giảm chuyển động khi tiếp xúc xe traffic hoặc mép chắn đường; không chỉ có mesh trang trí. Không yêu cầu AI giao thông toàn thành phố. |
 | PO-10.E Dừng và tham quan | Có ít nhất **2 điểm dừng** tách nhau dọc tuyến, có tên/nội dung riêng cho cảnh minh họa. Chỉ cho phép đỗ/xuống xe khi ở trong vùng dừng được định nghĩa rõ trong cấu hình và vận tốc xe **≤0,5 đơn vị scene/giây**; tương tác POI chỉ khi đang ở chế độ đi bộ và đủ gần POI theo proximity guard. Ngoài vùng hoặc đang chạy nhanh phải từ chối; HUD nói cần dừng/gần điểm. Tương tác mở nội dung và ghi dấu một lần; không tự đóng dấu chỉ vì chạy qua. |
@@ -108,3 +108,20 @@ Root xác minh artifact: APK không khai báo INTERNET, đóng gói 47 JSON/lice
 **Photo mode offline là optional/deferred:** không nằm trong cửa nghiệm thu 0.4; chỉ đưa vào nếu toàn bộ loop bắt buộc đã đạt và không trì hoãn QA. Không thêm nhiệm vụ đua xe, backend, multiplayer, download bản đồ, toàn bộ mạng đường Việt Nam hoặc cam kết 30 FPS trên mọi thiết bị vào batch này.
 
 Thước đo proof: vòng bắt buộc hoàn thành được bằng điều khiển thật, hai điểm dừng có guard đúng, restart giữ checkpoint/dấu và save cũ không mất dữ liệu. Chưa có số liệu người dùng hoặc hiệu năng thiết bị để đặt lời hứa thương mại. BA/SA chốt chi tiết cấu hình, geometry và checkpoint trong phạm vi AC này; thay đổi bỏ khả năng đi bộ tại điểm dừng cần quay lại PO trước khi coi slice hoàn tất.
+
+PO clarification 0.4: reset là latest-passed safe checkpoint, không phải nearest-absolute; mục đích không bỏ qua đoạn chưa lái. Đây là làm rõ hành vi hồi phục, không phép xóa dấu hoặc ghi thêm dấu. Hai POI phải có nội dung riêng phù hợp góc ngắm cảnh minh họa; tên khác nhưng cùng một đoạn mô tả không đạt PO-10.E.
+
+
+### PO-10 — kết quả nghiệm thu prototype 0.4
+
+PO chấp nhận **khả năng chơi của prototype kỹ thuật**, không chấp nhận rằng chất lượng hình ảnh tham chiếu bán hiện thực/photoreal đã đạt. QA báo **417 assertion PASS**: 160 kiểm tra mới và 257 hồi quy, gồm guard xuống xe/đi bộ/tương tác, hai mô tả điểm dừng riêng, save tương thích và reset latest-passed với ranh giới nghiêm ngặt. Root báo `PASS04_VISUAL_PASS` qua desktop GUI bằng input thật. Pilot script headless của root điều khiển xe vật lý từ s=5 đến s=738,02 qua 5.916 fixed ticks với traffic và không va chạm trong lượt đó; đây là công cụ kiểm thử, không phải tính năng tự lái hoặc benchmark hiệu năng.
+
+| Cửa | Kết luận hiện tại |
+| --- | --- |
+| PO-10.A–G vòng chơi/logic/input/save | Technical prototype accepted dựa QA và desktop smoke; touch thiết bị thật vẫn chưa kiểm. |
+| PO-10.H nguồn tài nguyên | Giữ yêu cầu procedural do team tạo hoặc license/provenance rõ; không dùng kết quả render để suy ra quyền tài nguyên hoặc GIS đúng thực địa. |
+| PO-10.I desktop | Root báo GUI PASS; ảnh start/bend/viewpoint thể hiện prototype stylized có đường nhựa, sương, rừng và xe. Hướng hình ảnh tham chiếu chưa đạt; cần iteration mỹ thuật riêng có tiêu chí đối chiếu. |
+| PO-10.J APK | Đang build; chưa gắn artifact ready cho 0.4 trước hash/signature/alignment/package kiểm xong. |
+| Chất lượng thiết bị/sản phẩm | Android/iOS cài thật, đa chạm thật, FPS/nhiệt, upgrade thật và nghiên cứu người chơi chưa xác minh. Không công bố 30 FPS hoặc chất lượng bán hiện thực đã hoàn thành. |
+
+Phần mở tiếp theo của slice: Designer xác định art gap từ ảnh tham chiếu và cảnh prototype, BA/SA/Dev đánh giá vật liệu/địa hình/thảm thực vật/ánh sáng trong ngân sách mobile, rồi PO chốt batch có bằng chứng hình ảnh và device profiling. Vẫn giữ PO-04/05 địa lý/nội dung và PO-08 device gates; nghiệm thu kỹ thuật này không đóng các yêu cầu toàn Việt Nam/đảo hoặc fidelity hình ảnh.

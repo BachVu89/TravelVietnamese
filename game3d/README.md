@@ -1,8 +1,10 @@
-# Dọc miền Việt 3D · bản mẫu 0.3
+# Dọc miền Việt 3D · bản mẫu 0.4
 
 Game tham quan offline bằng Godot 4.6.3 Compatibility renderer, tách biệt bản Expo/câu đố cũ ở thư mục gốc. Chạy `project.godot` hoặc scene `scenes/main.tscn`.
 
 ## Chơi
+
+**Tuyến đèo mới:** Đổi địa điểm → LÁI XE TRÊN ĐÈO MÂY. Touch dùng joystick để lái, GA và PHANH; bàn phím dùng A/D, W/S. Vào vịnh dừng và phanh trước khi xuống xe bằng nút HUD/E; đi bộ tới POI, bấm Khám phá/F, rồi đến gần xe để lên lại. Về điểm dừng phục hồi checkpoint đã đi qua. Tuyến minh họa không phải dữ liệu khảo sát; xem `docs/VALIDATION_0.4.md` ở repository gốc.
 
 - Đi bộ: joystick bên trái; trên máy tính dùng WASD/phím mũi tên.
 - Ngắm cảnh: kéo phía phải; trên máy tính giữ chuột phải và kéo.

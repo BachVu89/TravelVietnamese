@@ -15,6 +15,10 @@ func build(entry: Dictionary) -> void:
 	preload("res://scripts/pass/scenery.gd").build(self)
 	player = TravelPlayer.new()
 	add_child(player)
+	if player.is_node_ready():
+		_dress_walker()
+	else:
+		player.ready.connect(_dress_walker,CONNECT_ONE_SHOT)
 	player.set_physics_process(false)
 	player.hide()
 	player.collision_layer = 0
@@ -35,7 +39,7 @@ func build(entry: Dictionary) -> void:
 		traffic.append(vehicle)
 	for i in range(2):
 		var p := Route.at(Route.STOPS[i],10.0)
-		pois.append({"id":DEMO_ID+":viewpoint_"+str(i+1),"title":["Ban công mây", "Trạm nhìn thung lũng"][i],"description":"Điểm dừng trên tuyến đèo mẫu sinh thủ tục. Cảnh quan, khoảng cách và đường không phải dữ liệu khảo sát đèo Khánh Lê. Đỗ xe trong vịnh dừng rồi đi bộ để quan sát thung lũng.","position":p})
+		pois.append({"id":DEMO_ID+":viewpoint_"+str(i+1),"title":["Ban công mây", "Trạm nhìn thung lũng"][i],"description":["Ban công mây mở tầm nhìn ngang những tầng rừng phía sườn núi. Quan sát các lớp cây gần đậm màu, các dãy núi xa nhạt dần trong màn sương: đó là cách cảnh mẫu gợi chiều sâu của không gian đèo. Hãy đứng trong khu dừng có lan can, nhìn lại khúc cua và mặt đường sẫm phía sau. Đây là cảnh quan sinh thủ tục để trải nghiệm, không phải số hóa một điểm ngắm cảnh thực tại đèo Khánh Lê.", "Trạm nhìn thung lũng nằm ở chặng cao hơn của tuyến mẫu. Từ vịnh dừng, nhìn xuống sườn cây thấp và những đường sống núi nối tiếp phía xa; quay lại để thấy con đường uốn theo sườn dốc. Đi bộ giữa cột mốc và xe đã đỗ để cảm nhận sự thay đổi góc nhìn trước khi tiếp tục lên đèo. Địa hình, đường và tên điểm dừng đều là nội dung minh họa, không phải dữ liệu khảo sát hay chỉ dẫn du lịch thực địa."][i],"position":p})
 		var marker := PassArt.ellipsoid(self,p+Vector3.UP*1.8,Vector3(0.6,1.0,0.6),PassArt.material("E4B84C",0.35))
 		marker.name = "ViewpointMarker%d" % i
 		var label := Label3D.new()
@@ -45,6 +49,12 @@ func build(entry: Dictionary) -> void:
 		label.font_size = 42
 		label.pixel_size = 0.014
 		add_child(label)
+
+func _dress_walker() -> void:
+	for child in player.avatar.get_children():
+		player.avatar.remove_child(child)
+		child.queue_free()
+	PassArt.walker_model(player.avatar)
 
 func terrain_height(_x: float, z: float) -> float:
 	return Route.point(clampf(-z,0,Route.LENGTH)).y
@@ -108,7 +118,7 @@ func return_to_start() -> void:
 	var d := Route.distance_at(active_avatar().position)
 	checkpoint = 0.0
 	for stop: float in Route.STOPS:
-		if d >= stop-20:
+		if d >= stop:
 			checkpoint = stop
 	bike.reset_to_distance(maxf(5.0,checkpoint),8.0 if checkpoint>0 else 1.7)
 	if not riding:
@@ -130,7 +140,7 @@ func restore_road_state(value: Dictionary) -> void:
 func _physics_process(_delta: float) -> void:
 	if bike:
 		for stop: float in Route.STOPS:
-			if Route.in_layby(bike.position) and absf(Route.distance_at(bike.position)-stop)<17:
+			if Route.in_layby(bike.position) and Route.distance_at(bike.position) >= stop and absf(Route.distance_at(bike.position)-stop)<17:
 				checkpoint = stop
 	if not riding and player:
 		if player.position.y < terrain_height(player.position.x,player.position.z)-8:
