@@ -42,7 +42,7 @@ Tài nguyên game và danh mục địa danh được đóng gói. Không có ba
 ./scripts/build-3d-android-apk.sh
 ```
 
-Script ở repository gốc dùng SDK/JDK có sẵn, template Godot chính thức đã xác minh SHA512, export release không Gradle, align 16 KiB và ký khóa thử nghiệm local ngoài repository. Không in hoặc đưa khóa ký vào mã nguồn. Đầu ra: `artifacts/doc-mien-viet-3d-0.3.0.apk`; hỗ trợ arm64-v8a và armeabi-v7a. Đây là APK thử nghiệm, không phải bản phát hành Google Play.
+Script ở repository gốc dùng SDK/JDK có sẵn, template Godot chính thức đã xác minh SHA512, export release không Gradle, align 16 KiB và ký khóa thử nghiệm local ngoài repository. Không in hoặc đưa khóa ký vào mã nguồn. Đầu ra: `artifacts/doc-mien-viet-3d-0.4.0.apk`; hỗ trợ arm64-v8a và armeabi-v7a. Đây là APK thử nghiệm, không phải bản phát hành Google Play.
 
 Templates cần ở `$XDG_DATA_HOME/godot/export_templates/4.6.3.stable/`: `android_release.apk`, `android_debug.apk` và `ios.zip`. Lấy từ release Godot chính thức, đối chiếu `SHA512-SUMS.txt` trước khi dùng.
 
