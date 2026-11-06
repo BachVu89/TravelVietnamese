@@ -197,3 +197,15 @@ Nếu xe ra khỏi khu vực chơi, rơi hoặc kẹt nặng, phục hồi tới
 - Hai POI chỉ đạt 2/2 sau tương tác hợp lệ; vẫn tự do chơi tiếp được.
 - Fog/wet road/shadow tắt-bật vẫn đọc được tuyến; không hứa hiệu năng máy yếu khi chưa đo.
 - Chạy offline sau cài; Android/iOS cần test thiết bị riêng, desktop không thay thế ergonomics mobile.
+
+## UX 0.5 — Vào demo rõ, mục tiêu theo vòng chơi
+
+PO chốt phạm vi hai feature PO-11/12; phần này là thiết kế cần nghiệm thu, không báo APK đã đạt. Danh mục có một entry tiếng Việt rõ **“Lái xe qua đèo · Demo 750 m trong cảnh”**, vào được bằng một thao tác, không bắt tìm tên tỉnh hoặc qua quiz. Entry không thay thế hoặc khóa danh mục 47 vùng hiện có. Trở lại danh mục và tiếp tục giữ checkpoint/dấu/settings.
+
+HUD cảnh đèo chỉ một mục tiêu hành động kế tiếp: **Tới điểm dừng 1 → Phanh và đỗ → Xuống xe → Đi bộ tới POI/Khám phá → Trở lại xe → Tới điểm dừng 2 → Đỗ/xuống xe/Khám phá → Tới cuối tuyến**. Chỉ sau khi đủ hai dấu mới hướng dẫn tới cuối tuyến; không ghi hoàn thành Việt Nam hay tỉnh. Nội dung phản ánh guard tốc độ/vùng dừng và mode thực tế, không hiển thị “Xuống xe” như một hành động sẵn sàng khi chưa đủ điều kiện.
+
+Khi đã có dấu, không ép đóng lại hoặc giả vờ điểm đó chưa thăm sau khi restart. “Đi lại từ đầu” nếu có chỉ về điểm xuất phát an toàn, giữ dấu và cấu hình; ghi rõ hiệu quả trước khi thực hiện. Không thêm album/photo-mode trong batch0.5.
+
+Menu hình ảnh thêm **Chất lượng cảnh: Tiết kiệm / Chi tiết**, mặc định Tiết kiệm khi save thiếu hoặc sai trường; áp dụng live, giữ sau đổi cảnh/mở lại. Hiện mô tả ngắn “Thay đổi mật độ/chi tiết trang trí”; không gọi preset là bảo đảm FPS. **Bóng đổ** vẫn là lựa chọn riêng, không bị preset đổi ngầm. Không đổi POI/collision/traffic/tiến trình khi đổi preset.
+
+Review landscape phải kiểm tra mục tiêu dài xuống hàng không che Ga/Phanh/Lái/Xuống xe; không thêm panel dưới màn hình chỉ để lặp hướng dẫn. Nghiệm thu gồm root chơi loop thực qua GUI và QA logic/migration; ảnh đẹp và headless assertion không thay kiểm thử đa chạm/cài thật/FPS trên thiết bị.

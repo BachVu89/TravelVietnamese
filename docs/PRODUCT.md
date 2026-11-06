@@ -129,6 +129,35 @@ Slice là một **mẫu riêng**, không phải tỉnh thứ 48 trong registry 4
 
 **Không thuộc cửa 0.4:** photo mode/album (deferred), mạng đường toàn quốc, bản sao GIS, photoreal như ảnh, mô phỏng xe chuyên sâu, multiplayer/backend hoặc tuyên bố đã phủ đủ đảo. **30 FPS là mục tiêu đánh giá thiết bị, chưa là số thực đo hoặc cam kết mọi máy.** Bán hiện thực cần được review bằng hình ảnh gameplay của build cụ thể; nếu tài nguyên hiện chỉ đạt blockout thì báo rõ, không tự đánh đồng gameplay PASS với chất lượng mỹ thuật đạt tham chiếu.
 
+## Phạm vi 0.5 — PO-11/12: cảnh đèo có chiều sâu và mục tiêu rõ
+
+**Ngày chốt: 07/11/2026 (UTC+7).** Người dùng cho tiếp tục batch 0.5, giới hạn hai tính năng ở [PRODUCT_BACKLOG.md](PRODUCT_BACKLOG.md): PO-11 mỹ thuật/preset và PO-12 vào demo/mục tiêu hành trình. Bản đã phân phối trước batch này là 0.4; các AC dưới đây chưa là kết quả nghiệm thu 0.5. Giữ engine Godot và vòng xe/đi bộ/offline hiện có; không đổi hướng sang quiz hoặc lấy nâng version thay cho cải thiện scene.
+
+### PO-11 — Thay đổi cảnh thật và hai preset
+
+| AC PO | Điều kiện nghiệm thu/test cụ thể |
+| --- | --- |
+| PO-11.A — Mặt đường | Ở cùng camera kiểm chứng, thấy biến thiên màu/roughness asphalt theo tỷ lệ, vạch đường đi liền qua cua và shoulder/mép chắn rõ. Kiểm đầu tuyến, cua và điểm dừng 230: không z-fighting, vạch nổi khỏi mặt đường hoặc bị ngắt bất thường. Thay đổi chỉ bề ngoài, giữ tuyến/collider và không làm xe mắc ở các vị trí đã đi được ở 0.4. Texture procedural hoặc có nguồn/license hợp lệ. |
+| PO-11.B — Ba lớp cảnh quan | Có lớp đá/sườn dốc gần đường, cây/bụi đa dạng silhouette/kích thước theo seed và nền núi xa tách lớp. Không chỉ tăng số cây dạng giống nhau. Hai điểm dừng có bố cục góc nhìn phân biệt được. Cùng seed/vào lại không tích lũy node trang trí trùng; cây/đá không che làn, vùng đỗ hoặc nút/POI bắt buộc. Không thêm collider trang trí làm thay đổi đường đi giữa preset. |
+| PO-11.C — Ánh sáng/sương | Màu lighting và fog thống nhất, có phân lớp gần/xa; vạch đường, traffic và vùng dừng vẫn nhìn được tại ba camera đầu tuyến/cua/điểm dừng. Không dùng fog dày để che toàn bộ nền hoặc phần đường phải lái. Manifest ghi tài nguyên mới do team tạo hoặc provenance/license. Đánh giá bằng render thật, không chỉ giá trị shader trong code. |
+| PO-11.D — Tiết kiệm/Chi tiết | Có hai preset **Tiết kiệm** (mặc định) và **Chi tiết**. Đổi lựa chọn áp dụng ngay và giữ qua chuyển scene/restart. Phải công bố khác biệt cấu hình trang trí/tầm nhìn và kiểm scene có thay đổi thực; collision/route/traffic/POI/objective/checkpoint/stamps giữ nguyên. Bóng đổ độc lập: kiểm đủ ma trận hai preset × bóng Bật/Tắt, đổi preset không đổi lựa chọn bóng. Save v1 cũ thiếu trường hoặc trường này sai kiểu/ngoài tập chỉ trả default Tiết kiệm cho riêng trường, không mất dữ liệu lõi hoặc settings khác. Không gọi preset là số FPS đã đạt. |
+| PO-11.E — Bộ ảnh đối chiếu | Có **ba cặp ảnh trước–sau 0.4/0.5** tại đầu tuyến, khúc cua và điểm dừng 230; mỗi cặp cùng vị trí/góc camera, viewport và lựa chọn bóng, ghi preset/renderer/build. Nêu khác biệt A/B/C nhìn được và chụp hai góc dừng để review bố cục riêng. Nếu khác viewport/preset phải ghi rõ thay vì dùng nó làm bằng chứng cải thiện. PO/designer đánh giá từng lớp; không tự kết luận photoreal hoặc tương đương ảnh tham chiếu. |
+
+### PO-12 — Một thao tác vào demo, mục tiêu suy từ tiến trình
+
+| AC PO | Điều kiện nghiệm thu/test cụ thể |
+| --- | --- |
+| PO-12.A — Entry | Trong danh mục hiện có có entry tiếng Việt rõ cho demo đèo; một thao tác chọn entry đưa vào mẫu/tiếp tục checkpoint, không cần tìm tên tỉnh hoặc vượt quiz. Không xóa save, ép mở tutorial mới hoặc khóa 47 cảnh khi dùng entry. Quay về danh mục và vào lại giữ tiến trình hợp lệ. |
+| PO-12.B — Mục tiêu hiện tại | HUD chỉ một hành động kế tiếp suy từ mode/tiến độ/checkpoint, vị trí vùng dừng, vận tốc và dấu POI: đi tới điểm 1 → đỗ/xuống xe → đi bộ đủ gần/tương tác POI1 → tiếp tục tới điểm 2 → đỗ/xuống xe/đi bộ/tương tác POI2 → tới vùng cuối tuyến. Kiểm đứng ngoài vùng, tốc độ >0,5, đã xuống xe nhưng còn xa và đủ gần: hướng dẫn phù hợp guard, không tự cấp dấu. Chỉ chuyển tới mục tiêu cuối sau khi cả hai dấu đã có; vào vùng cuối khi thiếu dấu không báo hoàn thành. Hoàn thành chỉ là mẫu đèo, không phải tỉnh hoặc Việt Nam. |
+| PO-12.C — Resume/đi lại | Không lưu một nhãn objective riêng rồi để lệch dữ liệu thật; tải lại/đổi scene phải suy đúng từ slice/checkpoint/stamps hiện có. Fixture chưa dấu/một dấu/hai dấu cho mục tiêu tương ứng, không yêu cầu nhận lại dấu đã có. **Đi lại từ đầu** chỉ đưa vị trí/mode về spawn an toàn, giữ dấu/settings/save lõi; khi đủ hai dấu vẫn thể hiện chúng đã thăm, không giả vờ nhiệm vụ chưa làm. Có thể tự do ghé lại điểm dừng, không nhân dấu. |
+| PO-12.D — Input và hồi quy | Entry/modal/HUD dùng được với touch và keyboard hiện hỗ trợ; ở viewport landscape kiểm chứng không che ga/phanh/lái/lên xuống xe. Modal/background hủy input đang giữ. QA kiểm thứ tự mục tiêu, restart/migration, traffic/collider và ma trận preset; root chơi render bằng input thật qua lái–đỗ–đi bộ/tương tác–lên xe. Đặt state/teleport phục vụ unit test không thay chứng cứ vòng chơi. |
+
+**Cửa giao 0.5:** có QA từng AC mới và hồi quy 0.4; bộ ảnh đối chiếu và vòng chơi render; APK được kiểm file/hash/chữ ký/alignment/package/version trước khi báo artifact ready. Phần mục tiêu hình ảnh chưa đạt phải ghi rõ thay vì gọi chung là bán hiện thực đã hoàn tất. Photo mode/album vẫn deferred.
+
+**Thiết bị đích người dùng nêu:** OPPO Find X7 Ultra và iPhone 13. Chưa có phiên bản OS hoặc quyền truy cập thiết bị để chạy thử; đây là model tham chiếu, không phải chứng nhận đã hỗ trợ/chạy native. Cần test riêng Android/iOS, đa chạm, lifecycle/save, frame time/RAM/nhiệt; không có số FPS thực đo hoặc cam kết 30 FPS cho hai máy ở thời điểm chốt AC.
+
+**Mốc bắt buộc sau 0.5, trước feature phụ đèo:** đưa ra đề xuất catalog đảo v0 có nguồn thực đã đọc, version/license, định nghĩa đảo/quần đảo, mẫu ID/tên/alias/parent/provenance/geometry/scene-status và báo cáo khoảng trống 13 vùng hiện có. Không bịa mẫu số mọi đảo hoặc dùng bbox suy quốc gia. Đây là bước review PO-04; PO-05 cảnh nội dung riêng vẫn mở. Batch 0.5 không thêm dữ liệu GIS hoặc làm thay đổi coverage registry 34 tỉnh/thành + 13 vùng đảo.
+
 ## Quy tắc offline và tài nguyên
 
 Tài nguyên của phạm vi được công bố phải nằm trong gói cài/nội dung offline trước khi bắt đầu chơi. Nếu phân phối theo gói vùng về sau, phải nói rõ vùng nào đã cài và vùng nào cần tải trước; không coi toàn quốc là offline khi người dùng chỉ có một vùng. Mọi mô hình, texture, font, âm thanh và dữ liệu bản đồ cần giấy phép sử dụng/phân phối phù hợp, không nhúng dịch vụ bản đồ trực tuyến vào đường chạy bắt buộc.

@@ -8,6 +8,7 @@ const Navigation = preload("res://scripts/navigation.gd")
 const Preferences = preload("res://scripts/preferences.gd")
 const PassWorldScript = preload("res://scripts/mountain_pass.gd")
 const RoadSave = preload("res://scripts/road_save.gd")
+const RouteObjectives = preload("res://scripts/route_objectives.gd")
 var onboarding = OnboardingScript.new()
 var navigation_label: Label
 var tutorial_label: Label
@@ -16,6 +17,10 @@ var waypoint_target: Dictionary = {}
 var settings_dialog: AcceptDialog
 var shadow_toggle: CheckButton
 var sensitivity_option: OptionButton
+var quality_option: OptionButton
+var route_objective: Dictionary = {}
+var route_objective_label: Label
+var demo_entry_button: Button
 var catalog: Array[Dictionary] = []
 var world: TravelWorld
 var controls: TravelTouchControls
@@ -155,7 +160,7 @@ func _process(delta: float) -> void:
 	waypoint_target = Navigation.next_target(world.pois, state.visited, origin, world.player.yaw)
 	if riding:
 		navigation_label.text = "%d km/h · %d / %d m cảnh" % [int(road_hud.speed_kmh), int(road_hud.progress), int(road_hud.total_length)]
-		guidance_note.text = "Điểm dừng: " + str(road_hud.next_stop)
+		guidance_note.text = "Tuyến đèo minh họa · Khoảng cách trong cảnh"
 	elif waypoint_target.is_empty():
 		navigation_label.text = "Đã khám phá " + str(_current_visit_count()) + "/" + str(world.pois.size()) + " điểm trong cảnh"
 	else:
@@ -163,10 +168,15 @@ func _process(delta: float) -> void:
 		navigation_label.text = str(arrows[waypoint_target.bearing]) + " " + str(waypoint_target.title) + " · ≈" + str(int(round(waypoint_target.distance))) + " m · Phía " + str(waypoint_target.bearing)
 	if not riding:
 		guidance_note.text = "Khoảng cách thẳng trong cảnh minh họa · Hướng theo camera"
+	route_objective_label.visible = pass_active
+	if pass_active:
+		route_objective = RouteObjectives.evaluate(state.visited, road_hud)
+		route_objective_label.text = str(route_objective.text) + "\n" + str(route_objective.detail)
 	drive_hint.visible = riding
 	footer_background.visible = not riding
 	footer_container.visible = not riding
 	vehicle_button.visible = pass_active and not paused
+	demo_entry_button.text = "Đi lại từ đầu" if pass_active else "Chơi đèo mẫu"
 	reset_button.text = "Về điểm dừng" if pass_active else "Về lối vào"
 	if pass_active:
 		vehicle_button.offset_right = 790 if riding else 630
@@ -196,6 +206,17 @@ func _current_visit_count() -> int:
 
 func is_pass_demo() -> bool:
 	return world != null and str(world.region.get("id", "")) == RoadSave.REGION_ID
+
+func start_pass_demo() -> bool:
+	return enter_region(RoadSave.REGION_ID)
+
+func replay_pass_route() -> bool:
+	# Reset this ride's position, not its stamps, settings or geographic progress.
+	state.road_demo = RoadSave.default_state()
+	var entered := enter_region(RoadSave.REGION_ID, false)
+	if entered and save_enabled:
+		save_now()
+	return entered
 
 func toggle_pass_vehicle() -> bool:
 	if not is_pass_demo() or _is_modal_open() or application_suspended:
@@ -319,9 +340,17 @@ func _build_ui() -> void:
 	heading.add_theme_font_size_override("font_size", 23)
 	names.add_child(heading)
 	var subtitle := Label.new()
-	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.4 · OFFLINE"
+	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.5 · OFFLINE"
 	subtitle.add_theme_font_size_override("font_size", 14)
 	names.add_child(subtitle)
+	demo_entry_button = Button.new()
+	demo_entry_button.text = "Chơi đèo mẫu"
+	demo_entry_button.pressed.connect(func():
+		if is_pass_demo():
+			replay_pass_route()
+		else:
+			start_pass_demo())
+	row.add_child(demo_entry_button)
 	var map_button := Button.new()
 	map_button.text = "Đổi địa điểm"
 	map_button.pressed.connect(open_menu)
@@ -500,6 +529,13 @@ func _build_guidance_ui() -> void:
 	guidance_note.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	guidance_note.add_theme_font_size_override("font_size", 12)
 	column.add_child(guidance_note)
+	route_objective_label = Label.new()
+	route_objective_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	route_objective_label.custom_minimum_size.x = 580
+	route_objective_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	route_objective_label.add_theme_font_size_override("font_size", 15)
+	route_objective_label.hide()
+	column.add_child(route_objective_label)
 	drive_hint = Label.new()
 	drive_hint.text = "A/D: lái · W: ga · S: phanh · E: lên/xuống xe tại vịnh dừng"
 	drive_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -530,7 +566,7 @@ func open_settings() -> void:
 		settings_dialog.exclusive = true
 		ui.add_child(settings_dialog)
 		var column := VBoxContainer.new()
-		column.custom_minimum_size = Vector2(520, 240)
+		column.custom_minimum_size = Vector2(520, 340)
 		column.add_theme_constant_override("separation", 16)
 		settings_dialog.add_child(column)
 		shadow_toggle = CheckButton.new()
@@ -553,13 +589,27 @@ func open_settings() -> void:
 			next.sensitivity = [0.6, 1.0, 1.4][index]
 			apply_preferences(next))
 		column.add_child(sensitivity_option)
+		var quality_label := Label.new()
+		quality_label.text = "Chi tiết cảnh (bóng đổ dùng lựa chọn riêng)"
+		quality_label.add_theme_font_size_override("font_size", 16)
+		column.add_child(quality_label)
+		quality_option = OptionButton.new()
+		quality_option.custom_minimum_size.y = 48
+		quality_option.add_item("Tiết kiệm · Ít cây bụi và chi tiết xa")
+		quality_option.add_item("Chi tiết · Nhiều lớp cảnh hơn")
+		quality_option.item_selected.connect(func(index: int):
+			var next: Dictionary = state.preferences.duplicate()
+			next.visual_quality = "detail" if index == 1 else "economy"
+			apply_preferences(next))
+		column.add_child(quality_option)
 		var note := Label.new()
 		note.text = "Áp dụng ngay và lưu trên thiết bị.\nTắt bóng đổ khi muốn giảm chi tiết đồ họa."
 		note.add_theme_font_size_override("font_size", 14)
 		column.add_child(note)
 	shadow_toggle.set_pressed_no_signal(state.preferences.shadows)
 	sensitivity_option.select([0.6, 1.0, 1.4].find(state.preferences.sensitivity))
-	settings_dialog.popup_centered(Vector2i(600, 340))
+	quality_option.select(1 if state.preferences.visual_quality == "detail" else 0)
+	settings_dialog.popup_centered(Vector2i(600, 480))
 
 func apply_preferences(preferences: Variant) -> void:
 	state.preferences = Preferences.normalize(preferences)

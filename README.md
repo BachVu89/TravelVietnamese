@@ -6,6 +6,8 @@ Bản 0.3 đã triển khai ba yêu cầu đầu của Product Owner: hướng d
 
 Bản 0.4 bổ sung tuyến đèo mẫu, xe máy, giao thông và hai điểm dừng để xuống đi bộ. Vào **Đổi địa điểm → LÁI XE TRÊN ĐÈO MÂY**. Xem [kết quả 0.4 và giới hạn chất lượng](docs/VALIDATION_0.4.md), [báo cáo BA](docs/STATUS_REPORT.md). Nhánh source đang phát triển là **`codex-work`**; APK phân phối ở **`apk-download`**.
 
+Bản 0.5 cải thiện cây/đá/mặt đường/chiều sâu cảnh, thêm hai mức chi tiết và mục tiêu tuyến. Vào trực tiếp bằng **Chơi đèo mẫu**; [kết quả 0.5](docs/VALIDATION_0.5.md), [ảnh đối chiếu cùng camera](docs/ART_COMPARE_0.5.md). Oppo Find X7 Ultra và iPhone 13 là thiết bị đích được người dùng nêu, chưa phải thiết bị đã kiểm chứng.
+
 ## Bản nền tảng 3D
 
 Dự án Godot 4.6.3 ở `game3d/`, dùng Compatibility renderer và nội dung đóng gói. Có đi bộ, xoay camera, va chạm, tương tác khi ở gần điểm tham quan và lưu tiến trình local. Các cảnh tạo theo quy tắc là cảnh minh họa; chưa số hóa địa hình hoặc toàn bộ tỉnh ngoài thực tế.

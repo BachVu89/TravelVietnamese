@@ -8,6 +8,7 @@ var riding := true
 var paused := false
 var traffic: Array[PassTraffic] = []
 var checkpoint := 0.0
+var visual_quality := "economy"
 
 func build(entry: Dictionary) -> void:
 	region = entry
@@ -49,6 +50,7 @@ func build(entry: Dictionary) -> void:
 		label.font_size = 42
 		label.pixel_size = 0.014
 		add_child(label)
+	apply_visual_quality(visual_quality)
 
 func _dress_walker() -> void:
 	for child in player.avatar.get_children():
@@ -152,3 +154,34 @@ func _physics_process(_delta: float) -> void:
 			var p := Route.at(d,side)
 			player.position.x = p.x
 			player.position.z = p.z
+
+func apply_visual_quality(profile: String) -> void:
+	visual_quality = "detail" if profile == "detail" else "economy"
+	var detailed := visual_quality == "detail"
+	for child in get_children():
+		if child is MultiMeshInstance3D and child.get_meta("pass_decoration",false):
+			var total := int(child.get_meta("detail_count",child.multimesh.instance_count))
+			child.multimesh.visible_instance_count = total if detailed else maxi(1,int(total*float(child.get_meta("economy_ratio",0.58))))
+			child.visibility_range_end = 340.0 if detailed else 190.0
+			child.visibility_range_end_margin = 25.0
+			child.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
+			child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if detailed and not child.name.begins_with("Understory") else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		elif child is MeshInstance3D and child.get_meta("pass_far_mass",false):
+			child.visible = detailed or int(child.get_meta("mountain_layer",0))<2
+		elif child is WorldEnvironment:
+			child.environment.fog_density = 0.0018 if detailed else 0.0025
+	if bike and bike.camera:
+		bike.camera.far = 650.0 if detailed else 440.0
+	if player and player.camera:
+		player.camera.far = 650.0 if detailed else 440.0
+
+func get_visual_statistics() -> Dictionary:
+	var groups := 0
+	var visible_instances := 0
+	var total := 0
+	for child in get_children():
+		if child is MultiMeshInstance3D and child.get_meta("pass_decoration",false):
+			groups += 1
+			total += child.multimesh.instance_count
+			visible_instances += child.multimesh.visible_instance_count
+	return {"profile":visual_quality,"decoration_groups":groups,"visible_instances":visible_instances,"detail_instances":total}

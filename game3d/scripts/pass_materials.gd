@@ -23,8 +23,8 @@ static func _noise_texture(seed_value: int, frequency: float, size: int = 256) -
 	texture.normalize = true
 	return texture
 
-static func _ramp_texture(seed_value: int, frequency: float, colors: PackedColorArray) -> NoiseTexture2D:
-	var texture := _noise_texture(seed_value, frequency)
+static func _ramp_texture(seed_value: int, frequency: float, colors: PackedColorArray, size: int = 256) -> NoiseTexture2D:
+	var texture := _noise_texture(seed_value, frequency, size)
 	var ramp := Gradient.new()
 	var offsets := PackedFloat32Array()
 	for index in colors.size():
@@ -40,23 +40,24 @@ static func road() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.resource_name = "Original damp asphalt — no real-world scan"
 	material.albedo_color = Color.WHITE
-	material.albedo_texture = _ramp_texture(4147, 0.11, PackedColorArray([
-		Color("20292c"), Color("2c3538"), Color("394244")]))
+	material.albedo_texture = _ramp_texture(4147, 0.38, PackedColorArray([
+		Color("222a2c"), Color("2b3335"), Color("353d3e")]), 512)
 	material.roughness = 0.86
 	# A restrained damp sheen; roughness remains above ~0.48, never mirror-like.
-	material.roughness_texture = _ramp_texture(9812, 0.025, PackedColorArray([
+	material.roughness_texture = _ramp_texture(9812, 0.012, PackedColorArray([
 		Color(0.56, 0.56, 0.56), Color(0.8, 0.8, 0.8), Color.WHITE]))
 	material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	material.metallic = 0.0
 	material.metallic_specular = 0.28
-	var bump := _noise_texture(4147, 0.21)
+	var bump := _noise_texture(4147, 0.38, 512)
 	bump.as_normal_map = true
-	bump.bump_strength = 0.6
+	bump.bump_strength = 0.35
 	material.normal_enabled = true
 	material.normal_texture = bump
-	material.normal_scale = 0.18
-	# Geometry supplies metric UVs; a 256px tile repeats about once per two metres.
-	material.uv1_scale = Vector3(0.5, 0.5, 0.5)
+	material.normal_scale = 0.12
+	# Current pass strip supplies world XZ * 0.16 UVs: scale 2 gives a
+	# ~3.125 m tile instead of the former blurry 12.5 m tile. Geometry unchanged.
+	material.uv1_scale = Vector3(2.0, 2.0, 2.0)
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_cache["road"] = material
 	return material
@@ -68,21 +69,21 @@ static func rock() -> StandardMaterial3D:
 	material.resource_name = "Original mossy strata rock"
 	material.albedo_color = Color.WHITE
 	material.albedo_texture = _ramp_texture(5921, 0.035, PackedColorArray([
-		Color("3f5146"), Color("5b675c"), Color("788076"), Color("92968b")]))
+		Color("3e4b3e"), Color("5e6353"), Color("7b7b68"), Color("93917d")]))
 	material.roughness = 0.96
 	material.metallic_specular = 0.18
 	# World triplanar avoids dependence on imported cliff UVs. Different axis scales
 	# stretch noise into thin strata; physical silhouette still belongs to geometry.
 	material.uv1_triplanar = true
 	material.uv1_world_triplanar = true
-	material.uv1_scale = Vector3(0.1, 0.65, 0.1)
+	material.uv1_scale = Vector3(0.14, 0.28, 0.14)
 	material.uv1_triplanar_sharpness = 4.0
 	var bump := _noise_texture(5921, 0.065)
 	bump.as_normal_map = true
 	bump.bump_strength = 1.4
 	material.normal_enabled = true
 	material.normal_texture = bump
-	material.normal_scale = 0.32
+	material.normal_scale = 0.24
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_cache["rock"] = material
 	return material
@@ -94,7 +95,7 @@ static func grass() -> StandardMaterial3D:
 	material.resource_name = "Original forest ground"
 	material.albedo_color = Color.WHITE
 	material.albedo_texture = _ramp_texture(7138, 0.055, PackedColorArray([
-		Color("354e3c"), Color("526a46"), Color("697851")]))
+		Color("2e4231"), Color("435a38"), Color("637047")]))
 	material.roughness = 1.0
 	material.metallic_specular = 0.12
 	material.uv1_triplanar = true
@@ -108,9 +109,39 @@ static func metal() -> StandardMaterial3D:
 		return _cache["metal"]
 	var material := StandardMaterial3D.new()
 	material.resource_name = "Original satin galvanized rail"
-	material.albedo_color = Color("9faeaa")
-	material.metallic = 0.38
+	material.albedo_color = Color("87948e")
+	material.metallic = 0.22
 	material.metallic_specular = 0.3
-	material.roughness = 0.68
+	material.roughness = 0.78
 	_cache["metal"] = material
+	return material
+
+
+static func foliage() -> StandardMaterial3D:
+	if _cache.has("foliage"):
+		return _cache["foliage"]
+	var material := StandardMaterial3D.new()
+	material.resource_name = "Original opaque geometry foliage — instance tinted"
+	material.albedo_color = Color.WHITE
+	material.vertex_color_use_as_albedo = true
+	material.roughness = 1.0
+	material.metallic_specular = 0.08
+	# Solid geometry foliage: no alpha overdraw/card shadows or external assets.
+	_cache["foliage"] = material
+	return material
+
+static func bark() -> StandardMaterial3D:
+	if _cache.has("bark"):
+		return _cache["bark"]
+	var material := StandardMaterial3D.new()
+	material.resource_name = "Original damp bark"
+	material.albedo_color = Color.WHITE
+	material.albedo_texture = _ramp_texture(18051, 0.07, PackedColorArray([
+		Color("302f24"), Color("474636"), Color("62604a")]))
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3(0.65, 0.12, 0.65)
+	material.roughness = 1.0
+	material.metallic_specular = 0.08
+	_cache["bark"] = material
 	return material

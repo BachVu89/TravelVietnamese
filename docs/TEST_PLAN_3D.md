@@ -192,3 +192,49 @@ Agent chính đã thực thi và chuyển kết quả cuối cho QA ghi nhận:
 - Công cụ QA điều khiển vật lý theo script đi từ station 5 đến **738,02** qua **5.916 bước simulation cố định**, không ghi nhận va chạm trong lượt đó. Đây là pilot của công cụ kiểm thử, **không phải tính năng tự lái của game**, không phải số đo FPS, thời gian chơi thực hoặc bằng chứng hiệu năng điện thoại.
 
 Tại mốc này có bằng chứng APK 0.4 đã build và xác minh tĩnh ở local. Chưa coi việc đẩy source Git là phát hành APK remote; việc tải artifact remote cần agent chính xác nhận riêng. Các cửa Android/iOS thực, đa chạm trên điện thoại, FPS/RAM/nhiệt và nâng cấp cài đè vẫn chưa chạy.
+
+## Batch 0.5 — chất lượng hình ảnh và mục tiêu tuyến
+
+Phạm vi QA: profile `economy` mặc định và `detail` chỉ thay đổi trang trí; giữ bóng đổ là lựa chọn độc lập; lưu profile trong preferences v1; một thao tác vào demo và hướng dẫn mục tiêu theo checkpoint/dấu/chế độ. Replay không xóa tiến trình. Art mới cần kiểm chứng render riêng, không suy chất lượng hình ảnh từ số assertion.
+
+Thiết bị mục tiêu do người dùng nêu: Oppo Find X7 Ultra và iPhone 13. Team chưa có quyền truy cập thiết bị thực; **chưa đo FPS, frame time, RAM hoặc nhiệt** trên hai máy, chưa xác nhận tương tác đa chạm hay cài đè APK trên máy người dùng.
+
+Kết quả cuối: `test_quality_preferences.gd` **24 assertion đạt, 0 lỗi**, exit code 0. Suite kiểm tra enum/default, mười nhóm dữ liệu quality không hợp lệ không làm mất shadow/sensitivity, golden save 0.2/0.3 giữ tiến trình, checkpoint/mode/stamp của save 0.4 vẫn giữ khi quality thiếu/hỏng, ghi/đọc file thật và canonical JSON. Lệnh:
+
+```bash
+XDG_DATA_HOME=/tmp/travel-qa05/preferences/data \
+XDG_CONFIG_HOME=/tmp/travel-qa05/preferences/config \
+XDG_CACHE_HOME=/tmp/travel-qa05/preferences/cache \
+godot --headless --path game3d --script tests/test_quality_preferences.gd
+```
+
+Log: `/tmp/travel-05-preferences.log`.
+
+### Kết quả headless 0.5
+
+**466 assertion đạt, 0 lỗi qua 13 suite**: 96 assertion mới và 370 regression liên quan. Tất cả lệnh kết thúc exit code 0; log cuối không có `ERROR` hoặc `FAIL`.
+
+| Suite mới | Assertion đạt | Bằng chứng |
+| --- | --- | --- |
+| `test_quality_preferences.gd` | 24 | Enum/default, lỗi chỉ ở quality không reset core/settings/road state; migration 0.2/0.3/0.4; file save canonical và reload |
+| `test_quality_world.gd` | 14 | Economy bật ngân sách 1.398 instance trang trí, detail 2.724; đổi qua lại/idempotent. Collider identity/shape bounds/layers/transforms, pose/speed/input/mode/checkpoint/traffic/POI giữ nguyên. Shadow và sensitivity độc lập. Camera transform cho phép sai số ≤0,001 đơn vị scene do SpringArm cập nhật nội bộ, không tính thay đổi far clip có chủ đích là thay pose. |
+| `test_route_objectives.gd` | 20 | Thứ tự stop1/đỗ/đi bộ/stop2/đích; guard can_exit; vượt stop không tự có dấu; thiếu một trong hai dấu không thể hoàn tất dù tới cuối; replay giữ hai dấu và không giả là chưa ghé |
+| `test_quality_goals_integration.gd` | 38 | Nút entry thật một action; UI quality callback live; settings/nút Trở lại trong viewport 1280×720; hai stop qua proximity guard thực cập nhật objective; restart giữa tuyến giữ checkpoint/dấu1 và nhắm stop2; replay giữ core/stamps/settings; đổi scene/restart giữ profile và mục tiêu đúng |
+
+Ngân sách instance là tổng `visible_instance_count` được cấu hình cho nhóm trang trí, **không phải số draw call hay FPS đo được**. Suite world tạm dừng physics để tách tác dụng của đổi profile khỏi chuyển động simulation; không suy các snapshot đó thành trải nghiệm chơi trên điện thoại.
+
+Regression đã chạy lại: `test_pass_physics` 14, `test_pass_world` 49, `test_pass_integration` 41, `test_pass_save` 28, `test_pass_touch` 11, `test_batch03_rules` 36, `test_batch03_integration` 38, `test_save_transitions` 135, `test_licenses` 18, tổng **370**. Không chạy lại các suite địa lý/world không chịu ảnh hưởng khác chỉ để tăng số kiểm tra.
+
+Lệnh cho các suite mới dùng cùng mẫu XDG ở trên và đổi `--script tests/<suite>.gd`. Log mới: `/tmp/travel-05-{preferences,world,objectives,integration}.log`; regression: `/tmp/travel-05-<test_suite>.log`. Main objective integration có bố trí vị trí để kiểm trạng thái/guard; **không dùng teleport làm bằng chứng lái end-to-end**. Cửa render trước/sau cùng camera, vòng chơi GUI bằng input thật và artifact 0.5 do agent chính xác minh riêng. Chưa ghi APK 0.5 ready hoặc đo hiệu năng Oppo/iPhone khi chưa có bằng chứng tương ứng.
+
+### Artifact và cửa render 0.5 cuối
+
+Agent chính đã thực thi và chuyển kết quả cho QA ghi nhận:
+
+- APK local 0.5: **51.697.778 byte**, SHA-256 `282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772`.
+- Xác minh tĩnh đạt: chữ ký v2/v3, zipalign 16 KiB, không quyền `INTERNET`; chứa JSON 47 địa danh có giấy phép và bytecode objective/profile/vegetation. Package/certificate khớp 0.4, versionCode tăng 4→5.
+- GUI **LIVE_LOOP05_PASS**: vào demo qua UI, điều khiển chạm lái thực từ station 5 đến 232,278, đỗ/xuống xe, đi bộ thực, tương tác F, đi trở lại xe và lên xe; objective chuyển sang stop2. Lượt này **không reset hoặc teleport**.
+- Chín capture so sánh theo cặp dùng cùng pose/camera, FOV 69 và độ phân giải 1280×720; độ lệch pose được báo cáo bằng 0. Far-clip budget: bản cũ 420, economy 440, detail 650. Đây là cấu hình render/tầm nhìn, không phải số đo FPS.
+- Harness headless đã sửa cách lấy logical size của controls thay vì kích thước Window 64 và thêm đợi frame flush cho GUI capture. Các sửa này thuộc công cụ kiểm thử, không thay đổi product code; không chạy lặp suite khi không có thay đổi sản phẩm liên quan.
+
+Như vậy đã có bằng chứng build/xác minh tĩnh APK local và cửa GUI/render riêng ngoài 466 assertion headless. **Chưa kiểm thử điện thoại thực, cài đè APK, đa chạm thật hoặc hiệu năng Oppo Find X7 Ultra/iPhone 13; chưa có kết quả iOS.** Không suy các capture, giới hạn far clip hay số instance thành cam kết hiệu năng thiết bị. Trạng thái upload/phát hành APK remote phải được agent chính xác nhận riêng.

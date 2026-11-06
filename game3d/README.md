@@ -1,8 +1,10 @@
-# Dọc miền Việt 3D · bản mẫu 0.4
+# Dọc miền Việt 3D · bản mẫu 0.5
 
 Game tham quan offline bằng Godot 4.6.3 Compatibility renderer, tách biệt bản Expo/câu đố cũ ở thư mục gốc. Chạy `project.godot` hoặc scene `scenes/main.tscn`.
 
 ## Chơi
+
+**Mới trong 0.5:** bấm **Chơi đèo mẫu** ở thanh trên để vào trực tiếp. Mục tiêu HUD hướng qua hai điểm tham quan tới cuối tuyến; **Đi lại từ đầu** giữ dấu và cài đặt. Trong Cài đặt có **Tiết kiệm/Chi tiết**, mặc định Tiết kiệm; bóng đổ là lựa chọn riêng. Ảnh so sánh và giới hạn ở `docs/ART_COMPARE_0.5.md`/`VALIDATION_0.5.md` của repository gốc.
 
 **Tuyến đèo mới:** Đổi địa điểm → LÁI XE TRÊN ĐÈO MÂY. Touch dùng joystick để lái, GA và PHANH; bàn phím dùng A/D, W/S. Vào vịnh dừng và phanh trước khi xuống xe bằng nút HUD/E; đi bộ tới POI, bấm Khám phá/F, rồi đến gần xe để lên lại. Về điểm dừng phục hồi checkpoint đã đi qua. Tuyến minh họa không phải dữ liệu khảo sát; xem `docs/VALIDATION_0.4.md` ở repository gốc.
 
@@ -42,7 +44,7 @@ Tài nguyên game và danh mục địa danh được đóng gói. Không có ba
 ./scripts/build-3d-android-apk.sh
 ```
 
-Script ở repository gốc dùng SDK/JDK có sẵn, template Godot chính thức đã xác minh SHA512, export release không Gradle, align 16 KiB và ký khóa thử nghiệm local ngoài repository. Không in hoặc đưa khóa ký vào mã nguồn. Đầu ra: `artifacts/doc-mien-viet-3d-0.4.0.apk`; hỗ trợ arm64-v8a và armeabi-v7a. Đây là APK thử nghiệm, không phải bản phát hành Google Play.
+Script ở repository gốc dùng SDK/JDK có sẵn, template Godot chính thức đã xác minh SHA512, export release không Gradle, align 16 KiB và ký khóa thử nghiệm local ngoài repository. Không in hoặc đưa khóa ký vào mã nguồn. Đầu ra: `artifacts/doc-mien-viet-3d-0.5.0.apk`; hỗ trợ arm64-v8a và armeabi-v7a. Đây là APK thử nghiệm, không phải bản phát hành Google Play.
 
 Templates cần ở `$XDG_DATA_HOME/godot/export_templates/4.6.3.stable/`: `android_release.apk`, `android_debug.apk` và `ios.zip`. Lấy từ release Godot chính thức, đối chiếu `SHA512-SUMS.txt` trước khi dùng.
 

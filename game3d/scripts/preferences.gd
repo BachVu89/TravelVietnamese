@@ -2,7 +2,7 @@ class_name TravelPreferences
 extends RefCounted
 
 static func defaults() -> Dictionary:
-	return {"shadows": true, "sensitivity": 1.0}
+	return {"shadows": true, "sensitivity": 1.0, "visual_quality": "economy"}
 
 static func normalize(value: Variant) -> Dictionary:
 	var preferences := defaults()
@@ -10,6 +10,8 @@ static func normalize(value: Variant) -> Dictionary:
 		return preferences
 	if value.get("shadows") is bool:
 		preferences.shadows = value.shadows
+	if value.get("visual_quality") in ["economy", "detail"]:
+		preferences.visual_quality = value.visual_quality
 	var sensitivity = value.get("sensitivity")
 	if sensitivity is float or sensitivity is int:
 		for preset in [0.6, 1.0, 1.4]:
@@ -21,6 +23,10 @@ static func apply(world: Node3D, value: Variant) -> void:
 	var preferences := normalize(value)
 	if not world:
 		return
+	# Quality changes decorative detail only. Reapply the player's independent
+	# shadow preference afterwards, even if a profile adjusts its lights.
+	if world.has_method("apply_visual_quality"):
+		world.call("apply_visual_quality", preferences.visual_quality)
 	world.player.camera_sensitivity = preferences.sensitivity
 	var bike = world.get("bike") if world.has_method("set_drive_input") else null
 	if bike:

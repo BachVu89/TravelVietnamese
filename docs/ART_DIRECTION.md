@@ -118,3 +118,55 @@ Mục tiêu 30 fps trên thiết bị đại diện vẫn phải đo; batch0.4 t
 `game3d/scripts/pass_materials.gd` cung cấp bốn static factory `road()`, `rock()`, `grass()`, `metal()` trả về `StandardMaterial3D` dùng chung/cached. Asphalt có albedo noise sẫm, roughness biến thiên giới hạn và normal nhẹ; rock có texture rêu/đá cùng world-triplanar kéo lớp; grass có màu đất rừng biến thiên; guardrail là kim loại satin. Texture procedural 256×256, deterministic seed, mipmaps; không dùng tài nguyên tải mạng hoặc custom shader. Geometry đường cần UV theo mét (module đặt scale 0,5); rock/grass dùng world-triplanar. Nếu sửa riêng từng mesh, duplicate material để không ảnh hưởng vật liệu dùng chung.
 
 Đã kiểm tra factory khởi tạo/cache và cả sáu texture procedural tạo ảnh 256×256 bằng Godot 4.6.3 headless. Đây là kiểm tra tài nguyên, chưa phải review hình ảnh GPU hoặc benchmark trên điện thoại. Cần xem ánh sáng/fog thực tế và điều chỉnh độ ướt nếu bị phản sáng quá mức.
+
+## Rà soát hình ảnh sau 0.4 — đề xuất batch 0.5
+
+Đã xem trực tiếp `docs/screenshots04/start.png`, `bend.png`, `viewpoint.png` và đối chiếu nguồn dựng cảnh. Đối chiếu ảnh tham chiếu ở mức các đặc trưng đã mô tả trong yêu cầu: asphalt ướt, rừng lá nhiều lớp, đá/sương và người đi xe. Đây không phải đánh giá ảnh gốc pixel-by-pixel. Ảnh 0.4 chứng minh bố cục đèo và xe hoạt động ở mức prototype; chưa đạt chất lượng bán hiện thực mong muốn, càng chưa phải photoreal.
+
+### Ba ưu tiên có tác động nhìn thấy rõ
+
+| Ưu tiên | Bằng chứng hiện tại | Thay đổi cần nhìn thấy | Ràng buộc mobile |
+| --- | --- | --- | --- |
+| 1 — Rừng nhiều lớp | Tán là 420 sphere cùng cấu trúc, thân đơn; bờ vực trống, tạo cảm giác cây kẹo mút | Tán nhiều cụm lệch nhau, thân có cành; gần đường có leaf-card/cụm fern, giữa có cây biến thể, xa là canopy/silhouette liền | MultiMesh và vật liệu dùng chung; card cận/trung cảnh có khoảng cách cắt; không shadow mọi lá |
+| 2 — Đá và mặt đất | Vách là strip nghiêng phẳng với noise kéo dài; asphalt nhìn nhòe từ camera sau xe | Mỏm/ledge đá tạo chiều sâu, chân đá có đất ẩm/rêu; asphalt có hạt mịn, mảng ẩm lớn nhẹ, vạch không phát sáng | Thêm silhouette bằng mesh lặp có xoay/tỷ lệ; texture 512–1024 phù hợp, mipmaps; không SSR/displacement nặng |
+| 3 — Chiều sâu và ánh sáng | Fog làm bạc màu gần cảnh; núi xa hiện như tấm tam giác dựng đứng, guardrail gần trắng | Núi nền liền silhouette thành 2–3 lớp, rừng gần còn tối/sắc; fog tăng theo xa, rail satin dịu | Basic fog Compatibility, giảm shadowcaster/drawcall; không volumetric fog hay hiệu ứng đắt để che thiếu geometry |
+
+### Hợp đồng leaf-card nếu được duyệt
+
+Ảnh cây lá phải là asset nguyên gốc hoặc có quyền phân phối rõ, nền alpha thật, không chứa ảnh nền trời/cảnh rừng bị cắt giả. Mỗi card nên chứa một cụm cành/lá đọc được ở camera gameplay, không nhồi hàng trăm lá cực nhỏ thành nhiễu. Dùng biến thể màu vừa phải, bố trí 2–3 mặt cắt nhau cho bụi/cụm lá, thân/cành vẫn là mesh. Không thay toàn bộ cây gần bằng một billboard phẳng quay như tấm biển.
+
+Vật liệu alpha-scissor/cutout ưu tiên cho mobile; có thể đánh giá alpha-hash/dither nếu Compatibility và thiết bị mục tiêu cho kết quả ổn định, không mặc định tuyên bố alpha-hash đã hỗ trợ/tối ưu. Giữ ngưỡng cắt đủ tránh viền trắng, dùng texture filter có mipmaps và kiểm tra shimmer khi xe chạy. Tránh alpha blending nhiều lớp toàn rừng, bóng lá alpha và mặt card gần camera che đường. Không đổi collision theo leaf alpha.
+
+Nếu root tạo asset bằng image generation: lưu ảnh nguồn, phiên bản xử lý được duyệt và ghi nguồn tạo; dùng công cụ chỉnh ảnh được chỉ định để thay đổi hình ảnh, không tự giả lập alpha bằng lệnh xử lý không được phép. Nếu chưa có texture, có thể dựng geometry lá nguyên gốc để kiểm chứng layering nhưng cần ghi rõ là fallback procedural.
+
+### Khung review 0.5
+
+Chụp lại cùng ba vị trí/camera start, bend, viewpoint để so trực tiếp với 0.4; thêm một ảnh nhìn gần rừng/đá nếu hữu ích. Không đổi góc nhìn để giấu cảnh chưa đẹp. Điều kiện nhìn thấy: giảm rõ hàng cây cùng dáng, cliff có silhouette/outcrop, nền núi không còn tấm tam giác rời, mặt đường và vạch vẫn rõ qua fog. Ghi riêng tính đúng chức năng, review thị giác GPU và hiệu năng thiết bị; headless factory test không xác nhận hình ảnh đẹp. Chưa đặt nhãn “photoreal” hoặc “giống ảnh 100%” cho batch này.
+
+### Quyết định triển khai 0.5 đã chốt với PO/Dev
+
+PO-11.A–C duyệt ba cải thiện nêu trên. Batch này chọn **geometry foliage opaque nguyên gốc**, không chờ ảnh tạo sinh hoặc leaf-card alpha: Dev dựng ba dạng cây (broadleaf nhiều cụm lệch, pine phân tầng, thân cao mảnh), understory fern/bush và các cụm rừng theo khoảng cách. Đây là cách giảm chi phí alpha overdraw và giữ nguồn tài nguyên rõ; không được suy ra geometry procedural đã đạt photoreal. Leaf-card vẫn là phương án nghiên cứu sau, không phải phụ thuộc chặn giao batch.
+
+`pass_materials.gd` cập nhật `road()` dùng texture hạt asphalt 512×512 và UV scale2; geometry hiện cung cấp UV XZ×0,16 nên tile khoảng 3,125 m, thay tile cũ 12,5 m gây nhòe. Noise roughness giữ biến thiên ẩm nhẹ; normal giảm để tránh hạt lấp lánh/giả đá. `rock()` chuyển đá ấm xám-olive, giảm kéo dài strata; `grass()` tối hơn để rừng gần có độ tương phản; `metal()` rail satin dịu `#87948E`, roughness0,78. `foliage()` mới: opaque, vertex/instance tint, roughness1, specular0,08. `bark()` mới: texture vỏ cây nâu ẩm nguyên gốc, world-triplanar. Không đổi geometry/collision, không thêm shader/custom asset ngoài.
+
+Palettes gợi ý cho instance màu tán: gần `#244A34`/`#345C3E`/`#47674A`; trung cảnh `#365844`/`#4C6C52`; xa nhẹ hơn theo fog, không sáng trắng. Tránh dùng một màu xanh cho cả đất, cây và đá; thân vỏ nâu trầm phải tách được tán. Tắt bóng vẫn phải đọc rõ các lớp bằng màu/silhouette.
+
+Đã chạy `PASS05_MATERIALS` trên Godot4.6.3 headless: sáu vật liệu cache opaque và bảy texture procedural tạo được ảnh 256/512px. Đây là kiểm tra tài nguyên, chưa phải kết luận visual/fps. Renderer thực phải review lại ba camera cùng vị trí cũ.
+
+Hai preset do PO chốt: **Tiết kiệm** mặc định, **Chi tiết** tăng chi phí trang trí/tầm nhìn có ghi cấu hình. Không đổi collision, POI, traffic, objective hoặc dấu khi chuyển preset; bật/tắt bóng là setting độc lập, không bị preset ghi đè. UI gọi đây là preset chất lượng, không bảo đảm “máy yếu chạy mượt” khi chưa benchmark thiết bị.
+
+Thiết bị mục tiêu người dùng vừa cung cấp: **Oppo Find X7 Ultra** và **iPhone 13**. Đây là mục tiêu để lựa chọn bài kiểm và cấu hình, chưa phải bằng chứng đã cài, đo FPS/nhiệt, kiểm đa chạm hoặc xác nhận tương thích. Không dựa vào cấu hình danh nghĩa để công bố performance; lưu riêng kết quả thực của từng thiết bị khi có.
+
+### Review ảnh render đối chiếu 0.5
+
+Designer đã xem trực tiếp bộ capture GPU/Mesa của root tại `/tmp/travel05-pair-{04-legacy,05-economy,05-detail}-{start,bend,stop}.png`: kiểm tra ảnh 04/05 khúc cua, 04/05 đầu tuyến, 04/05 điểm dừng230 và so Tiết kiệm/Chi tiết. Theo metadata, cùng station/lane, góc và vị trí camera, FOV69°, ảnh1280×720; far plane là biến cấu hình được giữ khác nhau có chủ đích (Tiết kiệm440, Chi tiết650). Root báo bóng Bật cho mọi capture. Vì vậy đây là đối chiếu tổng thể preset, không phải phép đo chỉ một biến duy nhất.
+
+| AC hình ảnh | Nhận xét trực tiếp từ ảnh |
+| --- | --- |
+| PO-11.A đường/mép | Asphalt tối và hạt mịn hơn, giảm mảng nhòe lớn của 0.4; guardrail bớt trắng phát sáng. Cua và vạch vẫn đọc được. Mảng ẩm chỉ nhẹ, chưa phải vật liệu ướt chân thực. |
+| PO-11.B cảnh quan | Thấy rõ pine nhiều tầng, broadleaf nhiều cụm, bụi sát đất và mỏm đá mới; giảm cây một sphere đồng dạng. Chi tiết dày hơn Tiết kiệm nhìn thấy được từ cùng camera. Vách nền vẫn là dải nghiêng lớn, cây/bụi còn hình học rõ. |
+| PO-11.C chiều sâu | Núi nền chuyển từ các tấm tam giác rời thành silhouette liên tục; gần cảnh tối và tương phản hơn, đường/traffic/điểm dừng vẫn thấy. Núi xa còn quá nhạt trắng-cyan, có thể gợi tuyết hơn rừng nhiệt đới. |
+
+Không thấy lỗi hình học nghiêm trọng chặn đường trong các ảnh đã xem; ảnh tĩnh không chứng minh không có clipping ở toàn tuyến hoặc chuyển động. Một số bụi/mỏm trên slope trông đặt nổi hoặc giao nền thô; cần xem gần và khi xe chạy. Điểm dừng còn mặt nền phẳng trống, nhãn/marker vàng lớn mang phong cách prototype. Đây là các điểm mỹ thuật còn mở, chưa đủ để tuyên bố đạt fidelity ảnh tham chiếu.
+
+Kết luận review phạm vi này: **có cải thiện hiển thị thực so với 0.4 ở cả ba nhóm**, vẫn là stylized prototype. Không gọi photoreal, không kết luận bán hiện thực đã hoàn tất, không suy hiệu năng thiết bị từ ảnh Mesa. Nên ưu tiên vòng sau giảm trắng-cyan của núi xa, xử lý chân bụi/đá bám slope và tăng chi tiết điểm dừng trước khi thêm hiệu ứng hậu kỳ.

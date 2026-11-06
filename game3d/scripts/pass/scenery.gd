@@ -7,23 +7,23 @@ static func build(world: Node3D) -> void:
 	env.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color("7F9DAA")
-	sky_mat.sky_horizon_color = Color("B7C5C4")
-	sky_mat.ground_horizon_color = Color("A6B6B3")
-	sky_mat.ground_bottom_color = Color("586F62")
+	sky_mat.sky_top_color = Color("8096A8")
+	sky_mat.sky_horizon_color = Color("BEC8CE")
+	sky_mat.ground_horizon_color = Color("ABB8C1")
+	sky_mat.ground_bottom_color = Color("374B42")
 	sky.sky_material = sky_mat
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color("C1CFCA")
-	env.ambient_light_energy = 0.65
+	env.ambient_light_energy = 0.42
 	env.fog_enabled = true
-	env.fog_light_color = Color("A6B6B3")
-	env.fog_density = 0.004
+	env.fog_light_color = Color("ABB8C1")
+	env.fog_density = 0.0018
 	environment.environment = env
 	world.add_child(environment)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-46,-30,0)
-	sun.light_energy = 0.85
+	sun.light_energy = 1.0
 	sun.light_color = Color("E7E5D6")
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 85
@@ -49,7 +49,7 @@ static func build(world: Node3D) -> void:
 	for s in range(0,750,5):
 		_mark(world,float(s),-3.25,0.09,5.1,white)
 		_mark(world,float(s),3.25,0.09,5.1,white)
-	var rail := PassArt.material("B6BFBE",0.38)
+	var rail := preload("res://scripts/pass_materials.gd").metal()
 	for s in range(0,750,5):
 		for side: float in [-1.0,1.0]:
 			var offset := -4.2 if side<0 else PassRoute.outer_edge(s)
@@ -82,17 +82,17 @@ static func _strip(world: Node3D, title: String, left: float, right: float, mat:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for segment in range(int(from_distance/5),int(to_distance/5)):
 		var s := segment*5.0
-		var vertices: Array[Vector3] = []
-		for spec: Vector2 in [Vector2(s,left),Vector2(s+5,left),Vector2(s,right),Vector2(s+5,right)]:
-			var p := PassRoute.at(spec.x,spec.y)
-			if terrain:
-				var offset := absf(spec.y)-4.25
-				p.y += offset*0.72 if spec.y<0 else -offset*0.55
-				p.y += sin(spec.x*0.07)*offset*0.08
-			vertices.append(p)
-		for index: int in [0,1,2,1,3,2]:
-			st.set_uv(Vector2(vertices[index].x*0.16,vertices[index].z*0.16))
-			st.add_vertex(vertices[index])
+		var columns := 12 if terrain else 1
+		for column in range(columns):
+			var lateral_a := lerpf(left,right,float(column)/columns)
+			var lateral_b := lerpf(left,right,float(column+1)/columns)
+			var vertices: Array[Vector3] = []
+			for spec: Vector2 in [Vector2(s,lateral_a),Vector2(s+5,lateral_a),Vector2(s,lateral_b),Vector2(s+5,lateral_b)]:
+				var p := preload("res://scripts/pass/vegetation.gd").terrain_point(spec.x,spec.y) if terrain else PassRoute.at(spec.x,spec.y)
+				vertices.append(p)
+			for index: int in [0,1,2,1,3,2]:
+				st.set_uv(Vector2(vertices[index].x*0.16,vertices[index].z*0.16))
+				st.add_vertex(vertices[index])
 	st.generate_normals()
 	var mesh := st.commit()
 	var visual := MeshInstance3D.new()
@@ -114,63 +114,54 @@ static func _mark(world: Node3D, s: float, lateral: float, width: float, length_
 	mark.rotation.x = atan(0.065)
 
 static func _forest(world: Node3D) -> void:
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 41004
-	var trunk_mesh := CylinderMesh.new()
-	trunk_mesh.top_radius = 0.12
-	trunk_mesh.bottom_radius = 0.27
-	trunk_mesh.height = 5.0
-	trunk_mesh.radial_segments = 6
-	var crown_mesh := SphereMesh.new()
-	crown_mesh.radial_segments = 8
-	crown_mesh.rings = 4
-	var trunks := MultiMesh.new()
-	trunks.transform_format = MultiMesh.TRANSFORM_3D
-	trunks.mesh = trunk_mesh
-	trunks.instance_count = 420
-	var crowns := MultiMesh.new()
-	crowns.transform_format = MultiMesh.TRANSFORM_3D
-	crowns.use_colors = true
-	crowns.mesh = crown_mesh
-	crowns.instance_count = 420
-	for i in range(420):
-		var s := rng.randf_range(0,750)
-		var side := -1.0 if i%2==0 else 1.0
-		var offset := rng.randf_range(8 if side<0 else 18,65)*side
-		var p := PassRoute.at(s,offset)
-		p.y += (absf(offset)-4.25)*(0.72 if side<0 else -0.55)+sin(s*0.07)*(absf(offset)-4.25)*0.08
-		trunks.set_instance_transform(i,Transform3D(Basis.IDENTITY,p+Vector3.UP*2.5))
-		var size_value := rng.randf_range(3.5,6.5)
-		crowns.set_instance_transform(i,Transform3D(Basis.IDENTITY.scaled(Vector3(size_value,size_value*1.25,size_value)),p+Vector3.UP*5.5))
-		crowns.set_instance_color(i,Color("345C45").lerp(Color("223E33"),rng.randf()))
-	var wood := MultiMeshInstance3D.new()
-	wood.multimesh = trunks
-	wood.material_override = PassArt.material("4A4C3F")
-	world.add_child(wood)
-	var leaves := MultiMeshInstance3D.new()
-	leaves.multimesh = crowns
-	var green := PassArt.material("FFFFFF")
-	green.vertex_color_use_as_albedo = true
-	leaves.material_override = green
-	world.add_child(leaves)
+	preload("res://scripts/pass/vegetation.gd").build(world)
 
 static func _far_ridges(world: Node3D) -> void:
+	# Closed-width mountain masses replace single vertical paper planes.
 	for layer in range(3):
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		for i in range(25):
-			var z := -1000.0+i*60
-			var x := 180.0+layer*95
-			var height := 65.0+sin(i*1.7+layer)*35+layer*30
-			for p: Vector3 in [Vector3(x,-90,z),Vector3(x,height,z),Vector3(x,-90,z+60),Vector3(x,height,z),Vector3(x,height+sin(i)*30,z+60),Vector3(x,-90,z+60)]:
-				st.add_vertex(p)
+		for i in range(65):
+			for row in range(6):
+				var points: Array[Vector3] = []
+				for uv: Vector2i in [Vector2i(i,row),Vector2i(i+1,row),Vector2i(i,row+1),Vector2i(i+1,row+1)]:
+					var z := -1100.0+uv.x*25.0
+					var cross_section := float(uv.y)/6.0
+					var x := 105.0+layer*120.0+cross_section*200.0+sin(z*0.007+layer)*30.0
+					var peak := 95.0+layer*28.0+sin(z*0.011+layer)*30.0+sin(z*0.023)*13.0
+					var y := -65.0+sin(cross_section*PI)*peak
+					points.append(Vector3(x,y,z))
+				for index: int in [0,1,2,1,3,2]:
+					st.add_vertex(points[index])
 		st.generate_normals()
 		var ridge := MeshInstance3D.new()
+		ridge.name = "ContinuousMountainMass"+str(layer)
 		ridge.mesh = st.commit()
-		var mat := PassArt.material("617C72" if layer==0 else "7E9890" if layer==1 else "9FB1AD")
+		var mat := PassArt.material("5B7067" if layer==0 else "778D87" if layer==1 else "94A5A4")
 		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 		ridge.material_override = mat
+		ridge.set_meta("pass_far_mass",true)
+		ridge.set_meta("mountain_layer",layer)
 		world.add_child(ridge)
+	_rock_outcrops(world)
+
+static func _rock_outcrops(world: Node3D) -> void:
+	var mesh := SphereMesh.new()
+	mesh.radial_segments = 9
+	mesh.rings = 5
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 510051
+	for chunk in range(6):
+		var transforms: Array[Transform3D] = []
+		for i in range(34):
+			var distance := rng.randf_range(chunk*125,(chunk+1)*125)
+			var offset := -rng.randf_range(8.0,33.0)
+			var size_value := rng.randf_range(3.0,7.0)
+			var basis := Basis(Vector3.UP,rng.randf_range(0,TAU))*Basis(Vector3.FORWARD,rng.randf_range(-0.3,0.3))
+			basis = basis.scaled(Vector3(minf(size_value,absf(offset)-5),size_value*1.8,size_value*1.1))
+			var p := preload("res://scripts/pass/vegetation.gd").terrain_point(distance,offset)
+			transforms.append(Transform3D(basis,p+Vector3.UP*size_value*0.35))
+		preload("res://scripts/pass/vegetation.gd").add_group(world,"RockOutcrops",mesh,preload("res://scripts/pass_materials.gd").rock(),transforms,[],chunk,0.6)
 
 static func _batch_static_boxes(world: Node3D) -> void:
 	var groups: Dictionary = {}
