@@ -38,25 +38,21 @@ static func road() -> StandardMaterial3D:
 	if _cache.has("road"):
 		return _cache["road"]
 	var material := StandardMaterial3D.new()
-	material.resource_name = "Original damp asphalt — no real-world scan"
-	material.albedo_color = Color.WHITE
-	material.albedo_texture = _ramp_texture(4147, 0.38, PackedColorArray([
-		Color("222a2c"), Color("2b3335"), Color("353d3e")]), 512)
-	material.roughness = 0.86
-	# A restrained damp sheen; roughness remains above ~0.48, never mirror-like.
-	material.roughness_texture = _ramp_texture(9812, 0.012, PackedColorArray([
-		Color(0.56, 0.56, 0.56), Color(0.8, 0.8, 0.8), Color.WHITE]))
+	material.resource_name = "Damp asphalt — CC0 scan texture (Poly Haven asphalt_01)"
+	# Real scanned asphalt (CC0), tinted darker toward the wet look of the
+	# reference photo; its own roughness map keeps the restrained damp sheen.
+	material.albedo_color = Color(0.60, 0.62, 0.63)
+	material.albedo_texture = load("res://assets/textures/asphalt_01/asphalt_01_Diffuse_1k.jpg") as Texture2D
+	material.roughness = 1.0
+	material.roughness_texture = load("res://assets/textures/asphalt_01/asphalt_01_Rough_1k.jpg") as Texture2D
 	material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	material.metallic = 0.0
 	material.metallic_specular = 0.28
-	var bump := _noise_texture(4147, 0.38, 512)
-	bump.as_normal_map = true
-	bump.bump_strength = 0.35
 	material.normal_enabled = true
-	material.normal_texture = bump
-	material.normal_scale = 0.12
+	material.normal_texture = load("res://assets/textures/asphalt_01/asphalt_01_nor_gl_1k.jpg") as Texture2D
+	material.normal_scale = 0.4
 	# Current pass strip supplies world XZ * 0.16 UVs: scale 2 gives a
-	# ~3.125 m tile instead of the former blurry 12.5 m tile. Geometry unchanged.
+	# ~3.125 m tile. Geometry unchanged.
 	material.uv1_scale = Vector3(2.0, 2.0, 2.0)
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_cache["road"] = material
@@ -66,24 +62,20 @@ static func rock() -> StandardMaterial3D:
 	if _cache.has("rock"):
 		return _cache["rock"]
 	var material := StandardMaterial3D.new()
-	material.resource_name = "Original mossy strata rock"
+	material.resource_name = "Mossy cliff rock — CC0 scan texture (Poly Haven dark_rock)"
 	material.albedo_color = Color.WHITE
-	material.albedo_texture = _ramp_texture(5921, 0.035, PackedColorArray([
-		Color("36452f"), Color("55604a"), Color("6e6e58"), Color("83806c")]))
+	material.albedo_texture = load("res://assets/textures/dark_rock/dark_rock_Diffuse_1k.jpg") as Texture2D
 	material.roughness = 0.96
 	material.metallic_specular = 0.18
-	# World triplanar avoids dependence on imported cliff UVs. Different axis scales
-	# stretch noise into thin strata; physical silhouette still belongs to geometry.
+	# World triplanar avoids dependence on imported cliff UVs; physical
+	# silhouette still belongs to geometry.
 	material.uv1_triplanar = true
 	material.uv1_world_triplanar = true
-	material.uv1_scale = Vector3(0.14, 0.28, 0.14)
+	material.uv1_scale = Vector3(0.16, 0.24, 0.16)
 	material.uv1_triplanar_sharpness = 4.0
-	var bump := _noise_texture(5921, 0.065)
-	bump.as_normal_map = true
-	bump.bump_strength = 1.4
 	material.normal_enabled = true
-	material.normal_texture = bump
-	material.normal_scale = 0.24
+	material.normal_texture = load("res://assets/textures/dark_rock/dark_rock_nor_gl_1k.jpg") as Texture2D
+	material.normal_scale = 0.5
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_cache["rock"] = material
 	return material
@@ -92,15 +84,22 @@ static func grass() -> StandardMaterial3D:
 	if _cache.has("grass"):
 		return _cache["grass"]
 	var material := StandardMaterial3D.new()
-	material.resource_name = "Original forest ground"
-	material.albedo_color = Color.WHITE
-	material.albedo_texture = _ramp_texture(7138, 0.055, PackedColorArray([
-		Color("2a3e2c"), Color("3c5233"), Color("57663f")]))
+	material.resource_name = "Forest ground — CC0 scan texture (Poly Haven aerial_grass_rock)"
+	# The scan is dry olive; a green multiply pulls the slopes toward the
+	# lush pass in the reference photo.
+	material.albedo_color = Color(0.66, 0.92, 0.55)
+	material.albedo_texture = load("res://assets/textures/aerial_grass_rock/aerial_grass_rock_Diffuse_1k.jpg") as Texture2D
+	material.normal_enabled = true
+	material.normal_texture = load("res://assets/textures/aerial_grass_rock/aerial_grass_rock_nor_gl_1k.jpg") as Texture2D
+	material.normal_scale = 0.7
 	material.roughness = 1.0
+	material.roughness_texture = load("res://assets/textures/aerial_grass_rock/aerial_grass_rock_Rough_1k.jpg") as Texture2D
+	material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
 	material.metallic_specular = 0.12
 	material.uv1_triplanar = true
 	material.uv1_world_triplanar = true
-	material.uv1_scale = Vector3(0.17, 0.17, 0.17)
+	material.uv1_scale = Vector3(0.22, 0.22, 0.22)
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_cache["grass"] = material
 	return material
 

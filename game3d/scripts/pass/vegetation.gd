@@ -77,6 +77,72 @@ static func terrain_point(distance: float, lateral: float) -> Vector3:
 	p.y += sin(distance*0.12+lateral*0.25)*sin(lateral*0.41)*minf(offset*0.13,2.7)
 	return p
 
+const MODEL_DIR := "res://assets/models/quaternius/"
+# Native AABB heights (m) of the CC0 Quaternius models, probed on import
+# (qa/probe_assets.gd); instances are scaled from these to target heights.
+const MODEL_HEIGHTS := {"Pine_1": 7.32, "Pine_2": 8.72, "Pine_3": 10.24, "Tree_1": 9.43, "Tree_2": 9.44, "Tree_3": 7.64, "Tree_4": 7.26, "Tree_5": 7.01, "Bush_with_Flowers_1": 1.58, "Fern_1": 2.69, "Grass_Wispy_1": 1.07, "Tall_Grass_1": 1.87, "Rock_Medium_1": 1.90, "Rock_Medium_2": 2.26, "Plant_1": 1.01, "Plant_Big_1": 0.25}
+static var _model_meshes: Dictionary = {}
+
+static func _model_mesh(model_name: String) -> ArrayMesh:
+	if _model_meshes.has(model_name):
+		return _model_meshes[model_name]
+	var scene: PackedScene = load(MODEL_DIR + model_name + ".glb")
+	var instance := scene.instantiate()
+	var found: ArrayMesh = null
+	var stack: Array[Node] = [instance]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is MeshInstance3D and node.mesh is ArrayMesh:
+			found = node.mesh
+			break
+		for child in node.get_children():
+			stack.append(child)
+	instance.free()
+	_model_meshes[model_name] = found
+	return found
+
+static func add_group_imported(world: Node3D, title: String, mesh: Mesh, positions: Array[Transform3D], chunk: int, economy_ratio: float = 0.58) -> void:
+	if positions.is_empty():
+		return
+	var origin := PassRoute.point(float(chunk) * 125.0 + 62.5)
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = mesh
+	mm.instance_count = positions.size()
+	for i in positions.size():
+		var transform_value := positions[i]
+		transform_value.origin -= origin
+		mm.set_instance_transform(i, transform_value)
+	var group := MultiMeshInstance3D.new()
+	group.name = title + "Chunk" + str(chunk)
+	group.position = origin
+	group.multimesh = mm
+	group.set_meta("pass_decoration", true)
+	group.set_meta("economy_ratio", economy_ratio)
+	group.set_meta("detail_count", positions.size())
+	group.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	world.add_child(group)
+
+static func _scatter(world: Node3D, rng: RandomNumberGenerator, chunk: int, model_name: String, count: int, off_min: float, off_max: float, h_min: float, h_max: float, sink: float, economy_ratio: float, avoid_stops_band: bool = false) -> void:
+	var transforms: Array[Transform3D] = []
+	var native := float(MODEL_HEIGHTS[model_name])
+	for i in range(count):
+		var distance := rng.randf_range(chunk * 125, (chunk + 1) * 125)
+		var side := -1.0 if i % 2 == 0 else 1.0
+		if avoid_stops_band and side > 0:
+			var near_stop := false
+			for stop: float in PassRoute.STOPS:
+				if absf(distance - stop) < 24.0:
+					near_stop = true
+			if near_stop:
+				continue
+		var p := terrain_point(distance, rng.randf_range(off_min, off_max) * side)
+		p.y -= sink
+		var s := rng.randf_range(h_min, h_max) / native
+		var basis := Basis(Vector3.UP, rng.randf_range(0, TAU)).scaled(Vector3(s, s * rng.randf_range(0.92, 1.15), s))
+		transforms.append(Transform3D(basis, p))
+	add_group_imported(world, model_name, _model_mesh(model_name), transforms, chunk, economy_ratio)
+
 static func add_group(world: Node3D, title: String, mesh: Mesh, material: Material, positions: Array[Transform3D], colors: Array[Color], chunk: int, economy_ratio: float = 0.58) -> void:
 	if positions.is_empty():
 		return
@@ -104,50 +170,28 @@ static func add_group(world: Node3D, title: String, mesh: Mesh, material: Materi
 	world.add_child(group)
 
 static func build(world: Node3D) -> void:
-	var materials = preload("res://scripts/pass_materials.gd")
+	# Vegetation is now real CC0 game models (Quaternius Stylized Nature
+	# MegaKit) instanced with MultiMesh, replacing the primitive blob trees:
+	# two pines and three broadleaf forms plus a twisted accent tree, model
+	# bushes/plants, fern patches and grass tufts in the roadside band, and
+	# scattered medium rocks. Placement, chunking and the economy/detail
+	# instance budget follow the same rules as the procedural set before.
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 51005
 	for chunk in range(6):
-		for form in range(3):
-			var transforms: Array[Transform3D] = []
-			var colors: Array[Color] = []
-			for i in range(40):
-				var distance := rng.randf_range(chunk*125,(chunk+1)*125)
-				var side := -1.0 if i%2==0 else 1.0
-				var offset := rng.randf_range(8 if side<0 else 18,69 if side<0 else 100)*side
-				var p := terrain_point(distance,offset)
-				var size_value := rng.randf_range(0.7,1.4)
-				var basis := Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3(size_value,size_value*rng.randf_range(0.9,1.25),size_value))
-				transforms.append(Transform3D(basis,p))
-				colors.append(Color("1E3626").lerp(Color("4E6B41"),rng.randf()))
-			add_group(world,"ForestTrunkForm"+str(form),tree_mesh(form,false),materials.bark(),transforms,[],chunk)
-			add_group(world,"ForestCanopyForm"+str(form),tree_mesh(form,true),materials.foliage(),transforms,colors,chunk)
-		var shrubs: Array[Transform3D] = []
-		var shrub_colors: Array[Color] = []
-		for i in range(215):
-			var distance := rng.randf_range(chunk*125,(chunk+1)*125)
-			var side := -1.0 if i%2==0 else 1.0
-			var offset := rng.randf_range(5.8 if side<0 else 15,37)*side
-			var size_value := rng.randf_range(0.65,1.6)
-			shrubs.append(Transform3D(Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3.ONE*size_value),terrain_point(distance,offset)))
-			shrub_colors.append(Color("2C422A").lerp(Color("5C6E42"),rng.randf()))
-		add_group(world,"Understory",understory_mesh(),materials.foliage(),shrubs,shrub_colors,chunk,0.42)
-		# Dense fern band hugging the road edges, like the reference photo's
-		# roadside undergrowth; kept out of the paved laybys on the valley side.
-		var ferns: Array[Transform3D] = []
-		var fern_colors: Array[Color] = []
-		for i in range(70):
-			var distance := rng.randf_range(chunk*125,(chunk+1)*125)
-			var side := -1.0 if i%2==0 else 1.0
-			if side > 0:
-				var near_stop := false
-				for stop: float in PassRoute.STOPS:
-					if absf(distance-stop) < 24.0:
-						near_stop = true
-				if near_stop:
-					continue
-			var offset := rng.randf_range(4.7,6.6)*side
-			var size_value := rng.randf_range(0.8,1.5)
-			ferns.append(Transform3D(Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3.ONE*size_value),terrain_point(distance,offset)))
-			fern_colors.append(Color("2A4630").lerp(Color("5F7A48"),rng.randf()))
-		add_group(world,"RoadsideFerns",understory_mesh(),materials.foliage(),ferns,fern_colors,chunk,0.5)
+		_scatter(world, rng, chunk, "Pine_1", 10, 9, 70, 7.0, 11.5, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Pine_2", 9, 9, 85, 7.5, 12.5, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Pine_3", 9, 9, 80, 8.0, 13.0, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Tree_1", 6, 10, 75, 7.5, 11.5, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Tree_2", 6, 10, 85, 7.5, 12.0, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Tree_3", 6, 10, 70, 6.5, 10.5, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Tree_4", 6, 10, 75, 6.0, 9.5, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Tree_5", 6, 10, 70, 6.0, 9.0, 0.10, 0.6)
+		_scatter(world, rng, chunk, "Bush_with_Flowers_1", 40, 5.8, 34, 0.9, 1.8, 0.06, 0.45)
+		_scatter(world, rng, chunk, "Fern_1", 40, 4.7, 7.2, 1.1, 1.7, 0.05, 0.5, true)
+		_scatter(world, rng, chunk, "Grass_Wispy_1", 42, 4.6, 7.6, 0.7, 1.3, 0.03, 0.5, true)
+		_scatter(world, rng, chunk, "Tall_Grass_1", 30, 4.6, 7.6, 1.0, 1.7, 0.03, 0.5, true)
+		_scatter(world, rng, chunk, "Plant_1", 24, 5.5, 24, 0.7, 1.2, 0.03, 0.5)
+		_scatter(world, rng, chunk, "Plant_Big_1", 16, 5.0, 18, 0.25, 0.5, 0.0, 0.5)
+		_scatter(world, rng, chunk, "Rock_Medium_1", 5, 6, 45, 1.2, 2.6, 0.35, 0.8)
+		_scatter(world, rng, chunk, "Rock_Medium_2", 5, 6, 45, 1.3, 2.8, 0.35, 0.8)

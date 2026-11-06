@@ -6,16 +6,17 @@ static func build(world: Node3D) -> void:
 	var env := Environment.new()
 	env.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
-	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color("6B8296")
-	sky_mat.sky_horizon_color = Color("D3DCD8")
-	sky_mat.ground_horizon_color = Color("AEBBAF")
-	sky_mat.ground_bottom_color = Color("2E4238")
+	# Real overcast mountain-road sky (CC0 HDRI "cloudy_cliffside_road",
+	# Poly Haven) replaces the flat procedural gradient and also drives
+	# ambient and reflected light, like the reference photo's soft daylight.
+	var sky_mat := PanoramaSkyMaterial.new()
+	sky_mat.panorama = preload("res://assets/sky/cloudy_cliffside_road_1k.hdr")
 	sky.sky_material = sky_mat
 	env.sky = sky
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("BCCDC2")
-	env.ambient_light_energy = 0.5
+	env.background_energy_multiplier = 0.75
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_energy = 0.72
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.fog_enabled = true
 	env.fog_light_color = Color("C2CFCB")
 	env.fog_density = 0.0021
@@ -23,7 +24,7 @@ static func build(world: Node3D) -> void:
 	world.add_child(environment)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-46,-30,0)
-	sun.light_energy = 0.9
+	sun.light_energy = 0.65
 	sun.light_color = Color("E6E1D0")
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 85
