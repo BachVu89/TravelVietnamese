@@ -24,6 +24,10 @@ Mở `game3d/project.godot` trong Godot 4.6.3 và chạy scene chính, hoặc:
 
 Trên mobile dùng joystick bên trái để đi và kéo vùng bên phải để xoay camera. Trên máy tính dùng WASD/phím mũi tên; thao tác camera và tương tác được hướng dẫn trong game. Đến gần cột mốc để mở nội dung tham quan. Đổi địa điểm qua danh mục có tìm kiếm; các đảo cũng vào được cảnh riêng.
 
+## Skill cho Codex và Muse
+
+[Bộ 7 Skill của team và cách sử dụng](docs/skills/README.md) nằm trong `.agents/skills/`, bao gồm Product Owner, BA, SA, Designer, Developer, Tester và điều phối. Codex dùng repository skills; Muse có hướng dẫn đọc Markdown trực tiếp, chưa kiểm chứng tích hợp native.
+
 ## Tài liệu và kiểm chứng
 
 - [Sản phẩm và tiêu chí nghiệm thu](docs/PRODUCT.md)
