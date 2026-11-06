@@ -45,6 +45,11 @@ var footer_background: Panel
 var footer_container: VBoxContainer
 var drive_hint: Label
 var application_suspended := false
+var header_bar: PanelContainer
+var guidance_panel: PanelContainer
+var speedometer: Speedometer
+var clean_view_button: Button
+var hud_hidden := false
 
 func _ready() -> void:
 	_load_catalog()
@@ -173,9 +178,12 @@ func _process(delta: float) -> void:
 		route_objective = RouteObjectives.evaluate(state.visited, road_hud)
 		route_objective_label.text = str(route_objective.text) + "\n" + str(route_objective.detail)
 	drive_hint.visible = riding
-	footer_background.visible = not riding
-	footer_container.visible = not riding
-	vehicle_button.visible = pass_active and not paused
+	speedometer.visible = riding and not hud_hidden
+	if riding:
+		speedometer.set_speed(float(road_hud.speed_kmh))
+	footer_background.visible = not riding and not hud_hidden
+	footer_container.visible = not riding and not hud_hidden
+	vehicle_button.visible = pass_active and not paused and not hud_hidden
 	demo_entry_button.text = "Đi lại từ đầu" if pass_active else "Chơi đèo mẫu"
 	reset_button.text = "Về điểm dừng" if pass_active else "Về lối vào"
 	if pass_active:
@@ -188,7 +196,10 @@ func _process(delta: float) -> void:
 	if interact_button.visible:
 		controls.blocked_rectangles.append(interact_button.get_global_rect())
 	current_poi = world.nearest_poi()
-	interact_button.visible = not current_poi.is_empty() and not paused
+	interact_button.visible = not current_poi.is_empty() and not paused and not hud_hidden
+	clean_view_button.visible = not _is_modal_open()
+	if clean_view_button.visible:
+		controls.blocked_rectangles.append(clean_view_button.get_global_rect())
 	if not current_poi.is_empty():
 		interact_button.text = ("✓ Xem lại · " if state.visited.has(current_poi.id) else "Khám phá · ") + str(current_poi.title)
 	hint.text = "Đi gần cột mốc vàng để tham quan  ·  " + str(_current_visit_count()) + "/" + str(world.pois.size()) + " dấu tại đây"
@@ -300,15 +311,15 @@ func _build_ui() -> void:
 	var theme := Theme.new()
 	theme.default_font_size = 18
 	var button_style := StyleBoxFlat.new()
-	button_style.bg_color = Color("214c3f")
-	button_style.set_corner_radius_all(9)
+	button_style.bg_color = Color(0.10, 0.24, 0.19, 0.72)
+	button_style.set_corner_radius_all(11)
 	button_style.content_margin_left = 15
 	button_style.content_margin_right = 15
 	button_style.content_margin_top = 9
 	button_style.content_margin_bottom = 9
 	theme.set_stylebox("normal", "Button", button_style)
 	var hover := button_style.duplicate()
-	hover.bg_color = Color("3b6a52")
+	hover.bg_color = Color(0.18, 0.36, 0.28, 0.88)
 	theme.set_stylebox("hover", "Button", hover)
 	theme.set_stylebox("pressed", "Button", hover)
 	theme.set_color("font_color", "Button", Color("fff4df"))
@@ -322,13 +333,14 @@ func _build_ui() -> void:
 				bike.look(motion)
 			else:
 				world.player.look(motion))
-	var bar := PanelContainer.new()
+	header_bar = PanelContainer.new()
+	var bar := header_bar
 	bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_left = 18
-	bar.offset_top = 16
-	bar.offset_right = -18
-	bar.offset_bottom = 98
-	bar.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.17, 0.14, 0.92)))
+	bar.offset_left = 12
+	bar.offset_top = 10
+	bar.offset_right = -12
+	bar.offset_bottom = 66
+	bar.add_theme_stylebox_override("panel", _panel_style(Color(0.05, 0.12, 0.10, 0.55)))
 	ui.add_child(bar)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 14)
@@ -337,14 +349,16 @@ func _build_ui() -> void:
 	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(names)
 	heading = Label.new()
-	heading.add_theme_font_size_override("font_size", 23)
+	heading.add_theme_font_size_override("font_size", 19)
 	names.add_child(heading)
 	var subtitle := Label.new()
-	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.6 · OFFLINE"
-	subtitle.add_theme_font_size_override("font_size", 14)
+	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.7 · OFFLINE"
+	subtitle.add_theme_font_size_override("font_size", 11)
 	names.add_child(subtitle)
 	demo_entry_button = Button.new()
 	demo_entry_button.text = "Chơi đèo mẫu"
+	demo_entry_button.custom_minimum_size.y = 44
+	demo_entry_button.add_theme_font_size_override("font_size", 14)
 	demo_entry_button.pressed.connect(func():
 		if is_pass_demo():
 			replay_pass_route()
@@ -353,16 +367,22 @@ func _build_ui() -> void:
 	row.add_child(demo_entry_button)
 	var map_button := Button.new()
 	map_button.text = "Đổi địa điểm"
+	map_button.custom_minimum_size.y = 44
+	map_button.add_theme_font_size_override("font_size", 14)
 	map_button.pressed.connect(open_menu)
 	row.add_child(map_button)
 	var save_button := Button.new()
 	save_button.text = "Lưu"
+	save_button.custom_minimum_size.y = 44
+	save_button.add_theme_font_size_override("font_size", 14)
 	save_button.pressed.connect(func():
 		save_enabled = true
 		save_now())
 	row.add_child(save_button)
 	reset_button = Button.new()
 	reset_button.text = "Về lối vào"
+	reset_button.custom_minimum_size.y = 44
+	reset_button.add_theme_font_size_override("font_size", 14)
 	reset_button.pressed.connect(return_to_entry)
 	row.add_child(reset_button)
 	_build_guidance_ui()
@@ -370,22 +390,22 @@ func _build_ui() -> void:
 	footer_background.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	footer_background.offset_left = 208
 	footer_background.offset_right = -16
-	footer_background.offset_top = -102
+	footer_background.offset_top = -88
 	footer_background.offset_bottom = -7
 	footer_background.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	footer_background.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.17, 0.14, 0.85)))
+	footer_background.add_theme_stylebox_override("panel", _panel_style(Color(0.05, 0.13, 0.11, 0.55)))
 	ui.add_child(footer_background)
 	var footer := VBoxContainer.new()
 	footer_container = footer
 	footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	footer.offset_left = 220
 	footer.offset_right = -25
-	footer.offset_top = -94
+	footer.offset_top = -80
 	footer.offset_bottom = -14
 	footer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ui.add_child(footer)
 	hint = Label.new()
-	hint.add_theme_font_size_override("font_size", 17)
+	hint.add_theme_font_size_override("font_size", 15)
 	hint.add_theme_color_override("font_shadow_color", Color.BLACK)
 	hint.add_theme_constant_override("shadow_offset_x", 1)
 	hint.add_theme_constant_override("shadow_offset_y", 2)
@@ -417,6 +437,25 @@ func _build_ui() -> void:
 	vehicle_button.pressed.connect(toggle_pass_vehicle)
 	vehicle_button.hide()
 	ui.add_child(vehicle_button)
+	speedometer = Speedometer.new()
+	speedometer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	speedometer.offset_left = -184
+	speedometer.offset_right = -16
+	speedometer.offset_top = -340
+	speedometer.offset_bottom = -172
+	speedometer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	speedometer.hide()
+	ui.add_child(speedometer)
+	clean_view_button = Button.new()
+	clean_view_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	clean_view_button.offset_left = -148
+	clean_view_button.offset_right = -12
+	clean_view_button.offset_top = 76
+	clean_view_button.offset_bottom = 118
+	clean_view_button.text = "Ngắm cảnh"
+	clean_view_button.add_theme_font_size_override("font_size", 13)
+	clean_view_button.pressed.connect(_toggle_clean_view)
+	ui.add_child(clean_view_button)
 	menu = PanelContainer.new()
 	menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	menu.offset_left = 120
@@ -511,35 +550,35 @@ func replay_tutorial() -> void:
 		save_now()
 
 func _build_guidance_ui() -> void:
-	var panel := PanelContainer.new()
-	panel.position = Vector2(18, 110)
-	panel.custom_minimum_size = Vector2(620, 0)
+	guidance_panel = PanelContainer.new()
+	var panel := guidance_panel
+	panel.position = Vector2(12, 78)
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.17, 0.14, 0.86)))
+	panel.add_theme_stylebox_override("panel", _panel_style(Color(0.05, 0.13, 0.11, 0.55)))
 	ui.add_child(panel)
 	var column := VBoxContainer.new()
 	column.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	panel.add_child(column)
 	navigation_label = Label.new()
 	navigation_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	navigation_label.add_theme_font_size_override("font_size", 18)
+	navigation_label.add_theme_font_size_override("font_size", 16)
 	column.add_child(navigation_label)
 	guidance_note = Label.new()
 	guidance_note.text = "Khoảng cách thẳng trong cảnh minh họa · Hướng theo camera"
 	guidance_note.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	guidance_note.add_theme_font_size_override("font_size", 12)
+	guidance_note.add_theme_font_size_override("font_size", 11)
 	column.add_child(guidance_note)
 	route_objective_label = Label.new()
 	route_objective_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	route_objective_label.custom_minimum_size.x = 580
+	route_objective_label.custom_minimum_size.x = 440
 	route_objective_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	route_objective_label.add_theme_font_size_override("font_size", 15)
+	route_objective_label.add_theme_font_size_override("font_size", 13)
 	route_objective_label.hide()
 	column.add_child(route_objective_label)
 	drive_hint = Label.new()
 	drive_hint.text = "A/D: lái · W: ga · S: phanh · E: lên/xuống xe tại vịnh dừng"
 	drive_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	drive_hint.add_theme_font_size_override("font_size", 13)
+	drive_hint.add_theme_font_size_override("font_size", 12)
 	drive_hint.hide()
 	column.add_child(drive_hint)
 	tutorial_row = HBoxContainer.new()
@@ -655,3 +694,44 @@ func _notification(what: int) -> void:
 			world.call("set_paused", true)
 	elif what == NOTIFICATION_APPLICATION_RESUMED or what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		application_suspended = false
+
+func _toggle_clean_view() -> void:
+	hud_hidden = not hud_hidden
+	header_bar.visible = not hud_hidden
+	guidance_panel.visible = not hud_hidden
+	clean_view_button.text = "Hiện giao diện" if hud_hidden else "Ngắm cảnh"
+
+class Speedometer:
+	extends Control
+	var speed_kmh := 0.0
+	var _shown := -1.0
+
+	func set_speed(value: float) -> void:
+		speed_kmh = value
+		if absf(value - _shown) > 0.4:
+			_shown = value
+			queue_redraw()
+
+	func _angle_for(value: float) -> float:
+		return deg_to_rad(135.0 + 270.0 * clampf(value / 70.0, 0.0, 1.0))
+
+	func _draw() -> void:
+		var center := size * 0.5
+		var radius := minf(size.x, size.y) * 0.5 - 4.0
+		var font := get_theme_default_font()
+		var cream := Color(1, 0.97, 0.88, 0.85)
+		draw_circle(center, radius, Color(0.04, 0.08, 0.07, 0.74))
+		draw_arc(center, radius - 2.0, 0, TAU, 64, Color(1, 0.97, 0.88, 0.7), 2.0, true)
+		for mark in range(0, 71, 10):
+			var ang := _angle_for(float(mark))
+			var dir := Vector2(cos(ang), sin(ang))
+			draw_line(center + dir * (radius - 13.0), center + dir * (radius - 4.0), cream, 2.0, true)
+			if mark % 20 == 0:
+				var label_pos := center + dir * (radius - 27.0)
+				draw_string(font, label_pos + Vector2(-10, 4), str(mark), HORIZONTAL_ALIGNMENT_CENTER, 20, 11, cream)
+		var needle_ang := _angle_for(speed_kmh)
+		var needle_dir := Vector2(cos(needle_ang), sin(needle_ang))
+		draw_line(center - needle_dir * 12.0, center + needle_dir * (radius - 18.0), Color(0.96, 0.48, 0.20), 3.5, true)
+		draw_circle(center, 6.0, cream)
+		draw_string(font, Vector2(0, center.y + radius * 0.44), str(int(speed_kmh)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 22, Color.WHITE)
+		draw_string(font, Vector2(0, center.y + radius * 0.44 + 15.0), "km/h", HORIZONTAL_ALIGNMENT_CENTER, size.x, 10, cream)
