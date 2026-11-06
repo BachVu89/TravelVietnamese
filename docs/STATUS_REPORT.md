@@ -4,6 +4,8 @@
 
 **Bản thử mới nhất là 3D 0.5, đã đăng APK và ZIP source lên GitHub.** Mã nguồn ở **`codex-work`**, bản cài ở **`apk-download`**. 466 kiểm tra/13 suite, ảnh đối chiếu và vòng chơi GUI đạt trong phạm vi desktop. **Chưa kiểm trên điện thoại thực; hình ảnh vẫn là prototype cách điệu.**
 
+**Cập nhật 0.6 (nhánh `muse-work`, chưa phát hành APK):** batch PO-13 theo ảnh design người dùng gửi lại — không khí sương/núi xa hai phía, vũng nước và lan can gỉ, cột mốc "ĐÀ LẠT / KHÁNH LÊ", thác trên vách đá, xe Cub chở hành lý. 17 suite/1.015 checks đạt và vòng chơi GUI đạt trong môi trường kiểm của Muse; APK 0.6 chưa build (thiếu build-tools 36 và chứng thư thử nghiệm gốc). Xem [VALIDATION_0.6.md](VALIDATION_0.6.md) và [ART_COMPARE_0.6.md](ART_COMPARE_0.6.md).
+
 ## 1. Team đã làm được gì?
 
 | Phiên bản | Nội dung đã có | Trạng thái và giới hạn |
@@ -13,6 +15,7 @@
 | **0.3 — cải thiện trải nghiệm** | Hướng dẫn ba thao tác thật; chỉ tới POI chưa thăm gần nhất; bật/tắt bóng và ba mức nhạy camera; giữ save 0.2. Có APK/gói source đã phân phối trên GitHub. | PO nghiệm thu phạm vi logic/desktop. Chưa xác minh cảm ứng, hiệu năng hoặc cài đè trên điện thoại thực. |
 | **0.4 — bản thử đã phân phối** | Đường đèo, xe máy, ba xe traffic, hai điểm dừng, đi bộ tham quan, checkpoint và HUD/touch đã tích hợp. QA 417 kiểm tra đạt; vòng chơi render desktop đạt. APK và ZIP source đã đăng GitHub. | Source đã push lên `codex-work`; artifact trên `apk-download`. Chưa mobile/iOS verified. Hình ảnh là prototype cách điệu, chưa đạt ảnh tham chiếu. |
 | **0.5 — bản thử local sẵn sàng** | PO-11/12 đã triển khai: cải thiện ba lớp mỹ thuật, hai preset, entry demo và mục tiêu hành trình. 466 kiểm tra đạt; ảnh đối chiếu cùng camera và vòng chơi GUI đạt; có APK đã kiểm. | Chưa xác nhận artifact 0.5 trên remote. Hình ảnh vẫn cách điệu; hai điện thoại đích và iOS chưa kiểm chứng. |
+| **0.6 — mỹ thuật tham chiếu, nhánh `muse-work`** | PO-13: sương/núi xa hai phía, đường ướt, cột mốc đích đến, thác vách đá, silhouette xe Cub + hành lý, thực vật đậm và rậm hơn. 1.015 checks/17 suite và vòng chơi GUI đạt trên desktop. | Source-only: chưa build APK, chưa push `apk-download`. Vẫn stylized; thiết bị đích và iOS chưa kiểm chứng. |
 
 Bên cạnh mã game, team đã lập tài liệu yêu cầu và điều kiện nghiệm thu, kiến trúc, UX/mỹ thuật, phạm vi dữ liệu địa lý, nghiên cứu định tính có nguồn, backlog và bộ kiểm thử. Nghiên cứu PO là đối chiếu sản phẩm công khai; chưa phải khảo sát thị trường đại diện hoặc bằng chứng người chơi thật.
 

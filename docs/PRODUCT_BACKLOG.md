@@ -172,3 +172,20 @@ Oppo Find X7 Ultra và iPhone13 là thiết bị mục tiêu do người dùng n
 ## Xác nhận phân phối 0.5
 
 Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.
+
+## Batch 0.6 — Không khí đèo và đạo cụ tham chiếu (PO-13)
+
+**Quyết định người dùng ngày 07/11/2026:** gửi lại ảnh design tham chiếu (đèo Khánh Lê, xe Cub chở hành lý, cột mốc "ĐÀ LẠT / KHÁNH LÊ", thác trên vách đá, đường ướt sau mưa) cùng ảnh chụp bản 0.5 và yêu cầu game thực tế tiến về design đó; thực hiện trên nhánh riêng `muse-work` theo bộ skill team. Đây là batch mỹ thuật tiếp nối PO-11, giữ nguyên các cửa chưa đạt của bản khả thi: **không cam kết photoreal**, mục tiêu là cảm giác bán hiện thực trong giới hạn Godot Compatibility + procedural.
+
+### PO-13 — Lớp không khí, đạo cụ tuyến và silhouette xe/người (P0 / M)
+
+| ID | Tiêu chí nghiệm thu |
+| --- | --- |
+| PO-13.A Không khí và chiều sâu | Trời u ám hơn (đỉnh trời xanh xám sâu, chân trời sáng sương); fog tăng có kiểm soát theo preset (Chi tiết 0,0021 / Tiết kiệm 0,0028) nhưng không che tuyến, POI hoặc traffic ở ba camera kiểm chứng. Ba lớp núi xa có ở **cả hai phía** tuyến, silhouette răng cưa thay cho khối trơn, tông xanh lam–lục phân lớp; có dải sương thấp trên thung lũng bằng vật liệu alpha rất nhẹ, không che mặt đường. |
+| PO-13.B Bề mặt và lề đường | Vũng nước tối, độ nhám thấp rải xác định (seed cố định) trên mặt asphalt, không collision, không z-fighting với vạch đường. Lan can có đoạn gỉ sét xen kẽ xác định; hai vịnh dừng có dãy blốc bê tông ở mép ngoài. |
+| PO-13.C Đạo cụ tham chiếu | Ít nhất hai cột mốc đích đến kiểu cột mốc Việt Nam (thân trắng, chóp đỏ, chữ đen "ĐÀ LẠT / KHÁNH LÊ") đặt bên tuyến gần các điểm dừng, chữ đọc được khi đi bộ/lái gần. Ít nhất một thác nước bậc thang trên vách đá kèm vệt đá ướt và bọt ở chân thác. Mọi đạo cụ procedural do team tạo; không dùng ảnh tham chiếu làm texture. |
+| PO-13.D Xe và người | Xe đổi sang silhouette Cub: chắn bùn/chân trước màu trắng bạc phếch, thêm baga sau và cuộn hành lý có dây chằng; người lái có ba lô, mũ bảo hiểm xám đậm đồng nhất với nhân vật đi bộ. Không đổi vật lý, collider, tốc độ hoặc trạng thái lên/xuống xe. |
+| PO-13.E Thực vật gần đường | Dải dương xỉ/bụi rậm sát hai mép đường (tránh mặt vịnh dừng đã lát), tán cây và bụi đậm màu hơn; mật độ trang trí tăng nhưng preset Tiết kiệm/Chi tiết vẫn chỉ đổi phần trang trí, không đổi collision/POI/traffic/progress như PO-11.D. |
+| PO-13.F Bằng chứng | Chụp trước–sau cùng camera tại đầu tuyến, khúc cua và vịnh dừng 230 theo `qa/paired_art_capture.gd`, cả hai preset cho bản mới; Designer/root xem render thật. Chỉ ghi cải thiện khi thấy trong render. Full art fidelity theo ảnh tham chiếu vẫn là gate riêng; không tự gọi photoreal/bán hiện thực đã đạt. |
+
+**Giới hạn batch:** không đổi route/checkpoint/save format (chỉ tăng version 0.6.0/code 6), không thêm photo mode (vẫn hoãn từ PO-10), không mở rộng tỉnh/đảo. Kết quả và bằng chứng: [VALIDATION_0.6.md](VALIDATION_0.6.md), [ART_COMPARE_0.6.md](ART_COMPARE_0.6.md). Artifact APK 0.6 chưa build trong batch này (môi trường build của Muse không có build-tools 36/chứng thư thử nghiệm gốc của team) — cửa artifact riêng, không gọi là đã sẵn sàng cài đặt.
