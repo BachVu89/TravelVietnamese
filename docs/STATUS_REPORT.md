@@ -2,7 +2,7 @@
 
 **Ngày cập nhật: 06/11/2026 — giờ Việt Nam (UTC+7).**
 
-**Bản đã giao gần nhất là 3D 0.3. Bản đang làm là 0.4: lái xe máy trên một đoạn đèo minh họa, dừng xe và xuống đi bộ tham quan. Người dùng vừa yêu cầu commit source lên nhánh **`codex-work`**; root đang chuẩn bị commit/push. Trước thao tác này, workspace ở nhánh local `work` chưa có commit. Nhánh phân phối APK là `apk-download`.** Hai nhánh này có vai trò và tình trạng khác nhau, xem phần Git bên dưới.
+**Bản đã giao gần nhất là 3D 0.3. Bản đang làm là 0.4:** lái xe máy trên một đoạn đèo minh họa, dừng xe và xuống đi bộ tham quan. Source/tài liệu đã được commit và đẩy lên nhánh phát triển **`codex-work`**. Nhánh phân phối APK là **`apk-download`**. Hai nhánh này có vai trò và tình trạng khác nhau, xem phần Git bên dưới.
 
 ## 1. Team đã làm được gì?
 
@@ -59,22 +59,22 @@ Team giữ rõ khoảng trống này trong [GEOGRAPHIC_SCOPE.md](GEOGRAPHIC_SCOP
 
 ## 5. Đang làm trên nhánh nào?
 
-**Yêu cầu mới đã được người dùng cho phép:** tạo nhánh phát triển `codex-work`, commit source/tài liệu và push lên GitHub. Root đang thực hiện; tại lúc BA bàn giao bản báo cáo này chưa có SHA/remote xác nhận, vì vậy chưa ghi là đã commit/push thành công.
-
-Kết quả Git root kiểm tra trước thao tác mới:
+**Nhánh đang làm là [`codex-work`](https://github.com/BachVu89/TravelVietnamese/tree/codex-work)**. Theo yêu cầu người dùng, root đã tạo nhánh, commit source/tài liệu và push thành công lên GitHub, có tracking `origin/codex-work`.
 
 | Nơi | Tên/trạng thái | Ý nghĩa |
 | --- | --- | --- |
-| Workspace phát triển hiện tại | `HEAD` trỏ tới **`work`**, nhưng **chưa có commit**; mã nguồn hiện ở trạng thái untracked. | Đây là tên nhánh làm việc local chưa được khởi tạo bằng commit. Chưa có commit source 0.4 trên nhánh này; không thể coi nó là nhánh phát triển đã được đẩy lên GitHub. |
-| GitHub remote | Chỉ có nhánh **`apk-download`** tại lần kiểm tra. | Nhánh phân phối APK, ZIP source và tài liệu; không phải nhánh phát triển source Godot theo cấu trúc thông thường. |
-| Nhánh `main` | **Chưa tồn tại trên remote** tại lần kiểm tra. | Không có source mới để checkout từ `main`. |
+| Workspace phát triển và GitHub | **`codex-work`**, đã có commit và remote xác nhận. | Chứa source/tài liệu prototype cùng các thay đổi 0.4 đang phát triển; đây là nhánh để theo dõi công việc hiện tại. |
+| Nhánh phân phối | **`apk-download`**. | Chứa APK, ZIP source 0.3 và tài liệu của lần phân phối; không phải nhánh source đang phát triển. |
+| Nhánh `main` | **Chưa tồn tại trên remote** tại lần kiểm tra. | Không dùng `main` để tìm source hiện tại. |
 
-Commit remote được xác nhận trước khi đăng báo cáo này: `2f0346d5d417ee6f21fe0d1c41560b71376e1cc3` trên `apk-download`. Khi root đăng thêm báo cáo, commit đầu nhánh phân phối sẽ thay đổi; mã trên vẫn chỉ là mốc đã kiểm tra của lần giao 0.3.
+Checkpoint source đầu tiên được push: [`35e7deceeb2d9d1986dcf93ac1bac8ed172931ee`](https://github.com/BachVu89/TravelVietnamese/commit/35e7deceeb2d9d1986dcf93ac1bac8ed172931ee), nội dung commit: `Checkpoint 3D prototype and mountain-pass development`. Trước checkpoint, workspace ở tên nhánh local `work` chưa có commit; tình trạng chưa bảo vệ source bằng commit này đã được xử lý. Cache, khóa ký và artifact build không đưa vào commit source.
 
-**Checkpoint đang thực hiện:** source 0.4 hiện có trong workspace; root sẽ đưa source/tài liệu vào `codex-work` theo yêu cầu mới, loại cache, khóa ký và artifact build khỏi commit source. Gói source ZIP 0.3 đã phân phối không chứa các thay đổi 0.4. Cần kết quả commit/push từ root để xác nhận bảo vệ source trên remote. Việc commit bản đang phát triển không phải nghiệm thu hoặc phát hành 0.4.
+Mốc phân phối 0.3 đã kiểm tra trên `apk-download`: `2f0346d5d417ee6f21fe0d1c41560b71376e1cc3`. Gói source ZIP 0.3 không chứa các thay đổi 0.4 mới. **Commit source đang phát triển không phải nghiệm thu hoặc phát hành 0.4**; báo cáo này có thể được cập nhật bằng commit tài liệu tiếp theo.
 
 ## 6. Xem bản đã giao ở đâu?
 
+- [Đọc báo cáo này trên GitHub](https://github.com/BachVu89/TravelVietnamese/blob/codex-work/docs/STATUS_REPORT.md).
+- [Source đang phát triển — `codex-work`](https://github.com/BachVu89/TravelVietnamese/tree/codex-work).
 - [Nhánh phân phối GitHub `apk-download`](https://github.com/BachVu89/TravelVietnamese/tree/apk-download): bản 0.3 đã giao cùng APK, ZIP source và tài liệu. Đây là nơi xem/tải bản đã phân phối; source ZIP là snapshot đóng gói, không phải lịch sử commit source đang phát triển.
 - [Tải APK 0.3 đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.3.0.apk).
 - [Tải source ZIP 0.3 đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-source-0.3.0.zip).
