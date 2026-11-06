@@ -1,0 +1,17 @@
+node_modules/
+.expo/
+dist/
+*.log
+artifacts/*.apk
+artifacts/*.apk.sha256
+game3d/.godot/
+artifacts/*.idsig
+artifacts/*.zip
+*.keystore
+*.jks
+*.p12
+*.pfx
+export_credentials.cfg
+.env
+.env.*
+!.env.example

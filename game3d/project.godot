@@ -1,0 +1,31 @@
+; Dọc miền Việt — offline 3D exploration prototype
+config_version=5
+
+[application]
+config/name="Dọc miền Việt 3D"
+config/version="0.4.0"
+config/icon="res://icon.svg"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/description="Offline third-person exploration. Procedural illustrative scenes, not surveyed geography."
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/handheld/orientation=0
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+lights_and_shadows/directional_shadow/size=2048
+
+[input_devices]
+pointing/emulate_touch_from_mouse=false
+
+[physics]
+common/physics_ticks_per_second=60

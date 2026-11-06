@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Dọc miền Việt",
+    "slug": "doc-mien-viet",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.travelvietnamese.docmienviet"
+    },
+    "android": {
+      "package": "com.travelvietnamese.docmienviet",
+      "blockedPermissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "updates": {
+      "enabled": false
+    }
+  }
+}
