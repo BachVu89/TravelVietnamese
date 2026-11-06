@@ -62,6 +62,50 @@ M1 là mốc để chủ sản phẩm đánh giá đúng hướng chơi trước
 | 3D-09 | Tôi muốn thoát và quay lại dễ dàng. | Có thể rời cảnh về bản đồ rồi vào lại; chuyển cảnh và nạp dữ liệu có trạng thái rõ; dữ liệu lưu hỏng có thông báo và hướng phục hồi, không treo game. |
 | 3D-10 | Tôi muốn vào tham quan đảo khi có trong bản mẫu. | Đảo đã công bố là chơi được mở được cảnh terrain 3D có nhân vật điều khiển và POI tương tác; cảnh thuật toán ghi rõ minh họa. Phủ mọi đảo trong dataset là cửa nghiệm thu M4, không phải điều kiện hoàn thành một cảnh mẫu M1. |
 
+## Phạm vi 0.3 — yêu cầu PO đã được chốt
+
+Phần này chuyển ba ưu tiên **PO-01, PO-02, PO-03** thành điều kiện nghiệm thu cụ thể; nghiên cứu thị trường và thứ tự backlog do PO quản lý riêng. Không thay đổi mục tiêu game 3D, offline, tỉnh/thành và đảo ở trên. Các trạng thái dưới đây là yêu cầu phải kiểm chứng, không phải tuyên bố đã hoàn thành triển khai.
+
+### PO-01 — Hướng dẫn bằng thao tác thật
+
+Người chơi mới được hướng dẫn ba bước theo thứ tự: **di chuyển → xoay camera → tương tác tại POI**. Có thể bỏ qua để tiếp tục tự khám phá; không dùng tutorial làm cổng khóa toàn bộ game.
+
+| Mã nghiệm thu | Điều kiện và kết quả mong đợi |
+| --- | --- |
+| PO-01.A | Với bản lưu mới hoặc bản lưu 0.2 chưa có trường onboarding, hiển thị hướng dẫn từ bước 0. Giữ nguyên `region_id`, `positions` và `visited` khi mở bản lưu 0.2; không tạo lại hành trình để thêm tutorial. |
+| PO-01.B | Bước di chuyển chỉ hoàn tất sau khi nhân vật tích lũy ít nhất **2 đơn vị khoảng cách mặt phẳng XZ trong cảnh** do input di chuyển thực của người chơi. Teleport, khôi phục vị trí đã lưu, chuyển cảnh hoặc nút về lối vào không được tự tính hoàn tất bước này. UI có thể gọi là khoảng 2 m trong cảnh minh họa, không phải khoảng cách thực địa. |
+| PO-01.C | Bước nhìn chỉ được chấm khi đang ở bước này; tích lũy độ lớn góc xoay do input nhìn thật trên yaw/pitch đạt ít nhất **0,25 radian**. Xoay qua lại vẫn là thao tác nhìn; đặt lại camera hoặc khôi phục góc từ bản lưu không thay thế input. |
+| PO-01.D | Bước tương tác chỉ hoàn tất khi người chơi thực hiện hành động tương tác thành công qua kiểm tra khoảng cách tới POI hiện tại. Đứng gần, bấm khi ngoài tầm hoặc chỉ gọi cập nhật `visited` không đủ. Tương tác thành công tại POI đã thăm vẫn là bằng chứng thao tác; không tạo dấu trùng. |
+| PO-01.E | Chỉ hoàn thành đủ ba bước mới có trạng thái `completed`. Nút **Bỏ qua** dừng hướng dẫn với trạng thái `skipped`, không giả làm hoàn thành; vẫn di chuyển, nhìn và tương tác bình thường. |
+| PO-01.F | Có thao tác **Xem lại hướng dẫn**: bắt đầu lại bước 0 và bộ đếm bài hướng dẫn, không xóa tỉnh đang chọn, vị trí, dấu đã thăm hoặc cài đặt. Các thao tác trước khi bắt đầu lại không tự vượt qua các bước mới. |
+| PO-01.G | Trạng thái hướng dẫn được lưu bền qua đóng/mở lại. `skipped` và `completed` không tự mở lại tutorial khi khởi động; người chơi vẫn chủ động xem lại được. Các trường onboarding là phần mở rộng tùy chọn của save version 1, không làm mất tương thích bản lưu 0.2. |
+
+### PO-02 — Dẫn tới POI chưa khám phá gần nhất
+
+Định hướng giúp người chơi tự đi bộ tới mục tiêu; không tự dịch chuyển hoặc nhận dấu thay người chơi.
+
+| Mã nghiệm thu | Điều kiện và kết quả mong đợi |
+| --- | --- |
+| PO-02.A | Trong cảnh hiện tại, chọn POI **chưa có trong `visited`** gần nhân vật nhất theo khoảng cách mặt phẳng XZ. Không chọn POI ở tỉnh/đảo khác; thay đổi vị trí phải cập nhật mục tiêu gần nhất. |
+| PO-02.B | Hiển thị tên mục tiêu, khoảng cách xấp xỉ bằng đơn vị trong cảnh và hướng tương đối với camera, để phân biệt phía trước/trái/phải/phía sau. Xoay camera làm cập nhật hướng tương đối mà không buộc nhân vật di chuyển. Không trình bày khoảng cách minh họa như số đo địa lý thực. |
+| PO-02.C | Khi tương tác thành công, dấu được ghi đúng một lần và chỉ dẫn tự chuyển tới POI chưa thăm gần nhất còn lại. Đóng bảng thông tin hoặc quay lại cảnh vẫn nhất quán với tiến trình đã lưu. |
+| PO-02.D | Nếu không còn POI chưa thăm, hiển thị đã khám phá **N/N tại cảnh này**; với cảnh ba POI là **3/3**. Không giữ mục tiêu cũ, chỉ tới vị trí không tồn tại hoặc tuyên bố hoàn thành toàn quốc. |
+| PO-02.E | Chỉ dẫn chỉ cung cấp thông tin: bật/cập nhật mục tiêu không thay đổi vị trí, không tăng `visited` và không tự chấm POI đã khám phá. Tương tác vẫn dùng phạm vi tiếp cận thực tế của scene. |
+
+### PO-03 — Tùy chỉnh hiệu năng và cảm giác camera
+
+Cài đặt hoạt động offline, có tác dụng ngay và được giữ khi chuyển địa điểm hoặc khởi động lại.
+
+| Mã nghiệm thu | Điều kiện và kết quả mong đợi |
+| --- | --- |
+| PO-03.A | Có lựa chọn **Bóng đổ: Bật/Tắt**, mặc định Bật. Tắt thực sự vô hiệu bóng đổ của nguồn sáng đang dùng trong cảnh; bật lại khôi phục. Chuyển sang tỉnh/đảo khác giữ lựa chọn, không chỉ đổi nhãn UI. |
+| PO-03.B | Có ba mức độ nhạy camera **0,6× / 1× / 1,4×**, mặc định 1×. Cùng một input nhìn, góc thay đổi tương ứng hệ số ở vùng chưa chạm giới hạn pitch; lựa chọn áp dụng ngay cho điều khiển camera đang được hỗ trợ. |
+| PO-03.C | Đổi cài đặt rồi chuyển cảnh, lưu và đóng/mở lại vẫn giữ bóng đổ/độ nhạy; không cần mạng. UI phản ánh đúng giá trị đang có hiệu lực. |
+| PO-03.D | Bản lưu version 1 cũ thiếu cài đặt dùng mặc định **Bật / 1×**, bảo toàn địa điểm, vị trí và dấu. Trường settings mới là phần mở rộng tùy chọn; không nâng phiên bản bằng cách làm bản lưu 0.2 không thể đọc. |
+| PO-03.E | Mở/đóng bảng cài đặt không để input cảm ứng bị kẹt, không tự di chuyển nhân vật hoặc tự đóng dấu POI. Chưa tuyên bố cải thiện FPS cụ thể khi chưa đo cùng thiết bị và cùng cảnh. |
+
+**Kiểm chứng 0.3:** kiểm thử ngưỡng và nguồn input tutorial, trạng thái bỏ qua/xem lại, chọn POI theo XZ và hướng camera, hoàn thành N/N, tác dụng thật của bóng đổ/độ nhạy, lưu sau chuyển cảnh và đọc bản lưu 0.2. Chạy thử UI trên nền tảng có bằng chứng hiện tại; Android/iOS chưa chạy phải ghi rõ chưa xác minh. Các thay đổi này không bổ sung đảo có tên, địa hình thực hoặc POI đặc trưng mới; báo cáo coverage địa lý vẫn giữ các khoảng trống đã nêu.
+
 ## Quy tắc offline và tài nguyên
 
 Tài nguyên của phạm vi được công bố phải nằm trong gói cài/nội dung offline trước khi bắt đầu chơi. Nếu phân phối theo gói vùng về sau, phải nói rõ vùng nào đã cài và vùng nào cần tải trước; không coi toàn quốc là offline khi người dùng chỉ có một vùng. Mọi mô hình, texture, font, âm thanh và dữ liệu bản đồ cần giấy phép sử dụng/phân phối phù hợp, không nhúng dịch vụ bản đồ trực tuyến vào đường chạy bắt buộc.

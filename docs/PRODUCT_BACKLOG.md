@@ -1,0 +1,86 @@
+# Product backlog — Dọc miền Việt 3D
+
+Owner: **Product Owner**. Cập nhật quyết định: 06/11/2026. Hướng bất biến do chủ sản phẩm đặt: khám phá 3D bằng nhân vật điều khiển, Android/iOS, offline, đủ tỉnh/thành và các đảo trong phạm vi dữ liệu được kiểm chứng; các đảo phải có cảnh đi vào. PO không tự đổi hướng này thành quiz hoặc game chỉ có marker.
+
+Nghiên cứu đầu vào: [market/RESEARCH.md](market/RESEARCH.md). Bằng chứng hiện là benchmark tính năng nguồn công khai và quan sát code; chưa xác minh nhu cầu/thị phần bằng nghiên cứu người chơi. **P0/P1 là ưu tiên PO, S/M/L là ước lượng tương đối để trao đổi**, không phải lịch giao hàng hoặc số giờ đã cam kết.
+
+## Iteration 0.3 đã chốt để triển khai
+
+| ID | Ưu tiên/cỡ | Vấn đề và quyết định | Bằng chứng | Đo/kiểm chứng |
+| --- | --- | --- | --- | --- |
+| PO-01 | P0 / S–M | Người mới vào scene mà chưa có chuỗi học thao tác được xác nhận. Thêm hướng dẫn tương tác ba bước. | Khoảng trống code 0.2; pattern hướng dẫn hành động của Veloren S4. | Test trạng thái + playtest mới; mục tiêu 4/5 người tự hoàn thành trong 2 phút là giả thuyết chưa đo. |
+| PO-02 | P0 / M | Người chơi chỉ thấy hành động khi đã đến gần POI; thêm mục tiêu chưa thăm, khoảng cách và hướng. | Khoảng trống code 0.2; waypoint/map trong S1/S4. | Kiểm thử hình học và chuyển mục tiêu; quan sát thời gian tìm POI thứ hai, chưa claim cải thiện retention. |
+| PO-03 | P1 / S | Độ nhạy cố định và bóng luôn bật; thêm lựa chọn đơn giản, lưu local. | S2/S5 có tùy chỉnh cảm ứng/camera/bóng; code 0.2 chưa có menu. | Kiểm thử áp dụng/lưu; đo thiết bị riêng trước khi nói tiết kiệm pin hoặc tăng FPS. |
+
+### PO-01 — Hướng dẫn bằng hành động thật
+
+- Khi dữ liệu lưu chưa có trạng thái tutorial, khởi tạo `active`, bước 0. Bản nâng cấp từ 0.2 cũng thấy hướng dẫn này một lần; **không suy đoán đã học chỉ từ số dấu cũ**.
+- Ba bước theo thứ tự: di chuyển tối thiểu **2 đơn vị XZ trong scene bằng input liên tục**, xoay camera tổng góc yaw/pitch tối thiểu **0,25 rad bằng look input**, rồi tương tác thành công với một POI qua kiểm tra khoảng cách hiện có. Khoảng cách trong scene minh họa không phải khoảng cách địa lý thực.
+- Di chuyển do teleport, đổi vùng, hồi sinh hoặc nạp save không hoàn thành bước đi. Hành động làm trước khi tới bước tương ứng không tự bỏ qua các bước sau.
+- Có **Bỏ qua** và **Xem lại hướng dẫn**. Bỏ qua ghi `skipped`, khác `completed`. Xem lại đặt tutorial về bước 0, không xóa vị trí, vùng, dấu hoặc settings.
+- Tương tác lại POI đã có dấu vẫn được dùng hoàn thành bước học tương tác; không ghi dấu trùng hoặc yêu cầu người nâng cấp phải xóa progress.
+- Lưu bước/trạng thái bằng trường tùy chọn tương thích save v1; khởi động lại tiếp tục đúng bước. Hoàn thành/đã bỏ qua không tự hiện lại khi vào vùng mới hoặc mở lại game.
+- Không khóa quyền khám phá hoặc buộc hoàn thành tutorial để đổi địa điểm. UI/modal giữ quy tắc dừng input/cancel touches hiện có.
+
+### PO-02 — Mục tiêu tham quan và hướng đi trong scene
+
+- Khi chưa khám phá hết, chọn **POI chưa có dấu gần nhân vật nhất theo khoảng cách XZ** trong world đang hoạt động. Tie có thứ tự ổn định để mục tiêu không nhấp nháy.
+- HUD hiển thị tên, khoảng cách xấp xỉ bằng đơn vị scene và hướng tương đối theo camera. Có nhãn rõ **“trong cảnh minh họa”**; không suy ra tọa độ GPS hoặc đường đi ngoài thực tế.
+- Cập nhật khi nhân vật/camera di chuyển, sau tương tác và khi đổi vùng. Chỉ đọc POI của world hiện tại; ID/visited của vùng khác không làm sai tiến trình.
+- POI đã có dấu không còn là mục tiêu. Khi đã thăm mọi POI, không truy cập mục tiêu rỗng; hiện “Đã khám phá N/N điểm trong cảnh”. Không viết “đã tham quan đầy đủ tỉnh/quần đảo”.
+- HUD điều hướng không tự dịch chuyển nhân vật, không tự ghi dấu và không vượt điều kiện proximity để tương tác. Mở mục tiêu không phải hoàn thành tham quan.
+
+### PO-03 — Tùy chỉnh camera và bóng
+
+- Menu có bóng **Bật/Tắt**, mặc định **Bật** để giữ hành vi 0.2; độ nhạy camera **Thấp 0,6× / Chuẩn 1× / Cao 1,4×**, mặc định Chuẩn.
+- Thay đổi áp dụng trực tiếp trong cảnh hiện tại. Lựa chọn giữ khi vào mọi cảnh khác và sau khởi động lại; không ghi đè vị trí/dấu.
+- Save v1 không có trường mới dùng mặc định an toàn. Trường settings tùy chọn sai kiểu hoặc ngoài tập cho phép được chuẩn hóa riêng; không xóa progress lõi hợp lệ.
+- Độ nhạy tác động cho input look cảm ứng và chuột; giới hạn pitch/collision camera giữ nguyên. Không đổi tốc độ đi khi thay độ nhạy.
+- Mở settings dừng điều khiển thế giới và giải phóng touch đang giữ; đóng settings trở lại quyền điều khiển hợp lệ. Có nhãn chữ, không chỉ màu.
+- Không quảng cáo “chạy mượt máy yếu”, “tiết kiệm pin X%” hoặc “30 FPS” chỉ vì có nút tắt bóng; các kết quả này cần đo thiết bị.
+
+## Backlog chiến lược — không được thay bằng tiện ích UI
+
+| ID | Ưu tiên/cỡ | Yêu cầu tiếp theo | Cửa nghiệm thu/không được tuyên bố sớm |
+| --- | --- | --- | --- |
+| PO-04 | P0 chiến lược / L | Danh mục đảo có tên với provenance, version, ID/alias, quan hệ đảo/quần đảo và geometry có giấy phép. | Công bố phạm vi dataset, kiểm tra thiếu/trùng và coverage từng ID. 13 vùng đảo hiện tại không đại diện mọi đảo thành phần; tiếp tục giữ cờ coverage false đến khi đối soát. Không dùng bbox hoặc tên suy đoán để gắn quốc gia. |
+| PO-05 | P0 chiến lược / L | Dựng cảnh/landmark/POI đặc trưng có kiểm chứng, bắt đầu một khu đất liền và một đảo để làm chuẩn pipeline. | Người chơi nhận diện đặc trưng qua kiến trúc/địa hình/nội dung riêng có nguồn. Cảnh procedural chung chỉ mang nhãn minh họa, không tính thành số hóa địa danh hoàn thiện. |
+| PO-06 | P1 / M | Hộ chiếu/nhật ký xem lại POI đã đến, lọc vùng và tiến trình. | Không nhân dấu, giữ ID ổn định và save cũ. Hoàn thành scene khác hoàn thành toàn tỉnh/đảo. |
+| PO-07 | P1 / S–M | Danh mục tìm kiếm không dấu, lọc tỉnh/đảo/đã thăm, empty state rõ. | Tên có dấu vẫn hiển thị đúng; filter/search không làm mất cảnh/save, kiểm thử ví dụ Phú Quốc/phu quoc. |
+| PO-08 | P0 phát hành / M–L | Playtest và profiling Android thực; iOS build/ký/test khi có môi trường. | Kiểm chứng mở lạnh offline, đa chạm, safe area, save/restore, FPS/RAM/nhiệt trên cấu hình nêu rõ. APK hoặc preset iOS không được tính là đã chạy trên điện thoại/iPhone. |
+| PO-09 | P2 / M | Hoạt động ngắn gắn địa danh: quan sát chi tiết, chụp ảnh in-game hoặc nhiệm vụ tìm đường. | Không quay lại quiz làm cổng bắt buộc để đi bộ; cần nội dung đặc trưng và giấy phép tài nguyên trước triển khai. |
+
+## Luồng trạng thái và quyết định
+
+Trạng thái backlog: **Proposed → Ready → In progress → QA verified → PO accepted**. `Released/build available` là nhãn riêng, không thay cho hai cửa nghiệm thu QA và PO. Chưa ghi accepted/released nếu chưa có bằng chứng tương ứng.
+
+PO-01/02/03 đã **QA verified / PO accepted cho phạm vi prototype desktop** trong iteration 0.3. Root báo desktop visual smoke `PO03_PASS`: thực hiện đi/nhìn/tương tác thật, chuyển sang POI chưa thăm kế tiếp, thay settings trực tiếp và giữ lựa chọn bóng khi đổi sang cảnh đảo. PO đã đối chiếu implementation với 17 AC của BA; chưa thấy blocker sản phẩm qua static review. Đây chưa phải xác nhận Android/iOS hoặc nghiên cứu người chơi. Tester đã báo 83 assertion mới và 174 assertion hồi quy liên quan, tổng **257 kiểm tra PASS** qua sáu suite trong đợt chạy mới; bao gồm integration/checkpoint/save legacy/navigation/preferences. PO chấp nhận 17 AC trong phạm vi logic/headless + desktop smoke được báo cáo. Root đã xác minh artifact APK 0.3 sẵn sàng ở local: **51.642.944 byte**, SHA256 `99649f3cb829098d8a7cbde8f06604a2320bed98ca3c0ed9df4197a0241eca99`. Chữ ký v2/v3 và alignment 16 KiB đạt; package/certificate khớp 0.2, versionCode 2→3. Đây là kiểm tra khả năng cập nhật của metadata, chưa phải cài đè thật trên thiết bị. Chưa ghi released trên GitHub khi URL remote chưa xác nhận. Nghiệm thu mobile và hiệu quả người chơi vẫn còn mở.
+
+### Đối chiếu 17 AC — 06/11/2026
+
+| AC trong PRODUCT.md | Bằng chứng hiện có | Trạng thái/cửa còn lại |
+| --- | --- | --- |
+| PO-01.A | Save v1 mở rộng tùy chọn; fixture 0.2 và kiểm thử startup có trong integration suite. | QA PASS: fixture 0.2 giữ dữ liệu lõi. |
+| PO-01.B–D | Player phát tín hiệu chuyển động/nhìn thật; interaction dùng proximity guard. Root đã chơi chuỗi thật trên desktop. | QA PASS ngưỡng/input/proximity + desktop smoke verified. |
+| PO-01.E–F | Status skipped/completed riêng; replay chỉ reset dữ liệu tutorial. | QA PASS skip khác completed/replay giữ progress. |
+| PO-01.G | Checkpoint save tức thì khi step/status đổi; không ghi file mỗi frame tích lũy. | QA PASS checkpoint tức thì 0→1/1→2, restore và save cũ. |
+| PO-02.A–B | Helper chọn nearest-unvisited XZ/hướng camera; HUD ghi khoảng cách trong cảnh minh họa. Root đã thấy chỉ dẫn trực tiếp. | QA PASS nearest XZ/bearing/đổi vùng + desktop smoke verified. |
+| PO-02.C | Root đã tương tác và thấy mục tiêu kế tiếp. | QA PASS persistence/không nhân dấu + desktop smoke verified. |
+| PO-02.D–E | Code xử lý hết mục tiêu, giữ interaction guard; không tự di chuyển/ghi dấu từ HUD. | QA PASS all-visited 3/3 và không tự ghi dấu. |
+| PO-03.A–C | Root thấy settings UI áp dụng trực tiếp và giữ bóng qua cảnh đảo; preferences áp dụng cho world mới. | QA PASS live/scene/restart/độ nhạy + desktop smoke verified. |
+| PO-03.D–E | Normalize trường tùy chọn, default ON/1×; modal cancel input hiện có. | QA PASS malformed optional/legacy/defaults và hồi quy input; đa chạm thiết bị còn mở. |
+
+QA cuối đã bổ sung kiểm tra hồi quy bố cục settings sau lỗi geometry do root phát hiện và Dev sửa; integration có 38 kiểm tra. Xem [TEST_PLAN_3D.md](TEST_PLAN_3D.md) để biết phạm vi suite. Toàn bộ AC cần smoke lại trên Android thật, đặc biệt cảm ứng đa chạm, safe area, lifecycle save/restore và tương tác UI. iOS chưa được coi là verified. Không suy ra tăng FPS từ lựa chọn bóng; playtest onboarding và bằng chứng nhu cầu thị trường còn thiếu.
+
+PO chốt thứ tự theo mục tiêu người dùng, ảnh hưởng, bằng chứng và chi phí trao đổi với SA/Dev. Khi có phản hồi thật, PO cập nhật giả thuyết và backlog; giữ decision log thay vì mô tả quyết định cũ là dữ kiện thị trường.
+
+
+### Quyết định ưu tiên sau 0.3
+
+**Chọn PO-04 + PO-05 làm batch nội dung/dữ liệu kế tiếp**, không mở thêm batch chỉ tiện ích UI. PO-04 là công việc nền để biết tập đảo nào thực sự còn thiếu; PO-05 chứng minh mỗi nơi có trải nghiệm riêng thay vì cảnh chung đổi tên. Hai luồng có thể song hành; PO-08 tiếp tục là cửa chất lượng phát hành.
+
+Đầu ra nhỏ đầu tiên của PO-04: chốt dataset/version/license và quy tắc đối soát; manifest có ID ổn định, tên/alias, quan hệ đảo/quần đảo, nguồn cho từng bản ghi, tình trạng geometry và tình trạng cảnh vào được. Báo riêng tổng số bản ghi dữ liệu, bản ghi đối soát, cảnh dựng được và cảnh nội dung hoàn thiện; mẫu số “mọi đảo” chỉ được công bố khi nguồn và phạm vi được chốt. 13 vùng đảo hiện tại không tự thỏa AC này.
+
+Đầu ra nhỏ đầu tiên của PO-05: BA/Designer đề xuất **một địa điểm đất liền và một đảo** dựa trên nguồn nội dung/tài nguyên hợp lệ; PO chốt sau rà nguồn và chi phí với SA/Dev. Mỗi mẫu cần landmark/địa hình phân biệt được, đường đi có collision, ít nhất ba POI có nội dung riêng và nguồn, vào được offline, giữ save ID ổn định. Chưa chọn địa điểm chỉ dựa tên sẵn trong registry; chưa tuyên bố số hóa đúng thực địa khi chỉ làm cảnh minh họa. Nghiệm thu hai mẫu mới mở rộng pipeline theo catalog.
+
+Root xác minh artifact: APK không khai báo INTERNET, đóng gói 47 JSON/license, Android 7+ với armv7/arm64. Kiểm tra GUI mới sau sửa wrap dòng settings đạt và nút OK hiển thị. Các thông tin này không thay thử máy thật hoặc chứng minh mọi đảo đã được dựng.

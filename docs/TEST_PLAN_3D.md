@@ -87,3 +87,60 @@ Kết quả do agent chính thực thi và chuyển cho QA ghi nhận:
 Đã chạy lại suite save/transitions sau khi thêm hộp giấy phép: **135/135 đạt**. Không chạy lại suite 502 kiểm tra world vì thay đổi giấy phép không sửa world; suite giấy phép bổ sung 18/18 đạt.
 
 Đây là bằng chứng build artifact, kiểm tra tĩnh APK và chạy đồ họa desktop. **Chưa cài APK, chạy chế độ máy bay hoặc đo hiệu năng trên điện thoại Android thực; chưa xác minh build/chạy iOS.** Không suy kết quả desktop hoặc manifest thành kết quả kiểm thử thiết bị.
+
+## Batch 0.3 — điều kiện nghiệm thu bổ sung
+
+Các kết quả 0.2 ở trên được giữ làm mốc. Batch mới chưa được coi là đạt cho đến khi các kiểm tra tương ứng thực thi.
+
+| Mã PO | Điều kiện cần kiểm chứng |
+| --- | --- |
+| PO-01 | Hướng dẫn theo thứ tự: di chuyển phẳng ít nhất 2 m bằng đầu vào liên tục, không tính teleport; sau đó tích lũy ít nhất 0,25 rad đầu vào xoay camera trong bước nhìn; sau đó tương tác POI qua proximity guard. Không tính hành động trước bước tương ứng. POI đã ghé vẫn tính cho lượt hướng dẫn chơi lại. |
+| PO-01 lưu trạng thái | Skip phải phân biệt completed; replay về bước đầu và giữ nguyên vị trí/dấu khám phá. Khôi phục bước/status sau mở lại; save 0.2 thiếu trường mới bắt đầu hướng dẫn ở bước đầu, giữ toàn bộ dữ liệu cũ. |
+| PO-02 | Chọn POI chưa thăm gần nhất theo XZ, cập nhật khi nhân vật/camera/tập visited thay đổi; khoảng cách dùng đơn vị cảnh minh họa, hướng tương đối camera; không hướng tới POI đã thăm. Khi hết POI hiển thị hoàn thành khám phá cục bộ, không khẳng định hoàn thành toàn bộ tỉnh. |
+| PO-03 | Bóng mặc định bật; độ nhạy camera chọn 0,6 / 1 / 1,4, mặc định 1; áp dụng ngay, giữ qua đổi cảnh và khởi động lại. Settings không hợp lệ đưa về giá trị an toàn, giữ tiến trình cốt lõi. |
+| Regression | Menu/dialog dừng điều khiển và hủy pointer; không thêm analytics mạng. App ID và khóa ký được giữ để hỗ trợ cập nhật APK; phải xác minh riêng artifact cuối, không suy từ source. |
+
+Fixture `game3d/tests/fixtures/progress-v0.2.json` đóng băng schema save 0.2: vùng đảo đang chơi, hai vị trí/camera và hai dấu POI. Kiểm tra migration phải dùng fixture này thay vì tạo save cũ từ hàm default mới.
+
+### Kết quả thực thi batch 0.3
+
+Kết quả cuối sau sửa kiểu `checkpoint`, lưu ngay khi đổi bước và sửa chiều cao dialog settings: **257 assertion đạt, 0 lỗi** trong sáu suite; mỗi lệnh có exit code 0, log không có `ERROR` hoặc `FAIL`. Trong đó 83 assertion mới cho batch 0.3, 174 assertion regression liên quan được chạy lại. Sau thay đổi nhãn settings chỉ chạy lại suite integration chịu ảnh hưởng; các suite khác giữ kết quả chạy trước đó của batch này. Không chạy lại 502 assertion registry/world vì batch này không thay đổi world generator; kết quả đó vẫn là bằng chứng của mốc 0.2, không được cộng thành số test vừa chạy trên batch 0.3.
+
+| Suite | Assertion đạt | Bằng chứng chính |
+| --- | --- | --- |
+| `test_batch03_rules.gd` | 36 | Thứ tự/ngưỡng tutorial, skip khác complete, replay; nearest unvisited XZ và hướng theo camera; preset/default settings; golden fixture 0.2 và optional fields hỏng không mất core progress |
+| `test_player_tutorial.gd` | 9 | Physics đi bộ thực đủ 2 m và camera input thực; không tính gravity/teleport/đẩy vào tường; sensitivity 0,6 và 1,4 áp dụng vào góc quay thực |
+| `test_batch03_integration.gd` | 38 | Main migrate file 0.2 giữ vùng/vị trí/góc nhìn/visited; input thực chuyển bước; checkpoint 0→1 và 1→2 ghi file ngay trước chu kỳ autosave 5 giây; POI ngoài tầm không hoàn tất; POI đã ghé vẫn hoàn tất replay không nhân dấu; completed/skip/partial step khôi phục; replay giữ core; settings live/đổi cảnh/restart và dialog/nút Trở lại nằm trong viewport 1280×720; HUD bỏ POI đã ghé và hoàn thành cục bộ 3/3 |
+| `test_controls_player.gd` | 21 | Regression chạm/camera và collision |
+| `test_save_transitions.gd` | 135 | Regression 47 chuyển cảnh, file save, dữ liệu hỏng và không ghi đè save lỗi |
+| `test_licenses.gd` | 18 | Regression dialog modal, hủy pointer, cuộn giấy phép, không tạo dấu |
+
+Lệnh chạy lại toàn bộ phạm vi trên từ thư mục repository:
+
+```bash
+set -e
+for test_suite in test_batch03_rules test_player_tutorial test_batch03_integration test_controls_player test_save_transitions test_licenses; do
+  XDG_DATA_HOME="/tmp/travel-qa03-final/$test_suite/data" \
+  XDG_CONFIG_HOME="/tmp/travel-qa03-final/$test_suite/config" \
+  XDG_CACHE_HOME="/tmp/travel-qa03-final/$test_suite/cache" \
+    godot --headless --path game3d --script "tests/$test_suite.gd" \
+    > "/tmp/travel-$test_suite-03-final.log" 2>&1
+  tail -1 "/tmp/travel-$test_suite-03-final.log"
+done
+```
+
+Tiến trình tutorial và các bộ đếm phục vụ điều kiện chơi được lưu trong JSON cục bộ; rà soát scripts không thấy HTTP client, analytics endpoint hoặc gửi sự kiện mạng. Kết luận này là kiểm tra source, chưa thay thế xác minh quyền mạng của APK 0.3 cuối. Không build APK song song trong quá trình QA.
+
+Root phát hiện lỗi UI thực: nhãn autowrap làm dialog settings cao hơn màn hình khi tính minimum size trước khi có chiều rộng. Sau sửa nhãn hai dòng cố định, integration thêm ba assertion về kích thước dialog, toàn bộ rect trong viewport và nút Trở lại nằm trong vùng client. Lần chạy lại **38/38 đạt**; log `/tmp/travel-test_batch03_integration-03-final.log`. Kiểm tra này dùng viewport 1280×720 headless, không thay cho kiểm tra bố cục các kích cỡ điện thoại.
+
+### Artifact Android 0.3.0 cuối cùng
+
+Agent chính đã chạy xác minh APK 0.3 cuối và chuyển kết quả cho QA ghi nhận:
+
+- APK: `artifacts/doc-mien-viet-3d-0.3.0.apk`, **51.642.944 byte**.
+- SHA-256: `99649f3cb829098d8a7cbde8f06604a2320bed98ca3c0ed9df4197a0241eca99`.
+- Chữ ký v2/v3 và zipalign 16 KiB đạt; không có quyền `INTERNET`; gói chứa main Godot bytecode, JSON 47 mục và giấy phép.
+- Đối chiếu artifact thực: cùng application ID và chứng thư ký với bản 0.2; versionCode tăng từ 2 lên 3. Đây là điều kiện cho cài cập nhật, không phải bằng chứng đã cài cập nhật trên điện thoại.
+- Root chạy lại GUI sau sửa nhãn settings: dialog nằm trong viewport và toàn bộ flow PO-03 đạt smoke test desktop.
+
+Checksum và bằng chứng 0.2 phía trên vẫn chỉ thuộc APK 0.2. **Chưa kiểm thử cài cập nhật APK trên điện thoại, giữ save sau nâng cấp ứng dụng thực tế, hiệu năng Android hoặc iOS.** Kiểm thử migration golden fixture và đối chiếu app ID/chữ ký không thay thế các kiểm tra thiết bị này.
