@@ -107,3 +107,24 @@ iOS xuất project Xcode trên công cụ hỗ trợ rồi build/ký trên macOS
 6. Build APK và thử mở lạnh offline trên thiết bị; đo FPS/RAM. iOS có báo cáo kiểm thử riêng khi có máy hỗ trợ.
 
 Các mục là điều kiện cần thực thi, chưa phải tuyên bố đã đạt. Hạn chế, lỗi và kết quả đo phải được ghi vào báo cáo validation của build cụ thể.
+
+## Batch 0.4: khu đèo mẫu và xe máy
+
+Batch 0.4 mở rộng theo hướng một đoạn đèo minh họa khoảng 750 đơn vị mét trong scene, chạy xe máy góc nhìn thứ ba, traffic, dừng/xuống xe và khám phá POI. Đây là bước thử chất lượng hình ảnh tiếp theo, chưa phải số hóa đèo Khánh Lê hoặc chứng minh 30 FPS trên điện thoại. Giữ Godot/Compatibility, nội dung sinh cục bộ; không tự thêm asset bên ngoài chưa xác định giấy phép.
+
+Khu mẫu là nội dung riêng với ID ổn định, không thêm một tỉnh/thành giả vào registry 47 địa danh. `mountain_pass.gd` nên kế thừa hợp đồng `TravelWorld` (build, player, pois, nearest_poi, terrain_height) hoặc cung cấp adapter tương đương để main chuyển cảnh mà không phá 47 khu cũ. `motorbike.gd` quản lý vận tốc, lái/phanh, va chạm và camera xe. Main chỉ điều phối mode, giao diện và save, không chứa toàn bộ hình học đường hoặc động lực học xe.
+
+Các rủi ro cần kiểm khi triển khai:
+
+- **Tọa độ và save:** schema cũ giới hạn vị trí x/z ±41, y từ −5 tới 40; không clamp vị trí đường 750 m theo luật cũ. Thêm nhánh trạng thái khu đèo tùy chọn và validator riêng hoặc quy tắc bounds chỉ cho ID mẫu xác định. Save v1 cũ thiếu nhánh mới vẫn giữ region, positions, visited, onboarding và preferences. Trạng thái mới hỏng dùng spawn an toàn thay vì xóa hành trình cũ.
+- **Đường và làn:** cùng một hàm centerline/tangent/surface height cần dùng cho mesh, collision, vị trí xe và traffic để tránh lệch bề mặt. Kiểm tra hướng pháp tuyến, đầu/cuối tuyến và mép đường tại cua gắt. Guard rail/collision hoặc road-bound guard ngăn xe rơi khỏi khu chơi; hồi phục phải đưa xe về vị trí an toàn và đặt vận tốc về 0.
+- **Traffic:** chuyển động có seed và quy tắc làn ổn định; xe có collider, khoảng cách theo tốc độ và phản ứng khi gặp người/xe. Không dùng dịch chuyển transform xuyên qua collision để giả là traffic đã xử lý vật lý. Nếu tái sử dụng xe ở đầu tuyến, chỉ recycle khi ngoài vùng quan sát và không va chạm người chơi.
+- **Điều khiển:** touch và bàn phím có lái, ga và phanh rõ ràng; modal/background hủy input và dừng tăng ga. Camera xe dùng SpringArm/collision, không xoay nhân vật đi bộ ẩn thay vì camera đang hiển thị. Dừng/xuống xe không spawn người trong collider, rào hoặc xe traffic; đứng gần xe và trạng thái tốc độ phải hợp lệ để lên lại.
+- **POI và tiến trình:** chỉ ghi dấu khi ở gần và trong mode tham quan hợp lệ; chạy ngang qua không tự hoàn thành. Tọa độ điều hướng tính theo avatar hoạt động, không dùng vị trí người đi bộ đã bị ẩn khi lái xe. Giữ các ID POI riêng tránh trùng dấu 47 vùng cũ.
+- **Hình ảnh và hiệu năng:** wet-road là hiệu ứng minh họa tiết kiệm, không hứa phản chiếu photoreal; cây/đá/sương dùng ngân sách hình học và tầm nhìn phù hợp. Đo real-device FPS/frame time/RAM/nhiệt trước khi tăng mật độ, traffic hoặc đổ bóng.
+
+Triển khai hiện tại dùng `mountain_pass.gd` kế thừa `TravelWorld`; module `pass/route.gd`, `pass/bike.gd`, `pass/traffic.gd` và phần dựng cảnh tách riêng. ID khu mẫu là `mountain_pass_demo`, không nằm trong 47 mục geography. `active_avatar()`, `set_drive_input()`, `set_paused()`, `toggle_vehicle()`, `get_hud_state()` và `return_to_start()` là hợp đồng với main.
+
+Save version 1 thêm nhánh `road_demo` qua `road_save.gd`, có `bike_s` trong [0,750], `lateral` trong [−3,12], `riding` boolean và `checkpoint` thuộc {0,230,550}. Không ghi tọa độ đèo vào `positions` cũ. Thiếu hoặc hỏng nhánh này phục hồi checkpoint an toàn đã kiểm tra; nếu checkpoint cũng hỏng thì về đầu tuyến. Spawn mặc định là s=5, lateral=1.7; checkpoint 230/550 dùng lateral=8. Tất cả spawn khôi phục đều đứng yên; renderer/world xác nhận lại layby trước khi cho phục hồi mode đi bộ. Decoder giữ nguyên hành trình, settings và hướng dẫn hợp lệ. Khoảng s là tham số tiến dọc tuyến, không phải chiều dài cung chính xác; tuyến cong lấy mẫu dài hơn 750 đơn vị.
+
+Review hình học đã kiểm tra roundtrip `at(s,lateral)` → station/lateral cho s=1..749 và năm lateral từ −3 đến 12: sai số lớn nhất khoảng 0.000644 station và 0.000018 lateral. Bộ save/transitions hiện có chạy 135 kiểm tra, không thất bại khi thêm nhánh save. Đây là bằng chứng toán/lưu trữ, không chứng minh chất lượng hình ảnh, va chạm đầy đủ hoặc hiệu năng trên điện thoại. Kết quả QA batch và build cuối cần xem báo cáo validation riêng.

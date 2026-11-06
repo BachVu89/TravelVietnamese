@@ -137,3 +137,63 @@ Không thêm tùy chọn không hoạt động. Tắt bóng vẫn phải đủ t
 Viewport tham chiếu 1280×720: giữ thanh chính ở trên, cụm hướng dẫn/mục tiêu khoảng vùng x18–600 dưới thanh chính; đây là hướng bố cục, không phải vị trí pixel bắt buộc trên mọi máy. Không đặt một panel bắt chạm phủ toàn chiều ngang vùng camera. Dòng chữ tự xuống hàng khi tên dài, không đè nút Bỏ qua. Menu cài đặt cuộn được ở màn hình hẹp; luôn thấy cách Trở lại.
 
 Nghiệm thu trực tiếp: vừa giữ joystick vừa kéo camera; nhấn Bỏ qua không làm xoay camera; đóng menu không khiến nhân vật chạy tiếp vì touch cũ; mở bảng POI không bị HUD che nút; đổi độ nhạy và bóng rồi chuyển cảnh/mở lại app vẫn giữ setting. Kiểm thử màn hình điện thoại thật là bắt buộc để kết luận ergonomics, không thay bằng assertion hoặc ảnh desktop.
+
+## UX 0.4 — Lái xe qua đèo, dừng lại khám phá
+
+### Phạm vi được duyệt
+
+Vertical slice đèo dài mục tiêu 750 m trong mô hình (nằm trong khoảng người dùng duyệt 500–1000 m), có hai điểm dừng, xe máy và người lái nhìn thấy được, đường cong, sườn đá/rừng, sương mù và giao thông minh họa. Chiều dài và khoảng cách là trong cảnh game, không phải cam kết đo đạc tuyến đèo thật. Cảnh bán hiện thực cho mobile; không yêu cầu khớp ảnh tham chiếu 100% hay photoreal ở batch này. Các quy tắc 0.4 dưới đây ưu tiên cho cảnh đèo, không mặc định thay mọi scene khám phá cũ thành chế độ lái xe.
+
+### Vòng chơi
+
+Chọn cảnh đèo → xuất hiện ở khu an toàn với xe → đọc gợi ý lái một lần → lái tới điểm dừng 1 → dừng hẳn trong khu đỗ → xuống xe và đi bộ tới POI → quay lại xe → lái tới điểm dừng 2 → khám phá → tiếp tục tự do hoặc quay lại danh mục. Cả hai điểm dừng có chỗ tách khỏi làn chạy; không bắt người chơi đỗ giữa đường để tương tác. Cho phép đi lại và xem cảnh sau khi ghé đủ điểm, không tự đóng scene.
+
+### Hai chế độ rõ ràng
+
+| Trạng thái | Điều khiển trái | Điều khiển phải | Hành động ngữ cảnh |
+| --- | --- | --- | --- |
+| Đang lái | Cần lái ngang trái/phải | Giữ **Ga**, giữ **Phanh** | Không có nút Khám phá khi đang chạy |
+| Đã dừng tại khu đỗ | Cần lái vẫn hiện | Ga/Phanh vẫn hiện | **Xuống xe** khi tốc độ gần 0 và vị trí an toàn |
+| Đi bộ | Joystick 2D như trước | Vuốt nhìn; **Khám phá** khi gần POI | **Lên xe** khi đứng gần xe đã đỗ |
+| Menu/bảng thông tin | Vô hiệu hóa | Vô hiệu hóa | Không nhận thao tác lái hoặc đi |
+
+Không dùng cùng một nút đổi tên Ga/Khám phá theo từng frame gây bấm nhầm. Ga và Phanh là hai vùng chạm tách biệt; khi cùng giữ, ưu tiên Phanh. Buông Ga không đồng nghĩa tăng ga tiếp. Khi đổi chế độ, mở menu hoặc app mất focus, xóa toàn bộ touch/ga/phanh/lái đang giữ. Xe không tự tăng tốc khi vừa đóng menu. Batch đầu không cần số tay, nghiêng bằng gyro hay lùi xe bằng một gesture khó đoán.
+
+Nút **Xuống xe** chỉ xuất hiện khi điều kiện hợp lệ. Nếu đang chạy mà người chơi cần biết cách dừng, gợi ý “Phanh và đỗ ở điểm dừng để xuống xe”; không đặt nút disabled vô nghĩa giữa HUD. Khi xuống xe, đặt nhân vật ở vị trí cạnh xe không nằm trong collision/đường lưu thông. Khi lên xe, chuyển camera nhẹ, không làm nhân vật/xe nhảy văng hoặc mất tiến trình POI.
+
+### Camera và đọc tuyến
+
+Third-person theo sau xe, thấy trọn người lái, bánh sau và đủ đường phía trước. Camera khởi điểm cách sau 6–8 m, cao khoảng 2,5–3,5 m, FOV 65–72°; đây là tham số playtest. Camera tự bám hướng xe mượt để người mới không phải lái và xoay camera liên tục. Vuốt vùng phải trống cho phép quan sát; thả tay hồi về sau xe từ từ hoặc dùng **Đặt lại camera**. Không tự hồi khi ngón tay vẫn đang kéo; không bật camera shake/head bob mặc định.
+
+Ở cua, ưu tiên nhìn theo hướng tuyến phía trước, không nhìn sát bánh xe. Sương mù không che mất mặt đường hoặc vật cản gần. Tốc độ hiển thị **km/h trong game**; tỷ lệ động học phải được Dev/QA kiểm tra, không suy ra tốc độ ngoài thực tế chỉ từ nhãn. Khoảng cách tới điểm dừng ghi **“≈ … m trong cảnh”**. Chỉ dẫn bám theo tiến trình tuyến nếu đã có thuật toán; nếu dùng khoảng cách thẳng, gọi rõ khoảng cách minh họa và không vẽ đường dẫn xuyên núi.
+
+### HUD landscape không chen điều khiển
+
+- Trên trái: tên cảnh, nhãn “Cảnh đèo minh họa · offline”.
+- Trên giữa hoặc dưới tên: **Điểm dừng tiếp theo**, khoảng cách và tiến độ **0/2, 1/2, 2/2 điểm đã ghé**. Hoàn tất chỉ tính tương tác POI, không tính chạy ngang khu đỗ.
+- Trên phải: menu/đổi địa điểm; tốc độ số lớn gọn gần cụm này hoặc cạnh trái, không nằm trên đường chân trời trung tâm.
+- Dưới trái: vùng lái rộng, biểu tượng mũi tên trái/phải và nhãn “Lái”; không nhận trục dọc làm tăng ga.
+- Dưới phải: hai nút **Phanh** và **Ga**, tối thiểu 64 logical px mục tiêu, khoảng cách tránh bấm cả hai. Màu không thay chữ; Phanh có hình dạng/nhãn dễ phân biệt.
+- Hành động **Xuống xe/Lên xe** đặt ở mép trên cụm phải dưới khi hợp lệ, không đè vùng giữ Ga/Phanh. Chỉ một hành động ngữ cảnh nổi bật tại một thời điểm.
+- Vùng giữa để nhìn đường, xe và kéo camera; không đặt footer hướng dẫn dài phủ ngang như màn walk cũ.
+
+Ở chế độ đi bộ, ẩn Ga/Phanh và tốc độ, thay bằng điều khiển đi bộ quen thuộc. Nhãn chế độ “Đang lái” / “Đi bộ” hiện ngắn lúc chuyển. Hint trên màn hình chỉ một câu; có hướng dẫn đầy đủ trong menu. Điểm dừng có biển/lay-by nhìn được từ xa, không phụ thuộc HUD mới tìm ra.
+
+### Phục hồi và lưu
+
+Menu có **Về điểm an toàn trên tuyến**; nếu chuyển về vị trí mới cần mô tả rõ xe và người cùng được đưa về, vận tốc về 0, không mất dấu đã ghé. Không gọi đây là quay lại POI và không tự đánh dấu POI. Đây là thao tác phục hồi chủ ý, không teleport khi nhấn tên mục tiêu.
+
+Nếu xe ra khỏi khu vực chơi, rơi hoặc kẹt nặng, phục hồi tới mốc an toàn gần nhất theo quy tắc rõ, dừng xe và hiện thông báo ngắn. Save mode/scene/tiến trình và vị trí an toàn, không khôi phục xe đang lao với tốc độ cũ khi mở app. Việc xuống/lên xe, đổi cấu hình và phục hồi không nhân đôi dấu.
+
+### Checklist review 0.4
+
+- Lái liên tục toàn tuyến, có hai điểm dừng thực sự tiếp cận được và đủ chỗ đỗ.
+- Giữ lái + Ga/Phanh đa chạm đúng; kéo camera không kích nút ga.
+- Menu/mất focus/bỏ ngón tay hủy input; không còn ga kẹt.
+- Xe và người lái nhận diện rõ bằng mesh, không chỉ một capsule trên mặt đường.
+- Không xuyên guardrail/vách đá chính hoặc rơi vô hạn; giao thông không spawn ngay trên người chơi.
+- Đỗ → xuống xe → đi bộ → POI → lên xe → đi tiếp hoạt động trọn vòng.
+- HUD không che đường/cua, nút chạm không chồng nhau ở kích thước thiết bị mục tiêu.
+- Hai POI chỉ đạt 2/2 sau tương tác hợp lệ; vẫn tự do chơi tiếp được.
+- Fog/wet road/shadow tắt-bật vẫn đọc được tuyến; không hứa hiệu năng máy yếu khi chưa đo.
+- Chạy offline sau cài; Android/iOS cần test thiết bị riêng, desktop không thay thế ergonomics mobile.

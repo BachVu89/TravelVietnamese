@@ -38,3 +38,17 @@ Root đã chấp thuận batch này để triển khai. Tài liệu đầu vào,
 - PO yêu cầu checkpoint khi bước/trạng thái hướng dẫn đổi để restart không lùi bước; Dev đã bổ sung save ngay trên transition, giữ gate bảo vệ save lỗi và tránh ghi mỗi frame.
 - Quyết định sau 0.3: ưu tiên PO-04 dữ liệu đảo có provenance + PO-05 nội dung riêng đất liền/đảo; PO-08 device test là cửa phát hành. BA/SA/Designer lập đề xuất dữ liệu và hai cảnh mẫu trước khi mở rộng, Dev/Tester xác nhận pipeline/offline/save.
 - Benchmark công khai vẫn là đầu vào giả thuyết; test logic/render không thay phỏng vấn hay playtest người dùng và không chứng minh nhu cầu thị trường.
+
+
+## Decision log — vertical slice 0.4
+
+- Theo bước khả thi BA đã được người dùng duyệt, PO chốt PO-10: một đèo minh họa khoảng 750 scene-m, xe máy điều khiển được, traffic đơn giản có va chạm, hai điểm dừng và vòng lái→dừng→đi bộ tham quan→lái tiếp. PO-10 được ưu tiên trước mở rộng địa lý; PO-04/05 vẫn mở.
+- Phạm vi hình ảnh bán hiện thực theo cảm giác ảnh tham chiếu; không cam kết photoreal, địa hình GIS Khánh Lê chính xác, toàn Việt Nam hoặc FPS điện thoại chưa đo. Asset phải do team tạo hoặc có license/provenance.
+- Photo mode offline optional/deferred; ưu tiên loop, input cảm ứng/keyboard, save tương thích và desktop/Android artifact gates. Chi tiết AC nằm trong PRODUCT_BACKLOG.md; chưa nghiệm thu implementation 0.4.
+
+- PO làm rõ reset 0.4: về checkpoint an toàn gần nhất đã đi qua trên tuyến (d470→230 nếu các mốc0/230/550), không nhảy tới mốc chưa chạy; hai điểm dừng cần đoạn nội dung riêng, không dùng chung mô tả chỉ đổi tên.
+
+
+## Nghiệm thu PO-10 prototype 0.4
+
+QA báo 417 assertion PASS (160 mới + 257 hồi quy); root báo desktop `PASS04_VISUAL_PASS` và pilot vật lý đi từ s5 tới s738,02. PO accepted **technical playable prototype**, gồm reset latest-passed đúng ranh giới và nội dung điểm dừng riêng. Hình ảnh hiện vẫn stylized; chưa đạt hình ảnh bán hiện thực theo tham chiếu. APK 0.4 đang build, chưa artifact ready; cài thật Android/iOS, FPS/đa chạm/upgrade và market validation còn mở. Không dùng nghiệm thu kỹ thuật để tuyên bố hoàn thành art hoặc phủ đủ Việt Nam/đảo.
