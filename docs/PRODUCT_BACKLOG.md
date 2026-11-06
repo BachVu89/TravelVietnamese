@@ -189,3 +189,18 @@ Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `a
 | PO-13.F Bằng chứng | Chụp trước–sau cùng camera tại đầu tuyến, khúc cua và vịnh dừng 230 theo `qa/paired_art_capture.gd`, cả hai preset cho bản mới; Designer/root xem render thật. Chỉ ghi cải thiện khi thấy trong render. Full art fidelity theo ảnh tham chiếu vẫn là gate riêng; không tự gọi photoreal/bán hiện thực đã đạt. |
 
 **Giới hạn batch:** không đổi route/checkpoint/save format (chỉ tăng version 0.6.0/code 6), không thêm photo mode (vẫn hoãn từ PO-10), không mở rộng tỉnh/đảo. Kết quả và bằng chứng: [VALIDATION_0.6.md](VALIDATION_0.6.md), [ART_COMPARE_0.6.md](ART_COMPARE_0.6.md). Artifact APK 0.6 chưa build trong batch này (môi trường build của Muse không có build-tools 36/chứng thư thử nghiệm gốc của team) — cửa artifact riêng, không gọi là đã sẵn sàng cài đặt.
+
+## Batch 0.7 — HUD nhập vai theo khung hình tham chiếu (PO-14)
+
+Nguồn: cùng yêu cầu trực tiếp của người dùng ngày 07/11/2026 — sau mỹ thuật cảnh (PO-13), người dùng yêu cầu tiếp tục để **giao diện** tiến về khung hình design ban đầu: giảm tối đa các dải panel che cảnh, giữ lại đồng hồ tốc độ và các điểm chạm cần thiết. Chỉ áp dụng cho lớp HUD của `main.gd`; không đổi gameplay, route, save hay scene 3D.
+
+| ID | Hạng mục | Tiêu chí nghiệm thu |
+| --- | --- | --- |
+| PO-14.A | Thanh đầu trang mỏng, xuyên sáng | Thanh cao ~56 (trước 98), nền alpha 0,55, tiêu đề 19 pt/phụ đề 11 pt; nút cùng hàng cao tối thiểu 44, chữ 14 pt, nền xuyên sáng theo theme chung. |
+| PO-14.B | Panel dẫn đường dạng pill nổi | Panel bỏ chiều rộng cố định 620, nền alpha 0,55, chữ dẫn đường 16 pt; nội dung và logic cập nhật không đổi (test điều hướng vẫn đạt). |
+| PO-14.C | Đồng hồ tốc độ analog | Khi đang lái, góc phải dưới (trên cụm GA/PHANH) hiện đồng hồ tròn: vạch chia 0–70 km/h, kim cam, số km/h số trùng với số trên nhãn dẫn đường; ẩn khi đi bộ. Dữ liệu lấy từ chính `road_hud.speed_kmh`, không nguồn đo thứ hai. |
+| PO-14.D | Chế độ Ngắm cảnh | Nút "Ngắm cảnh" góc phải trên: ẩn thanh đầu trang, panel dẫn đường, footer, nút lên xe/khám phá và đồng hồ; chỉ còn nút "Hiện giao diện" cùng joystick/bàn đạp trong suốt để vẫn lái được. Nút luôn được đăng ký vùng chặn chạm để không xoay camera khi bấm. |
+| PO-14.E | Footer gọn hơn | Nền alpha 0,55, chiều cao giảm, chữ gợi ý 15 pt; vẫn ẩn khi đang lái như 0.5/0.6. |
+| PO-14.F | Bằng chứng UI | Script `qa/ui_capture_07.gd` chụp 4 trạng thái thật (đứng yên trên xe, đang lái ~45 km/h, ngắm cảnh, đi bộ tại vịnh dừng) tại `docs/screenshots07/`; ảnh đi bộ dùng đặt xe kiểu QA như các bản chụp đối chiếu trước, vòng lái thật do drive QA bao phủ. |
+
+Giới hạn giữ nguyên: nút bấm vẫn đạt vùng chạm tối thiểu của team; không thêm chế độ chụp ảnh/lưu album (PO-10.F vẫn hoãn); APK 0.7 chưa build trong batch này (cùng lý do chứng thư/build-tools như 0.6).
