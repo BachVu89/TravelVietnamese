@@ -8,6 +8,8 @@
 
 **Cập nhật 0.7 (nhánh `muse-work`, chưa phát hành APK):** batch PO-14 đưa HUD về gần khung hình tham chiếu — thanh đầu trang mỏng xuyên sáng, panel dẫn đường dạng pill, đồng hồ tốc độ analog khi lái, chế độ Ngắm cảnh ẩn toàn bộ panel. 17 suite/1.015 checks đạt, vòng chơi GUI đạt, 4 ảnh UI thật trong `docs/screenshots07/`. Xem [VALIDATION_0.7.md](VALIDATION_0.7.md).
 
+**Cập nhật 0.8 (nhánh `muse-work`, chưa phát hành APK):** batch PO-15 theo phản hồi của người dùng — thay bề mặt và thảm thực vật tự vẽ bằng tài nguyên CC0 (Poly Haven + Quaternius), trời HDRI, xe/người thêm chi tiết. 17 suite/1.015 checks đạt, vòng chơi GUI đạt, ảnh đối chiếu tại `docs/screenshots08/`, danh mục tài nguyên tại [ASSETS_CC0.md](ASSETS_CC0.md). File nhị phân chưa lên GitHub (giới hạn connector), giao kèm ZIP. Xem [VALIDATION_0.8.md](VALIDATION_0.8.md) và [ART_COMPARE_0.8.md](ART_COMPARE_0.8.md).
+
 ## 1. Team đã làm được gì?
 
 | Phiên bản | Nội dung đã có | Trạng thái và giới hạn |
@@ -19,6 +21,7 @@
 | **0.5 — bản thử local sẵn sàng** | PO-11/12 đã triển khai: cải thiện ba lớp mỹ thuật, hai preset, entry demo và mục tiêu hành trình. 466 kiểm tra đạt; ảnh đối chiếu cùng camera và vòng chơi GUI đạt; có APK đã kiểm. | Chưa xác nhận artifact 0.5 trên remote. Hình ảnh vẫn cách điệu; hai điện thoại đích và iOS chưa kiểm chứng. |
 | **0.6 — mỹ thuật tham chiếu, nhánh `muse-work`** | PO-13: sương/núi xa hai phía, đường ướt, cột mốc đích đến, thác vách đá, silhouette xe Cub + hành lý, thực vật đậm và rậm hơn. 1.015 checks/17 suite và vòng chơi GUI đạt trên desktop. | Source-only: chưa build APK, chưa push `apk-download`. Vẫn stylized; thiết bị đích và iOS chưa kiểm chứng. |
 | **0.7 — HUD nhập vai, nhánh `muse-work`** | PO-14: thanh đầu trang mỏng xuyên sáng, pill dẫn đường, đồng hồ tốc độ analog, chế độ Ngắm cảnh, footer gọn. 1.015 checks/17 suite, vòng chơi GUI và 4 ảnh UI đạt trên desktop. | Source-only: chưa build APK. Độ đọc HUD trên thiết bị thật chưa kiểm chứng. |
+| **0.8 — tài nguyên CC0, nhánh `muse-work`** | PO-15: texture quét thật (đất/đá/nhựa đường), HDRI trời đèo, cây/bụi/cỏ bằng model Quaternius CC0, xe Cub và người lái thêm chi tiết. 1.015 checks/17 suite, vòng chơi GUI, ảnh đối chiếu 2 preset đạt trên desktop. | Source + ZIP tài nguyên: nhị phân chưa lên GitHub, chưa build APK. Hiệu năng thiết bị thật chưa đo; cây/người vẫn stylized. |
 
 Bên cạnh mã game, team đã lập tài liệu yêu cầu và điều kiện nghiệm thu, kiến trúc, UX/mỹ thuật, phạm vi dữ liệu địa lý, nghiên cứu định tính có nguồn, backlog và bộ kiểm thử. Nghiên cứu PO là đối chiếu sản phẩm công khai; chưa phải khảo sát thị trường đại diện hoặc bằng chứng người chơi thật.
 

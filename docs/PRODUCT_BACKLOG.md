@@ -204,3 +204,18 @@ Nguồn: cùng yêu cầu trực tiếp của người dùng ngày 07/11/2026 �
 | PO-14.F | Bằng chứng UI | Script `qa/ui_capture_07.gd` chụp 4 trạng thái thật (đứng yên trên xe, đang lái ~45 km/h, ngắm cảnh, đi bộ tại vịnh dừng) tại `docs/screenshots07/`; ảnh đi bộ dùng đặt xe kiểu QA như các bản chụp đối chiếu trước, vòng lái thật do drive QA bao phủ. |
 
 Giới hạn giữ nguyên: nút bấm vẫn đạt vùng chạm tối thiểu của team; không thêm chế độ chụp ảnh/lưu album (PO-10.F vẫn hoãn); APK 0.7 chưa build trong batch này (cùng lý do chứng thư/build-tools như 0.6).
+
+## Batch 0.8 — Nhân vật và cảnh quan bằng tài nguyên CC0 (PO-15)
+
+Nguồn: người dùng phản hồi trực tiếp ngày 07/11/2026 — bản 0.6/0.7 vẫn bị đánh giá là "tạm bợ" về **thiết kế nhân vật và cảnh quan** (không phải cỡ chữ/HUD), và cho phép dùng thêm thư viện/tài nguyên miễn phí. Batch này thay phần tự vẽ nguyên thủy bằng tài nguyên CC0 có nguồn rõ ràng; danh mục đầy đủ ở `docs/ASSETS_CC0.md`, ghi công trong cả hộp thoại Giấy phép của game. Đây là lần đầu dự án dùng tài nguyên ngoài, thay cho quy ước "toàn bộ tự vẽ" của các batch trước — theo lệnh trực tiếp của người dùng.
+
+| ID | Hạng mục | Tiêu chí nghiệm thu |
+| --- | --- | --- |
+| PO-15.A | Bề mặt thật (Poly Haven, CC0) | Mặt đất dùng scan `aerial_grass_rock` (+normal/roughness, triplanar, nhuộm xanh), vách đá dùng `dark_rock`, mặt đường dùng `asphalt_01`; vẫn giữ puddle/sheen ướt của 0.6. |
+| PO-15.B | Trời và ánh sáng thật | HDRI `cloudy_cliffside_road` (CC0) làm PanoramaSky, ambient/reflection lấy từ trời; nắng chính hạ 0,65 cho đúng không khí u ám; fog theo preset giữ nguyên. |
+| PO-15.C | Thảm thực vật bằng model (Quaternius, CC0) | Bỏ cây cầu/khối tự vẽ: 3 mẫu thông + 5 mẫu cây lá rộng + bụi hoa, dương xỉ, 2 loại cỏ, cây nhỏ và đá vừa — MultiMesh theo chunk, đúng meta ngân sách Tiết kiệm/Chi tiết. Hai mẫu lá đỏ mùa thu (Twisted Tree, Bush_1) đã loại sau khi phân tích màu texture, vì lệch tông cảnh. |
+| PO-15.D | Nhân vật và xe chi tiết hơn | Người lái: thêm vai áo, túi + cuộn trên ba lô, cằm mũ, găng tay (cả bản đi bộ). Xe Cub: đèn pha tròn, xi-nhan, gương cuống, dè trước 3 đoạn, yên 2 tầng, thùng hông vải, đèn hậu, ống xả + lon pô. Không đổi vật lý/kích thước va chạm. |
+| PO-15.E | Giấy phép minh bạch | Hộp thoại Giấy phép trong game có mục "TÀI NGUYÊN ĐỒ HỌA CC0"; `docs/ASSETS_CC0.md` liệt kê từng file, nguồn, giấy phép và dung lượng. |
+| PO-15.F | Bằng chứng | Ảnh đối chiếu cùng 3 camera với 0.6 (screenshots08, cả 2 preset), đủ 17 suite và vòng chơi GUI như các batch trước. |
+
+Giới hạn đã biết: model quét 3D thật của Poly Haven (thông/fir quét) quá nặng cho mô hình MultiMesh hàng trăm cây và bản mobile nên không dùng; cây dùng bản stylized CC0 của Quaternius — sạch và có thiết kế rõ ràng nhưng chưa phải cây thật. Nhân vật/xe vẫn là dựng hình theo khối, đã tăng chi tiết nhưng chưa phải model người/xe thật. File nhị phân (GLB/PNG/JPG/HDR ~52 MB) không đẩy được qua connector GitHub — giao kèm dạng ZIP như các thư mục ảnh trước.
