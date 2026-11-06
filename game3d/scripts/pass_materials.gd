@@ -69,7 +69,7 @@ static func rock() -> StandardMaterial3D:
 	material.resource_name = "Original mossy strata rock"
 	material.albedo_color = Color.WHITE
 	material.albedo_texture = _ramp_texture(5921, 0.035, PackedColorArray([
-		Color("3e4b3e"), Color("5e6353"), Color("7b7b68"), Color("93917d")]))
+		Color("36452f"), Color("55604a"), Color("6e6e58"), Color("83806c")]))
 	material.roughness = 0.96
 	material.metallic_specular = 0.18
 	# World triplanar avoids dependence on imported cliff UVs. Different axis scales
@@ -95,7 +95,7 @@ static func grass() -> StandardMaterial3D:
 	material.resource_name = "Original forest ground"
 	material.albedo_color = Color.WHITE
 	material.albedo_texture = _ramp_texture(7138, 0.055, PackedColorArray([
-		Color("2e4231"), Color("435a38"), Color("637047")]))
+		Color("2a3e2c"), Color("3c5233"), Color("57663f")]))
 	material.roughness = 1.0
 	material.metallic_specular = 0.12
 	material.uv1_triplanar = true

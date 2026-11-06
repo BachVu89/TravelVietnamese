@@ -340,7 +340,7 @@ func _build_ui() -> void:
 	heading.add_theme_font_size_override("font_size", 23)
 	names.add_child(heading)
 	var subtitle := Label.new()
-	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.5 · OFFLINE"
+	subtitle.text = "DỌC MIỀN VIỆT 3D · 0.6 · OFFLINE"
 	subtitle.add_theme_font_size_override("font_size", 14)
 	names.add_child(subtitle)
 	demo_entry_button = Button.new()

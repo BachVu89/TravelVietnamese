@@ -63,7 +63,7 @@ static func bike_model(parent: Node3D) -> Node3D:
 	parent.add_child(model)
 	var rubber := material("151B1D")
 	var steel := material("949E9E", 0.25)
-	var paint := material("A8412C", 0.3)
+	var paint := material("B4AA99", 0.5)
 	var cloth := material("536B59")
 	var denim := material("283C50")
 	for z: float in [-0.72, 0.72]:
@@ -81,6 +81,13 @@ static func bike_model(parent: Node3D) -> Node3D:
 		limb(model, Vector3(-0.12,0.39,z), Vector3(0.12,0.39,z), 0.08, steel)
 	box(model, Vector3(0,0.83,0.1), Vector3(0.39,0.25,0.8), paint)
 	box(model, Vector3(0,1.02,0.28), Vector3(0.43,0.1,0.7), rubber)
+	# Weathered Cub-style leg shield at the front, like the reference bike.
+	box(model, Vector3(0,0.66,-0.52), Vector3(0.44,0.6,0.1), material("C9C2B0",0.55)).rotation.x = 0.22
+	# Rear rack with a strapped luggage roll — the touring load in the photo.
+	box(model, Vector3(0,1.08,0.6), Vector3(0.36,0.05,0.42), steel)
+	ellipsoid(model, Vector3(0,1.27,0.62), Vector3(0.66,0.36,0.44), material("5C6650",0.9))
+	for strap_x: float in [-0.14,0.14]:
+		box(model, Vector3(strap_x,1.27,0.62), Vector3(0.05,0.4,0.48), rubber)
 	ellipsoid(model, Vector3(0,0.65,0), Vector3(0.5,0.48,0.6), steel)
 	for x: float in [-0.14,0.14]:
 		limb(model,Vector3(x,0.4,-0.72),Vector3(x,1.14,-0.49),0.045,steel)
@@ -91,7 +98,8 @@ static func bike_model(parent: Node3D) -> Node3D:
 	rider.name = "Rider"
 	model.add_child(rider)
 	box(rider,Vector3(0,1.5,0.15),Vector3(0.46,0.62,0.28),cloth).rotation.x = -0.16
-	ellipsoid(rider,Vector3(0,2.01,0.06),Vector3(0.5,0.53,0.5),material("E7DDBA",0.35))
+	box(rider,Vector3(0,1.6,0.4),Vector3(0.37,0.48,0.17),material("46523F",0.9))
+	ellipsoid(rider,Vector3(0,2.01,0.06),Vector3(0.5,0.53,0.5),material("41474E",0.35))
 	box(rider,Vector3(0,2.0,-0.15),Vector3(0.37,0.14,0.08),material("22363C",0.2))
 	for side: float in [-1,1]:
 		limb(rider,Vector3(side*0.2,1.7,0.1),Vector3(side*0.33,1.38,-0.2),0.09,cloth)
@@ -111,7 +119,7 @@ static func walker_model(parent: Node3D) -> Node3D:
 	var skin := material("CCA889")
 	box(model,Vector3(0,1.15,0),Vector3(0.47,0.6,0.29),cloth)
 	# Same helmet, visor and touring jacket as the rider, now standing upright.
-	ellipsoid(model,Vector3(0,1.69,0),Vector3(0.5,0.53,0.5),material("E7DDBA",0.35))
+	ellipsoid(model,Vector3(0,1.69,0),Vector3(0.5,0.53,0.5),material("41474E",0.35))
 	box(model,Vector3(0,1.69,0.21),Vector3(0.37,0.14,0.08),material("22363C",0.2))
 	box(model,Vector3(0,1.14,-0.17),Vector3(0.34,0.42,0.16),material("384B3D"))
 	for side: float in [-1,1]:

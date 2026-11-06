@@ -7,24 +7,24 @@ static func build(world: Node3D) -> void:
 	env.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color("8096A8")
-	sky_mat.sky_horizon_color = Color("BEC8CE")
-	sky_mat.ground_horizon_color = Color("ABB8C1")
-	sky_mat.ground_bottom_color = Color("374B42")
+	sky_mat.sky_top_color = Color("6B8296")
+	sky_mat.sky_horizon_color = Color("D3DCD8")
+	sky_mat.ground_horizon_color = Color("AEBBAF")
+	sky_mat.ground_bottom_color = Color("2E4238")
 	sky.sky_material = sky_mat
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("C1CFCA")
-	env.ambient_light_energy = 0.42
+	env.ambient_light_color = Color("BCCDC2")
+	env.ambient_light_energy = 0.5
 	env.fog_enabled = true
-	env.fog_light_color = Color("ABB8C1")
-	env.fog_density = 0.0018
+	env.fog_light_color = Color("C2CFCB")
+	env.fog_density = 0.0021
 	environment.environment = env
 	world.add_child(environment)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-46,-30,0)
-	sun.light_energy = 1.0
-	sun.light_color = Color("E7E5D6")
+	sun.light_energy = 0.9
+	sun.light_color = Color("E6E1D0")
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 85
 	world.add_child(sun)
@@ -50,12 +50,14 @@ static func build(world: Node3D) -> void:
 		_mark(world,float(s),-3.25,0.09,5.1,white)
 		_mark(world,float(s),3.25,0.09,5.1,white)
 	var rail := preload("res://scripts/pass_materials.gd").metal()
+	var rust := PassArt.material("6B564A",0.95)
 	for s in range(0,750,5):
 		for side: float in [-1.0,1.0]:
 			var offset := -4.2 if side<0 else PassRoute.outer_edge(s)
 			var a := PassRoute.at(s,offset)
 			var b := PassRoute.at(minf(s+5,750),offset)
-			var beam := PassArt.box(world,(a+b)*0.5+Vector3.UP*0.78,Vector3(0.14,0.36,a.distance_to(b)+0.08),rail,true)
+			var beam_mat: Material = rust if (s/5 + (0 if side<0 else 1)) % 6 == 2 else rail
+			var beam := PassArt.box(world,(a+b)*0.5+Vector3.UP*0.78,Vector3(0.14,0.36,a.distance_to(b)+0.08),beam_mat,true)
 			beam.rotation.y = atan2(b.x-a.x,b.z-a.z)
 			PassArt.box(world,a+Vector3.UP*0.4,Vector3(0.12,0.8,0.14),PassArt.material("545D5C"))
 	# End barriers protect the two route terminals.
@@ -66,6 +68,11 @@ static func build(world: Node3D) -> void:
 		_strip(world,"Layby"+str(int(stop)),4.25,13.0,PassArt.material("7B8074"),true,false,stop-20,stop+20)
 		for i in range(3):
 			PassArt.box(world,PassRoute.at(stop-9+i*7,11.8)+Vector3.UP*0.65,Vector3(0.4,1.3,0.4),rail)
+		# Weathered concrete barriers guard the outer edge of each layby.
+		for i in range(4):
+			var barrier_mat := PassArt.material("A9A89C" if i%2==0 else "9C9A8E",0.9)
+			var barrier := PassArt.box(world,PassRoute.at(stop-13.5+i*6.4,12.55)+Vector3.UP*0.4,Vector3(0.45,0.8,5.6),barrier_mat,true)
+			barrier.rotation.y = atan2(-PassRoute.tangent(stop).x,-PassRoute.tangent(stop).z)
 		var sign := PassArt.box(world,PassRoute.at(stop-19,5)+Vector3.UP*2.2,Vector3(2,1.2,0.12),PassArt.material("285B4C"))
 		var label := Label3D.new()
 		label.text = "P  ĐIỂM DỪNG\nGIẢM TỐC"
@@ -75,6 +82,10 @@ static func build(world: Node3D) -> void:
 		sign.add_child(label)
 	_forest(world)
 	_far_ridges(world)
+	_mist_banks(world)
+	_puddles(world)
+	_milestones(world)
+	_waterfalls(world)
 	_batch_static_boxes(world)
 
 static func _strip(world: Node3D, title: String, left: float, right: float, mat: Material, collision: bool, terrain: bool = false, from_distance: float = 0.0, to_distance: float = 750.0) -> void:
@@ -118,32 +129,114 @@ static func _forest(world: Node3D) -> void:
 
 static func _far_ridges(world: Node3D) -> void:
 	# Closed-width mountain masses replace single vertical paper planes.
-	for layer in range(3):
-		var st := SurfaceTool.new()
-		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		for i in range(65):
-			for row in range(6):
-				var points: Array[Vector3] = []
-				for uv: Vector2i in [Vector2i(i,row),Vector2i(i+1,row),Vector2i(i,row+1),Vector2i(i+1,row+1)]:
-					var z := -1100.0+uv.x*25.0
-					var cross_section := float(uv.y)/6.0
-					var x := 105.0+layer*120.0+cross_section*200.0+sin(z*0.007+layer)*30.0
-					var peak := 95.0+layer*28.0+sin(z*0.011+layer)*30.0+sin(z*0.023)*13.0
-					var y := -65.0+sin(cross_section*PI)*peak
-					points.append(Vector3(x,y,z))
-				for index: int in [0,1,2,1,3,2]:
-					st.add_vertex(points[index])
-		st.generate_normals()
-		var ridge := MeshInstance3D.new()
-		ridge.name = "ContinuousMountainMass"+str(layer)
-		ridge.mesh = st.commit()
-		var mat := PassArt.material("5B7067" if layer==0 else "778D87" if layer==1 else "94A5A4")
-		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		ridge.material_override = mat
-		ridge.set_meta("pass_far_mass",true)
-		ridge.set_meta("mountain_layer",layer)
-		world.add_child(ridge)
+	# Layered blue-green silhouettes on BOTH sides so bends looking either
+	# way read depth through the mist instead of flat white-cyan shapes.
+	for side: float in [1.0,-1.0]:
+		for layer in range(3):
+			var st := SurfaceTool.new()
+			st.begin(Mesh.PRIMITIVE_TRIANGLES)
+			for i in range(65):
+				for row in range(6):
+					var points: Array[Vector3] = []
+					for uv: Vector2i in [Vector2i(i,row),Vector2i(i+1,row),Vector2i(i,row+1),Vector2i(i+1,row+1)]:
+						var z := -1100.0+uv.x*25.0
+						var cross_section := float(uv.y)/6.0
+						var x := side*(105.0+layer*120.0+cross_section*200.0+sin(z*0.007+layer)*30.0)
+						var peak := 105.0+layer*28.0+sin(z*0.011+layer)*30.0+sin(z*0.023)*13.0+sin(z*0.11+layer)*10.0+sin(z*0.043+layer*2.0)*16.0
+						var y := -65.0+pow(sin(cross_section*PI),0.7)*peak
+						points.append(Vector3(x,y,z))
+					for index: int in [0,1,2,1,3,2]:
+						st.add_vertex(points[index])
+			st.generate_normals()
+			var ridge := MeshInstance3D.new()
+			ridge.name = "ContinuousMountainMass"+str(layer)+("L" if side<0 else "R")
+			ridge.mesh = st.commit()
+			var mat := PassArt.material("3E5C4C" if layer==0 else "5F7F6E" if layer==1 else "8AA696")
+			mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+			ridge.material_override = mat
+			ridge.set_meta("pass_far_mass",true)
+			ridge.set_meta("mountain_layer",layer)
+			world.add_child(ridge)
 	_rock_outcrops(world)
+
+static func _mist_banks(world: Node3D) -> void:
+	# Low translucent mist banks drifting over the valley side and between
+	# the far ridge layers; very low alpha so they layer, never hide the road.
+	var mist := StandardMaterial3D.new()
+	mist.albedo_color = Color(0.88,0.92,0.91,0.08)
+	mist.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mist.roughness = 1.0
+	mist.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var mist_far := StandardMaterial3D.new()
+	mist_far.albedo_color = Color(0.86,0.90,0.89,0.10)
+	mist_far.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mist_far.roughness = 1.0
+	mist_far.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	for i in range(5):
+		var s := 80.0+i*135.0
+		var bank := PassArt.ellipsoid(world,PassRoute.at(s,58)+Vector3.UP*(-4.0+float(i%3)*2.0),Vector3(46,5,20),mist)
+		bank.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for i in range(3):
+		var s := 150.0+i*270.0
+		var bank := PassArt.ellipsoid(world,PassRoute.at(s,150)+Vector3.UP*(2.0+float(i)*2.0),Vector3(90,9,40),mist_far)
+		bank.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+static func _puddles(world: Node3D) -> void:
+	# Dark low-roughness patches read as standing water on the damp asphalt.
+	var water := StandardMaterial3D.new()
+	water.albedo_color = Color("454F57")
+	water.roughness = 0.14
+	water.metallic_specular = 0.65
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 7707
+	for i in range(16):
+		var s := rng.randf_range(25.0,735.0)
+		var lateral := rng.randf_range(-2.4,2.4)
+		var patch := PassArt.box(world,PassRoute.at(s,lateral)+Vector3.UP*0.02,Vector3(rng.randf_range(1.2,2.2),0.012,rng.randf_range(2.2,4.5)),water)
+		patch.rotation.y = atan2(-PassRoute.tangent(s).x,-PassRoute.tangent(s).z)
+		patch.rotation.x = atan(0.065)
+
+static func _milestones(world: Node3D) -> void:
+	# Red-topped destination milestones like the reference photo: white post,
+	# red cap, black "ĐÀ LẠT / KHÁNH LÊ" lettering facing the road.
+	var post_mat := PassArt.material("E8E6DA",0.7)
+	var cap_mat := PassArt.material("B03A2E",0.6)
+	for s: float in [60.0,245.0,565.0]:
+		var base := preload("res://scripts/pass/vegetation.gd").terrain_point(s,5.1)
+		var right := PassRoute.right(s)
+		var yaw := atan2(-right.x,-right.z)
+		var post := PassArt.box(world,base+Vector3.UP*0.48,Vector3(0.55,0.95,0.14),post_mat)
+		post.rotation.y = yaw
+		var cap := PassArt.box(world,base+Vector3.UP*0.98,Vector3(0.55,0.3,0.145),cap_mat)
+		cap.rotation.y = yaw
+		var label := Label3D.new()
+		label.text = "ĐÀ LẠT\nKHÁNH LÊ"
+		label.font_size = 44
+		label.pixel_size = 0.0085
+		label.modulate = Color("191919")
+		label.position = Vector3(0,-0.12,0.085)
+		post.add_child(label)
+
+static func _waterfalls(world: Node3D) -> void:
+	# Stepped cascades down the rock wall, with a dark wet streak behind and
+	# foam where the water lands — the reference pass has falls on the wall.
+	var fall_mat := PassArt.material("D9E4DF",0.3)
+	var wet_mat := PassArt.material("33413C",0.95)
+	var foam_mat := PassArt.material("EDF2EE",0.5)
+	for s: float in [372.0,470.0]:
+		var right := PassRoute.right(s)
+		var yaw := atan2(right.x,right.z)
+		var back := preload("res://scripts/pass/vegetation.gd").terrain_point(s,-8.1)
+		var streak := PassArt.box(world,back+Vector3.UP*2.1-right*0.07,Vector3(1.5,5.6,0.06),wet_mat)
+		streak.rotation.y = yaw
+		for i in range(5):
+			var lat := -11.0+float(i)*1.45
+			var p := preload("res://scripts/pass/vegetation.gd").terrain_point(s,lat)
+			var step := PassArt.box(world,p+Vector3.UP*0.55,Vector3(1.0,2.0,0.09),fall_mat)
+			step.rotation.y = yaw
+		var base := preload("res://scripts/pass/vegetation.gd").terrain_point(s,-4.9)
+		var foam := PassArt.ellipsoid(world,base+Vector3.UP*0.12,Vector3(0.95,0.22,0.95),foam_mat)
+		foam.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 
 static func _rock_outcrops(world: Node3D) -> void:
 	var mesh := SphereMesh.new()

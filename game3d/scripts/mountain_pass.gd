@@ -169,7 +169,7 @@ func apply_visual_quality(profile: String) -> void:
 		elif child is MeshInstance3D and child.get_meta("pass_far_mass",false):
 			child.visible = detailed or int(child.get_meta("mountain_layer",0))<2
 		elif child is WorldEnvironment:
-			child.environment.fog_density = 0.0018 if detailed else 0.0025
+			child.environment.fog_density = 0.0021 if detailed else 0.0028
 	if bike and bike.camera:
 		bike.camera.far = 650.0 if detailed else 440.0
 	if player and player.camera:

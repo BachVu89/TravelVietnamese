@@ -114,21 +114,40 @@ static func build(world: Node3D) -> void:
 			for i in range(40):
 				var distance := rng.randf_range(chunk*125,(chunk+1)*125)
 				var side := -1.0 if i%2==0 else 1.0
-				var offset := rng.randf_range(8 if side<0 else 18,69)*side
+				var offset := rng.randf_range(8 if side<0 else 18,69 if side<0 else 100)*side
 				var p := terrain_point(distance,offset)
 				var size_value := rng.randf_range(0.7,1.4)
 				var basis := Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3(size_value,size_value*rng.randf_range(0.9,1.25),size_value))
 				transforms.append(Transform3D(basis,p))
-				colors.append(Color("233E2B").lerp(Color("57704A"),rng.randf()))
+				colors.append(Color("1E3626").lerp(Color("4E6B41"),rng.randf()))
 			add_group(world,"ForestTrunkForm"+str(form),tree_mesh(form,false),materials.bark(),transforms,[],chunk)
 			add_group(world,"ForestCanopyForm"+str(form),tree_mesh(form,true),materials.foliage(),transforms,colors,chunk)
 		var shrubs: Array[Transform3D] = []
 		var shrub_colors: Array[Color] = []
-		for i in range(180):
+		for i in range(215):
 			var distance := rng.randf_range(chunk*125,(chunk+1)*125)
 			var side := -1.0 if i%2==0 else 1.0
 			var offset := rng.randf_range(5.8 if side<0 else 15,37)*side
 			var size_value := rng.randf_range(0.65,1.6)
 			shrubs.append(Transform3D(Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3.ONE*size_value),terrain_point(distance,offset)))
-			shrub_colors.append(Color("33462D").lerp(Color("65724B"),rng.randf()))
+			shrub_colors.append(Color("2C422A").lerp(Color("5C6E42"),rng.randf()))
 		add_group(world,"Understory",understory_mesh(),materials.foliage(),shrubs,shrub_colors,chunk,0.42)
+		# Dense fern band hugging the road edges, like the reference photo's
+		# roadside undergrowth; kept out of the paved laybys on the valley side.
+		var ferns: Array[Transform3D] = []
+		var fern_colors: Array[Color] = []
+		for i in range(70):
+			var distance := rng.randf_range(chunk*125,(chunk+1)*125)
+			var side := -1.0 if i%2==0 else 1.0
+			if side > 0:
+				var near_stop := false
+				for stop: float in PassRoute.STOPS:
+					if absf(distance-stop) < 24.0:
+						near_stop = true
+				if near_stop:
+					continue
+			var offset := rng.randf_range(4.7,6.6)*side
+			var size_value := rng.randf_range(0.8,1.5)
+			ferns.append(Transform3D(Basis(Vector3.UP,rng.randf_range(0,TAU)).scaled(Vector3.ONE*size_value),terrain_point(distance,offset)))
+			fern_colors.append(Color("2A4630").lerp(Color("5F7A48"),rng.randf()))
+		add_group(world,"RoadsideFerns",understory_mesh(),materials.foliage(),ferns,fern_colors,chunk,0.5)
