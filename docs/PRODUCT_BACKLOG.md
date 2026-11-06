@@ -168,3 +168,7 @@ Ngay sau 0.5, trước khi mở thêm feature phụ trên đèo, team phải có
 **Artifact ready LOCAL:** APK0.5.0/code5,51.697.778byte; SHA256 `282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772`. Root xác minh chữ kýv2/v3,16KiB alignment, không INTERNET,47JSON/license và bytecode mới đóng gói; package/certificate giữ từ0.4/code4→5. Chưa ghi GitHub released khi URL remote chưa xác nhận; metadata cho phép update không thay kiểm cài đè thật. Bằng chứng đầy đủ: [VALIDATION_0.5.md](VALIDATION_0.5.md).
 
 Oppo Find X7 Ultra và iPhone13 là thiết bị mục tiêu do người dùng nêu, **chưa thử thật**. Không có IPA ký, không có FPS/frame-time/RAM/nhiệt/pin hoặc market/user validation. Mốc catalog đảo v0 ở trên giữ bắt buộc trước feature phụ đèo tiếp theo; PO-04/05/08 và full art fidelity vẫn mở.
+
+## Xác nhận phân phối 0.5
+
+Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.

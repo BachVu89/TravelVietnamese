@@ -2,7 +2,7 @@
 
 **Ngày cập nhật: 07/11/2026 — giờ Việt Nam (UTC+7).**
 
-**Bản thử đã phân phối mới nhất là 3D 0.4: APK và ZIP source đã được đăng lên GitHub.** Bản 0.4 cho lái xe máy trên đèo minh họa, đỗ, xuống xe tham quan rồi tiếp tục; QA và vòng chơi desktop đạt. **Chưa kiểm trên điện thoại thực.** Source được quản lý ở nhánh **`codex-work`**, APK phân phối ở **`apk-download`**. **Bản 0.5 đã sẵn sàng local:** 466 kiểm tra đạt, có ảnh đối chiếu/cải thiện cảnh và vòng chơi GUI đạt; APK đã kiểm. Chưa xác nhận đăng artifact 0.5 lên remote tại thời điểm cập nhật này.
+**Bản thử mới nhất là 3D 0.5, đã đăng APK và ZIP source lên GitHub.** Mã nguồn ở **`codex-work`**, bản cài ở **`apk-download`**. 466 kiểm tra/13 suite, ảnh đối chiếu và vòng chơi GUI đạt trong phạm vi desktop. **Chưa kiểm trên điện thoại thực; hình ảnh vẫn là prototype cách điệu.**
 
 ## 1. Team đã làm được gì?
 
@@ -60,7 +60,7 @@ Phạm vi đã chốt là một **mẫu riêng khoảng 750 đơn vị scene**, 
 
 Photo mode/album tiếp tục **hoãn khỏi cửa nghiệm thu 0.4**. Tiêu chí chi tiết ở [PRODUCT.md — phần 0.4](PRODUCT.md) và [PO-10 trong backlog](PRODUCT_BACKLOG.md). Các kiểm tra logic/render đạt không tự xác nhận mọi tình huống, chất lượng hình ảnh tham chiếu hay khả năng chạy trên thiết bị.
 
-## Bản 0.5 — đã kiểm local, chờ phân phối
+## Bản 0.5 — đã phân phối trên GitHub
 
 Hai hạng mục đã được hiện thực hóa trong scene/vòng chơi:
 
@@ -73,13 +73,13 @@ Hai hạng mục đã được hiện thực hóa trong scene/vòng chơi:
 - Có ảnh 0.4 đối chiếu 0.5 Tiết kiệm/Chi tiết tại ba góc. Camera pose, FOV và độ phân giải được xác nhận khớp chính xác, sai lệch 0; ba lớp thay đổi mỹ thuật hiện diện trong render. **Cảnh vẫn stylized, chưa đạt photoreal hoặc chất lượng ảnh tham chiếu.**
 - Root thao tác touch qua GUI, lái vật lý từ mốc 5 đến **232,278**, đỗ → xuống xe → đi bộ → F tương tác → đi về xe → lên xe; mục tiêu chuyển sang điểm dừng 2. Lượt này không reset hoặc teleport. Đây là input touch mô phỏng trên desktop, không phải thử OPPO/iPhone thật.
 
-**APK 0.5 local:** `artifacts/doc-mien-viet-3d-0.5.0.apk`, **51.697.778 byte**, SHA-256:
+**APK 0.5 đã phân phối:** `artifacts/doc-mien-viet-3d-0.5.0.apk`, **51.697.778 byte**, SHA-256:
 
 ```text
 282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772
 ```
 
-Đã kiểm chữ ký v2/v3, alignment 16 KiB, không quyền INTERNET, dữ liệu 47 vùng và module mới đóng gói. Package/chứng thư khớp 0.4, versionCode 4 → 5. Đây là **artifact local đã kiểm**, chưa xác nhận URL tải 0.5 remote hoặc cài đè thật trên điện thoại.
+Đã kiểm chữ ký v2/v3, alignment 16 KiB, không quyền INTERNET, dữ liệu 47 vùng và module mới đóng gói. Package/chứng thư khớp 0.4, versionCode 4 → 5. APK và source ZIP đã được push lên GitHub; chưa kiểm cài đè thật trên điện thoại.
 
 Người dùng nêu **OPPO Find X7 Ultra và iPhone 13** làm máy đích; chưa có OS/version hoặc truy cập thiết bị. Chưa có kết quả FPS/RAM/nhiệt/đa chạm native cho hai máy, chưa có IPA hoặc iOS chạy thực. Sau 0.5, trước feature phụ đèo, team phải đưa ra đề xuất catalog đảo v0 có nguồn/version/license/ID và báo cáo gap. Registry 47 mục và khoảng trống đảo/GIS không đổi. Photo mode/album vẫn deferred.
 
@@ -97,15 +97,15 @@ Team giữ rõ khoảng trống này trong [GEOGRAPHIC_SCOPE.md](GEOGRAPHIC_SCOP
 
 | Nơi | Tên/trạng thái | Ý nghĩa |
 | --- | --- | --- |
-| Workspace phát triển và GitHub | **`codex-work`**, đã có commit và remote xác nhận. | Chứa source/tài liệu và mã tích hợp 0.4 đã push; đây là nhánh để theo dõi công việc hiện tại. Báo cáo có thể có commit tài liệu bổ sung sau mốc code. |
-| Nhánh phân phối | **`apk-download`**. | Chứa APK, ZIP source 0.4 và các bản phân phối trước; không phải nhánh source đang phát triển. |
+| Workspace phát triển và GitHub | **`codex-work`**, đã có commit và remote xác nhận. | Chứa source/tài liệu và mã tích hợp 0.5 đã push; đây là nhánh để theo dõi công việc hiện tại. Báo cáo có thể có commit tài liệu bổ sung sau mốc code. |
+| Nhánh phân phối | **`apk-download`**. | Chứa APK, ZIP source 0.5 và các bản phân phối trước; không phải nhánh source đang phát triển. |
 | Nhánh `main` | **Chưa tồn tại trên remote** tại lần kiểm tra. | Không dùng `main` để tìm source hiện tại. |
 
 Checkpoint source đầu tiên được push: [`35e7deceeb2d9d1986dcf93ac1bac8ed172931ee`](https://github.com/BachVu89/TravelVietnamese/commit/35e7deceeb2d9d1986dcf93ac1bac8ed172931ee), nội dung commit: `Checkpoint 3D prototype and mountain-pass development`. Trước checkpoint, workspace ở tên nhánh local `work` chưa có commit; tình trạng chưa bảo vệ source bằng commit này đã được xử lý. Cache, khóa ký và artifact build không đưa vào commit source.
 
 **Mã nguồn 0.4 đã push:** [`197432a196e1b58ca1fb2a8431677caca87eb412`](https://github.com/BachVu89/TravelVietnamese/commit/197432a196e1b58ca1fb2a8431677caca87eb412) trên `codex-work`. Đây là mốc code 0.4 đã được xác nhận, không phải mốc hoàn thiện code 0.5.
 
-**Mốc nhánh trước khi hoàn thiện source/báo cáo 0.5:** root xác nhận `codex-work` có base [`3c96242`](https://github.com/BachVu89/TravelVietnamese/commit/3c96242). Phần code 0.5 cuối sẽ có commit tiếp theo; không coi base này là bằng chứng đã push mọi cập nhật 0.5.
+**Mã nguồn 0.5 đã push:** [`b800021`](https://github.com/BachVu89/TravelVietnamese/commit/b800021). **Phân phối 0.5 đã push:** [`3b3b35a`](https://github.com/BachVu89/TravelVietnamese/commit/3b3b35a), gồm APK, source ZIP, checksum và bằng chứng kiểm thử. Source ZIP là snapshot trước cập nhật trạng thái phân phối cuối cùng trong báo cáo này.
 
 **Phân phối 0.4 đã push:** [`cd0794febc1ae240c38c68a8b231665711117cfa`](https://github.com/BachVu89/TravelVietnamese/commit/cd0794febc1ae240c38c68a8b231665711117cfa) trên `apk-download`, gồm APK và ZIP source. Mốc phân phối 0.3 trước đó là `2f0346d5d417ee6f21fe0d1c41560b71376e1cc3`; ZIP source 0.3 không chứa thay đổi 0.4. Việc push source/artifact xác nhận khả năng xem/tải bản thử, không xác nhận chất lượng ảnh tham chiếu hoặc kiểm thử thiết bị.
 
@@ -113,12 +113,12 @@ Checkpoint source đầu tiên được push: [`35e7deceeb2d9d1986dcf93ac1bac8ed
 
 - [Đọc báo cáo này trên GitHub](https://github.com/BachVu89/TravelVietnamese/blob/codex-work/docs/STATUS_REPORT.md).
 - [Source đang phát triển — `codex-work`](https://github.com/BachVu89/TravelVietnamese/tree/codex-work).
-- [Nhánh phân phối GitHub `apk-download`](https://github.com/BachVu89/TravelVietnamese/tree/apk-download): bản 0.4 đã giao cùng APK và ZIP source; các bản cũ được giữ để tham khảo. Đây là nơi xem/tải bản đã phân phối; source ZIP là snapshot đóng gói, không phải lịch sử commit source đang phát triển.
-- [Tải APK 0.4 mới nhất](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.4.0.apk).
-- [Tải source ZIP 0.4](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-source-0.4.0.zip).
+- [Nhánh phân phối GitHub `apk-download`](https://github.com/BachVu89/TravelVietnamese/tree/apk-download): bản 0.5 đã giao cùng APK và ZIP source; các bản cũ được giữ để tham khảo. Đây là nơi xem/tải bản đã phân phối; source ZIP là snapshot đóng gói, không phải lịch sử commit source đang phát triển.
+- [Tải APK 0.5 mới nhất](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk).
+- [Tải source ZIP 0.5](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-source-0.5.0.zip).
 - [Tải APK 0.3 cũ đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.3.0.apk).
 - [Tải source ZIP 0.3 đã phân phối](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-source-0.3.0.zip).
-- APK 0.5 mới **local, chưa xác nhận remote**: `artifacts/doc-mien-viet-3d-0.5.0.apk`.
+- APK 0.5 local tương ứng bản đã phân phối: `artifacts/doc-mien-viet-3d-0.5.0.apk`.
 - APK 0.4 local tương ứng bản đã phân phối: `artifacts/doc-mien-viet-3d-0.4.0.apk`.
 - File APK 0.3 local: `artifacts/doc-mien-viet-3d-0.3.0.apk`.
 - Gói source local: `artifacts/doc-mien-viet-3d-source-0.3.0.zip`.
@@ -138,7 +138,7 @@ Checkpoint source đầu tiên được push: [`35e7deceeb2d9d1986dcf93ac1bac8ed
 
 Đây là team tác nhân AI theo vai trò, không mặc nhiên có studio nghệ thuật 3D hoặc phòng thử thiết bị chuyên nghiệp. Chi tiết tại [TEAM.md](TEAM.md).
 
-Mốc kế tiếp: hoàn tất commit source/báo cáo và phân phối APK/ZIP source 0.5, kiểm tra remote rồi cập nhật link tải. QA, ảnh đối chiếu và vòng chơi desktop 0.5 đã có kết quả nêu trên; bản phân phối remote mới nhất vẫn là 0.4. Tiếp tục chuẩn bị test trên OPPO Find X7 Ultra/iPhone 13; sau batch phải có đề xuất catalog đảo v0 trước feature phụ đèo. Kiểm thử Android/iOS thực và hiệu năng vẫn là cửa riêng; không cam kết số FPS, ngày giao hoặc chi phí chưa được xác minh.
+Mốc kế tiếp: đề xuất catalog đảo v0 có nguồn/version/license/ID và báo cáo khoảng thiếu, trước các feature phụ cho đèo. Tiếp tục chuẩn bị thử trên OPPO Find X7 Ultra/iPhone 13. Kiểm thử Android/iOS thực và hiệu năng còn mở; chưa cam kết FPS, ngày giao hoặc chi phí.
 
 ---
 

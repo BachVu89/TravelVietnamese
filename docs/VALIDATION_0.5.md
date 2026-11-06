@@ -42,3 +42,7 @@ Mở **Dọc miền Việt 3D → Chơi đèo mẫu**. Theo mục tiêu HUD, dù
 Chưa có benchmark, FPS/frame time/RAM/nhiệt/pin, safe area, cảm ứng thực, mở lạnh offline trên Oppo hoặc iPhone. Chưa có IPA ký; iOS cần quy trình macOS/Xcode/Apple signing. Không quảng cáo 30 FPS hoặc tối ưu riêng cho hai điện thoại khi chưa đo.
 
 Phạm vi vẫn 34 tỉnh/thành và 13 vùng đảo; tuyến sinh thủ tục không phải địa hình Khánh Lê thực hoặc toàn bộ Việt Nam. Chưa đủ mọi đảo có tên. Mốc catalog đảo với nguồn/giấy phép/ID/coverage vẫn còn mở và phải được xử lý trước các tiện ích phụ đèo tiếp theo. Photo album chưa triển khai.
+
+## Xác nhận phân phối 0.5
+
+Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.

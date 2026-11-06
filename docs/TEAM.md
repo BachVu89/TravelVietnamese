@@ -64,3 +64,7 @@ QA báo 417 assertion PASS (160 mới + 257 hồi quy); root báo desktop `PASS0
 ## PO acceptance 0.5 — 07/11/2026
 
 PO accepted chín AC PO-11/12 ở mức cải thiện prototype desktop:466assertion/13suite PASS; paired9ảnh có pose/FOV/viewport khớp; Designer xác nhận ba lớp art đổi rõ; root GUI ride→stop→walk/interact→remount/nexttarget bằng input thật khôngteleport. Núi xa/faces/placement vẫn stylized, fidelity tham chiếu chưa đạt. APK0.5 localready:51.697.778byte, SHA256 `282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772`, chữ ký/alignment/package kiểm đạt; chưa ghi GitHub released trước URL. Oppo Find X7 Ultra/iPhone13 chưa thử; không FPS/device/market claims. Mốc catalog đảo v0 sau0.5 không đổi.
+
+## Xác nhận phân phối 0.5
+
+Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.
