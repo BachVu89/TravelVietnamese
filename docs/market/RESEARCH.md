@@ -50,3 +50,8 @@ Không thêm analytics mạng vào game offline để làm các bước trên. N
 ## Cập nhật triển khai — 06/11/2026
 
 Batch PO-01/02/03 đã được hiện thực hóa và root báo smoke trực quan desktop đạt ở các hành động chính; Tester báo 257 kiểm tra logic/integration/hồi quy PASS qua sáu suite; PO đã accepted phạm vi prototype desktop. Điều này xác minh khả năng triển khai của giải pháp ở mức hiện tại, **không xác minh giả thuyết 4/5 người tự học trong 2 phút, retention, nhu cầu thị trường hoặc hiệu năng điện thoại**. Không có nguồn thị trường mới được thêm trong cập nhật này; ngày đọc và provenance của sáu nguồn giữ nguyên 05/11/2026. Ưu tiên nghiên cứu/nội dung tiếp theo là PO-04 danh mục đảo có nguồn và PO-05 cảnh đặc trưng, đồng thời tiến hành playtest/profiling thiết bị khi có bằng chứng thực tế.
+
+
+## Quyết định phát triển — 07/11/2026
+
+Batch0.5 chọn art đèo có bằng chứng trước–sau và entry/objective dễ hiểu, dựa gap của prototype0.4 và hướng ảnh tham chiếu người dùng; không có nghiên cứu thị trường mới hoặc dữ liệu người chơi mới để tuyên bố hiệu quả. Photo album chưa được mở scope. Mốc sau0.5 là đề xuất catalog đảo có nguồn/version/license và khoảng trống coverage, giữ yêu cầu cốt lõi Việt Nam/đảo bên cạnh mẫu đèo. Hiệu quả onboarding, chất lượng theo cảm nhận và hiệu năng điện thoại vẫn cần playtest/profiling thực.

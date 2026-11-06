@@ -1,6 +1,6 @@
 # Product backlog — Dọc miền Việt 3D
 
-Owner: **Product Owner**. Cập nhật quyết định: 06/11/2026. Hướng bất biến do chủ sản phẩm đặt: khám phá 3D bằng nhân vật điều khiển, Android/iOS, offline, đủ tỉnh/thành và các đảo trong phạm vi dữ liệu được kiểm chứng; các đảo phải có cảnh đi vào. PO không tự đổi hướng này thành quiz hoặc game chỉ có marker.
+Owner: **Product Owner**. Cập nhật quyết định: 07/11/2026. Hướng bất biến do chủ sản phẩm đặt: khám phá 3D bằng nhân vật điều khiển, Android/iOS, offline, đủ tỉnh/thành và các đảo trong phạm vi dữ liệu được kiểm chứng; các đảo phải có cảnh đi vào. PO không tự đổi hướng này thành quiz hoặc game chỉ có marker.
 
 Nghiên cứu đầu vào: [market/RESEARCH.md](market/RESEARCH.md). Bằng chứng hiện là benchmark tính năng nguồn công khai và quan sát code; chưa xác minh nhu cầu/thị phần bằng nghiên cứu người chơi. **P0/P1 là ưu tiên PO, S/M/L là ước lượng tương đối để trao đổi**, không phải lịch giao hàng hoặc số giờ đã cam kết.
 
@@ -121,7 +121,50 @@ PO chấp nhận **khả năng chơi của prototype kỹ thuật**, không ch�
 | PO-10.A–G vòng chơi/logic/input/save | Technical prototype accepted dựa QA và desktop smoke; touch thiết bị thật vẫn chưa kiểm. |
 | PO-10.H nguồn tài nguyên | Giữ yêu cầu procedural do team tạo hoặc license/provenance rõ; không dùng kết quả render để suy ra quyền tài nguyên hoặc GIS đúng thực địa. |
 | PO-10.I desktop | Root báo GUI PASS; ảnh start/bend/viewpoint thể hiện prototype stylized có đường nhựa, sương, rừng và xe. Hướng hình ảnh tham chiếu chưa đạt; cần iteration mỹ thuật riêng có tiêu chí đối chiếu. |
-| PO-10.J APK | Đang build; chưa gắn artifact ready cho 0.4 trước hash/signature/alignment/package kiểm xong. |
+| PO-10.J APK | Root xác nhận baseline 0.4 đã xuất bản trên nhánh `apk-download` tại `cd0794`; checkpoint code/report `codex-work` tại `3c96242`. Đây không phải bằng chứng đã cài hoặc upgrade trên thiết bị. |
 | Chất lượng thiết bị/sản phẩm | Android/iOS cài thật, đa chạm thật, FPS/nhiệt, upgrade thật và nghiên cứu người chơi chưa xác minh. Không công bố 30 FPS hoặc chất lượng bán hiện thực đã hoàn thành. |
 
 Phần mở tiếp theo của slice: Designer xác định art gap từ ảnh tham chiếu và cảnh prototype, BA/SA/Dev đánh giá vật liệu/địa hình/thảm thực vật/ánh sáng trong ngân sách mobile, rồi PO chốt batch có bằng chứng hình ảnh và device profiling. Vẫn giữ PO-04/05 địa lý/nội dung và PO-08 device gates; nghiệm thu kỹ thuật này không đóng các yêu cầu toàn Việt Nam/đảo hoặc fidelity hình ảnh.
+
+
+## Batch 0.5 — cải thiện cảnh đèo và vòng trải nghiệm
+
+**Quyết định PO ngày 07/11/2026: Ready, tối đa hai feature PO-11/12.** Ưu tiên thay đổi nhìn thấy được trong thế giới 3D; không lấy đổi version/UI thay cho art. Không thêm photo album trong batch này: PO-10 đã defer, lưu ảnh/thư viện hệ điều hành sẽ cần scope và QA riêng. Không dùng việc làm đèo để đóng hoặc bỏ backlog đảo.
+
+### PO-11 — Chiều sâu hình ảnh đèo và hai preset chất lượng (P0 / M–L)
+
+| AC | Điều kiện kiểm chứng |
+| --- | --- |
+| PO-11.A Mặt đường | Cùng tuyến/collision hiện có, bổ sung asphalt có biến thiên roughness/màu ở tỷ lệ phù hợp, vạch đường liền mạch theo khúc cua và shoulder/mép chắn đọc rõ. Không z-fighting, vạch nổi lơ lửng hoặc thay đổi mặt va chạm làm xe mắc ở vị trí cũ. Không dùng ảnh chưa rõ quyền làm texture. |
+| PO-11.B Cảnh quan | Có ít nhất ba lớp khác biệt: đá/sườn dốc gần đường; cây/bụi có biến thiên hình dáng/kích thước theo seed; nền núi xa tạo silhouette chiều sâu. Tránh cây lấn làn, chắn POI hoặc sinh trùng ở mỗi lần vào scene. Hai điểm dừng có bố cục góc nhìn phân biệt được, không chỉ đổi nhãn. |
+| PO-11.C Ánh sáng | Lighting/fog thống nhất màu, tạo phân lớp gần/xa và giữ vạch đường, traffic, vùng dừng nhìn được ở cả ba camera kiểm chứng. Fog không thay thế geometry hoặc che khuất tuyến bắt buộc. Mọi tài nguyên mới procedural-owned hoặc có provenance/license trong manifest. |
+| PO-11.D Preset | Thêm lựa chọn `Tiết kiệm` / `Chi tiết` áp dụng live và sau đổi scene/restart; mặc định Tiết kiệm khi save thiếu trường. Preset thay đổi thực sự mật độ/chi tiết trang trí hoặc tầm nhìn theo cấu hình được ghi rõ, **không đổi collision, POI, traffic, objective hoặc progress**. Tùy chọn bóng hiện có vẫn độc lập, không bị preset âm thầm ghi đè. Save v1 additive, sai kiểu/ngoài tập trở về default chỉ ở trường này. Không đổi preset thành cam kết FPS/máy yếu. |
+| PO-11.E Bằng chứng | Designer/root chụp trước–sau cùng vị trí/góc camera tại đầu tuyến, khúc cua và điểm dừng230; ghi preset và cấu hình render. PO đối chiếu riêng ba lớp A/B/C và sự khác nhau của hai góc dừng. Chỉ accepted cải thiện nếu thay đổi hiện diện ở scene/render, không chỉ tồn tại trong code. Full art fidelity theo ảnh tham chiếu vẫn là gate riêng; không tự gọi photoreal/bán hiện thực đã đạt. |
+
+### PO-12 — Vào demo và mục tiêu hành trình rõ (P1 / M)
+
+| AC | Điều kiện kiểm chứng |
+| --- | --- |
+| PO-12.A Entry | Có nút/entry tiếng Việt rõ để vào demo đèo từ danh mục hiện có; không cần tìm tên tỉnh hay qua quiz. First launch không ép xóa save hoặc chặn khám phá 47 vùng; người chơi chọn demo rồi vào được bằng một thao tác entry. Quay lại danh mục và tiếp tục checkpoint không mất progress. |
+| PO-12.B Objective | HUD một mục tiêu kế tiếp theo thứ tự: tới điểm dừng1 → dừng/xuống xe → đi bộ tương tác POI1 → tiếp tục tới điểm dừng2 → dừng/xuống xe/tương tác POI2 → tới cuối tuyến. Mục tiêu phản ánh mode, vùng dừng, guard vận tốc và dấu thực; đứng gần hoặc mở HUD không tự ghi dấu. Chỉ hiện tới cuối tuyến khi hai POI đã có dấu; kết thúc tuyến không gọi hoàn thành tỉnh/Việt Nam. |
+| PO-12.C Resume/replay | Tiến trình objective được suy từ dữ liệu slice/checkpoint/stamps và trạng thái hiện tại; mở lại game hoặc đổi scene không đòi đóng dấu lại POI cũ. Nếu có `Đi lại từ đầu`, chỉ reset vị trí/mode về điểm xuất phát an toàn, giữ stamps/settings/save lõi, không âm thầm xóa hành trình. Khi hai dấu đã có, mục tiêu không giả vờ chưa thăm; hành trình tự do vẫn cho phép vào lại điểm dừng. |
+| PO-12.D Input và QA | Entry, mục tiêu và modal thao tác được bằng touch/keyboard hiện có; chữ không che ga/phanh/lái/nút xuống xe ở viewport ngang kiểm chứng. Test thứ tự objective và guards không dùng teleport làm bằng chứng chơi end-to-end. Root lái thực một đoạn–dừng–đi bộ/tương tác–lên xe qua GUI; QA kiểm restart/migration, regression traffic/collision. Desktop/headless không thay cho kiểm điện thoại thật. |
+
+**Cửa giao 0.5:** QA có bằng chứng từng AC mới và hồi quy 0.4; root render paired views và chơi loop; APK hash/signature/alignment/package/version được xác minh trước gọi artifact ready. Android/iOS cài thật, FPS/nhiệt, đa chạm và nâng cấp thật vẫn PO-08; chờ model điện thoại không chặn art/logic độc lập.
+
+### Mốc đảo tiếp theo — PO-04 không bị hoãn vô hạn
+
+Ngay sau 0.5, trước khi mở thêm feature phụ trên đèo, team phải có **đề xuất catalog đảo v0 có thể review**: ít nhất một nguồn dữ liệu ứng viên thật đã đọc, license/version, cách định nghĩa đảo/quần đảo và tên/alias, mẫu bản ghi có ID/provenance/parent/geometry/scene-status, cùng báo cáo khoảng trống của 13 vùng hiện tại. Nếu chưa đủ nguồn tin cậy, ghi rõ phần thiếu và kế hoạch đối soát; không bịa mẫu số “mọi đảo”, không dùng bbox suy quốc gia. Đây là mốc tài liệu/dữ liệu bắt đầu PO-04, không phải cam kết tất cả đảo đã nhập. PO-05 tiếp tục yêu cầu pipeline nội dung riêng cho đất liền và đảo; cảnh đèo chỉ là một mẫu đất liền minh họa.
+
+
+### Nghiệm thu PO 0.5 — 07/11/2026
+
+**PO accepted chín AC PO-11.A–E/PO-12.A–D trong phạm vi cải thiện prototype desktop**, dựa báo cáo QA, root và Designer; không nghiệm thu fidelity ảnh tham chiếu hoặc thiết bị thực. QA: **466 assertion PASS qua 13 suite** (96 mới + 370 hồi quy mục tiêu). Root GUI `LIVE_LOOP05_PASS`: input touch mô phỏng đưa xe từ s5 tới s232,278, phanh ở vịnh dừng, xuống xe, đi bộ thật, tương tác F, quay lại lên xe và mục tiêu chuyển stop2; không teleport/reset trong lượt này.
+
+- PO-11.A–C/E: ba bộ ảnh baseline0.4/Tiết kiệm0.5/Chi tiết0.5 tại start/bend/stop230 có camera origin/basis/FOV69 và viewport1280×720 khớp, sai số pose lớn nhất0. Far clip khác có chủ đích theo profile420/440/650, đã công bố; không coi mọi render parameter là giống nhau. Designer/root xác nhận asphalt, cây/bụi phân lớp, mỏm đá và ridge/fog có thay đổi nhìn thấy. Vẫn stylized, núi xa trắng-cyan/mặt dốc phẳng/đặt đá bụi thô/điểm dừng trống còn mở; chưa đạt bán hiện thực/photoreal. Xem [ART_COMPARE_0.5.md](ART_COMPARE_0.5.md).
+- PO-11.D: QA xác minh Tiết kiệm/Chi tiết có1.398/2.724 instance trang trí trong48nhóm, settings live/persist/legacy/default và bóng độc lập; pose/vận tốc/collision/traffic/POI không đổi theo profile. Các số này là instance, không phải cây hay FPS.
+- PO-12.A–D: QA kiểm entry thật, objective guards cần hai dấu, resume/replay giữ tiến độ; root chơi loop một điểm dừng thực qua GUI. Mở lại/checkpoint không làm mất legacy core. Kiểm touch này là desktop simulation, không phải cảm ứng điện thoại.
+
+**Artifact ready LOCAL:** APK0.5.0/code5,51.697.778byte; SHA256 `282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772`. Root xác minh chữ kýv2/v3,16KiB alignment, không INTERNET,47JSON/license và bytecode mới đóng gói; package/certificate giữ từ0.4/code4→5. Chưa ghi GitHub released khi URL remote chưa xác nhận; metadata cho phép update không thay kiểm cài đè thật. Bằng chứng đầy đủ: [VALIDATION_0.5.md](VALIDATION_0.5.md).
+
+Oppo Find X7 Ultra và iPhone13 là thiết bị mục tiêu do người dùng nêu, **chưa thử thật**. Không có IPA ký, không có FPS/frame-time/RAM/nhiệt/pin hoặc market/user validation. Mốc catalog đảo v0 ở trên giữ bắt buộc trước feature phụ đèo tiếp theo; PO-04/05/08 và full art fidelity vẫn mở.

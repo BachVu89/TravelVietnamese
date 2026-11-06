@@ -52,3 +52,15 @@ Root đã chấp thuận batch này để triển khai. Tài liệu đầu vào,
 ## Nghiệm thu PO-10 prototype 0.4
 
 QA báo 417 assertion PASS (160 mới + 257 hồi quy); root báo desktop `PASS04_VISUAL_PASS` và pilot vật lý đi từ s5 tới s738,02. PO accepted **technical playable prototype**, gồm reset latest-passed đúng ranh giới và nội dung điểm dừng riêng. Hình ảnh hiện vẫn stylized; chưa đạt hình ảnh bán hiện thực theo tham chiếu. APK 0.4 đang build, chưa artifact ready; cài thật Android/iOS, FPS/đa chạm/upgrade và market validation còn mở. Không dùng nghiệm thu kỹ thuật để tuyên bố hoàn thành art hoặc phủ đủ Việt Nam/đảo.
+
+
+## Decision log — 07/11/2026, batch 0.5
+
+- Root xác nhận baseline0.4 đã xuất bản; PO chốt tối đa hai feature: PO-11 chiều sâu cảnh đèo/preset chất lượng, PO-12 entry demo và mục tiêu ride→stop→walk. Photo album tiếp tục deferred.
+- Art được review bằng paired screenshots cùng camera tại start/bend/stop230, không nghiệm thu bằng code hoặc version mới. Preset mặc định Tiết kiệm, giữ bóng độc lập, không đổi collision/traffic/POI. Không tuyên bố photoreal, FPS hay device verified khi chưa đo.
+- Sau0.5, trước feature phụ đèo tiếp theo, BA/SA/PO phải giao đề xuất catalog đảo v0 có nguồn/license/ID/coverage gaps để mở PO-04. Không coi 13 vùng đảo là catalog đầy đủ; PO-05 nội dung riêng đảo vẫn mở.
+
+
+## PO acceptance 0.5 — 07/11/2026
+
+PO accepted chín AC PO-11/12 ở mức cải thiện prototype desktop:466assertion/13suite PASS; paired9ảnh có pose/FOV/viewport khớp; Designer xác nhận ba lớp art đổi rõ; root GUI ride→stop→walk/interact→remount/nexttarget bằng input thật khôngteleport. Núi xa/faces/placement vẫn stylized, fidelity tham chiếu chưa đạt. APK0.5 localready:51.697.778byte, SHA256 `282b805f5715e7320815f83535cfb5e58e406b489bf40da05c6140a4331d3772`, chữ ký/alignment/package kiểm đạt; chưa ghi GitHub released trước URL. Oppo Find X7 Ultra/iPhone13 chưa thử; không FPS/device/market claims. Mốc catalog đảo v0 sau0.5 không đổi.
