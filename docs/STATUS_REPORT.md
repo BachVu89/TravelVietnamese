@@ -4,6 +4,14 @@
 
 **Bản thử mới nhất là 3D 0.5, đã đăng APK và ZIP source lên GitHub.** Mã nguồn ở **`codex-work`**, bản cài ở **`apk-download`**. 466 kiểm tra/13 suite, ảnh đối chiếu và vòng chơi GUI đạt trong phạm vi desktop. **Chưa kiểm trên điện thoại thực; hình ảnh vẫn là prototype cách điệu.**
 
+## Yêu cầu đồ họa mới — 07/11/2026
+
+Người dùng yêu cầu UE5 và hệ sinh thái PBR/scan/rừng nhiệt đới/đường ướt/sương theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt), sau đó xác nhận chưa có UE hoặc asset sẵn. Team đã chuẩn bị project C++ UE5.5, spline/mesh đường và cảnh placeholder, material slots, script tạo material PBR tham số và map trong Editor, cấu hình mobile, entrypoint build, danh sách asset và kế hoạch chuyển engine. Xem [hướng dẫn](../unreal/README.md), [tiêu chí đồ họa](GRAPHICS_REQUIREMENTS.md), [kiểm chứng](UNREAL_VALIDATION.md).
+
+**Chưa có UE trong môi trường để compile/render/cook. Chưa có map/material `.uasset` sinh từ Editor, APK/IPA Unreal, xe máy/touch/save đã port hoặc bằng chứng đồ họa đạt mẫu.** Kiểm tra source/config không thay runtime. Godot 0.5 vẫn là APK chơi được đã giao; UE là nhánh công việc mới trong cùng `codex-work`, không phải bản nâng đồ họa đã cài được.
+
+Ưu tiên triển khai mới là xác minh scaffold trên UE, rồi hoàn thiện một đoạn đèo với asset có license và kiểm điện thoại trước khi nhân rộng; catalog đảo vẫn là nghĩa vụ dữ liệu riêng, không coi danh mục cũ là scene Unreal đã có. Nanite/Lumen chỉ đánh giá ở profile desktop riêng, không hứa chạy trên iPhone 13/Oppo từ config.
+
 ## 1. Team đã làm được gì?
 
 | Phiên bản | Nội dung đã có | Trạng thái và giới hạn |
@@ -12,7 +20,7 @@
 | **0.2 — nền game 3D** | Chuyển sang Godot: điều khiển nhân vật đi bộ, camera góc nhìn thứ ba, địa hình/va chạm, POI, lưu offline và đổi địa điểm. Danh mục 47 mục gồm 34 tỉnh/thành và 13 vùng đảo, mỗi mục vào được cảnh minh họa có ba POI. Có APK và gói source. | Phần lớn nội dung sinh bằng thuật toán; Hà Nội có khu mẫu riêng. Đây không phải toàn bộ địa hình hoặc công trình của mỗi tỉnh/đảo. |
 | **0.3 — cải thiện trải nghiệm** | Hướng dẫn ba thao tác thật; chỉ tới POI chưa thăm gần nhất; bật/tắt bóng và ba mức nhạy camera; giữ save 0.2. Có APK/gói source đã phân phối trên GitHub. | PO nghiệm thu phạm vi logic/desktop. Chưa xác minh cảm ứng, hiệu năng hoặc cài đè trên điện thoại thực. |
 | **0.4 — bản thử đã phân phối** | Đường đèo, xe máy, ba xe traffic, hai điểm dừng, đi bộ tham quan, checkpoint và HUD/touch đã tích hợp. QA 417 kiểm tra đạt; vòng chơi render desktop đạt. APK và ZIP source đã đăng GitHub. | Source đã push lên `codex-work`; artifact trên `apk-download`. Chưa mobile/iOS verified. Hình ảnh là prototype cách điệu, chưa đạt ảnh tham chiếu. |
-| **0.5 — bản thử local sẵn sàng** | PO-11/12 đã triển khai: cải thiện ba lớp mỹ thuật, hai preset, entry demo và mục tiêu hành trình. 466 kiểm tra đạt; ảnh đối chiếu cùng camera và vòng chơi GUI đạt; có APK đã kiểm. | Chưa xác nhận artifact 0.5 trên remote. Hình ảnh vẫn cách điệu; hai điện thoại đích và iOS chưa kiểm chứng. |
+| **0.5 — bản thử đã phân phối** | PO-11/12 đã triển khai: cải thiện ba lớp mỹ thuật, hai preset, entry demo và mục tiêu hành trình. 466 kiểm tra đạt; ảnh đối chiếu cùng camera và vòng chơi GUI đạt; có APK đã kiểm. | APK/source ZIP đã đăng nhánh `apk-download`. Hình ảnh vẫn cách điệu; hai điện thoại đích và iOS chưa kiểm chứng. |
 
 Bên cạnh mã game, team đã lập tài liệu yêu cầu và điều kiện nghiệm thu, kiến trúc, UX/mỹ thuật, phạm vi dữ liệu địa lý, nghiên cứu định tính có nguồn, backlog và bộ kiểm thử. Nghiên cứu PO là đối chiếu sản phẩm công khai; chưa phải khảo sát thị trường đại diện hoặc bằng chứng người chơi thật.
 

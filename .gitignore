@@ -15,3 +15,16 @@ export_credentials.cfg
 .env
 .env.*
 !.env.example
+
+# Unreal: keep source/config; regenerate build, caches and local editor state
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+unreal/**/.vs/
+unreal/**/*.sln
+unreal/**/*.suo
+unreal/**/*.opensdf
+artifacts/unreal-*/
+__pycache__/
+*.py[cod]

@@ -68,3 +68,7 @@ PO accepted chín AC PO-11/12 ở mức cải thiện prototype desktop:466asser
 ## Xác nhận phân phối 0.5
 
 Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.
+
+## Yêu cầu chuyển đồ họa UE5 — 07/11/2026
+
+Người dùng gửi brief UE5/PBR/scan/cây nhiệt đới/sương và xác nhận chưa có engine/asset. Bắt đầu source scaffold trong `unreal/`, giữ bản Godot đã giao. SA chốt mobile pipeline riêng không mặc định Nanite/Lumen; Designer lập tiêu chí và manifest ứng viên chưa mua/license chưa xác minh; Dev chuẩn bị C++/bootstrap; QA review tĩnh và ghi rõ chưa có UE để compile/render/cook. Root tích hợp build wrapper và material generator tham số. Đây chưa phải bản chơi Unreal hoặc chất lượng hình ảnh đã được nghiệm thu. Chi tiết [UNREAL_MIGRATION.md](UNREAL_MIGRATION.md), [UNREAL_VALIDATION.md](UNREAL_VALIDATION.md).

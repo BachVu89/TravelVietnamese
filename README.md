@@ -8,6 +8,12 @@ Bản 0.4 bổ sung tuyến đèo mẫu, xe máy, giao thông và hai điểm d�
 
 Bản 0.5 cải thiện cây/đá/mặt đường/chiều sâu cảnh, thêm hai mức chi tiết và mục tiêu tuyến. Vào trực tiếp bằng **Chơi đèo mẫu**; [kết quả 0.5](docs/VALIDATION_0.5.md), [ảnh đối chiếu cùng camera](docs/ART_COMPARE_0.5.md). Oppo Find X7 Ultra và iPhone 13 là thiết bị đích được người dùng nêu, chưa phải thiết bị đã kiểm chứng.
 
+## Hướng đồ họa mới: Unreal Engine 5
+
+Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.
+
+Xem [yêu cầu đồ họa và tiêu chí](docs/GRAPHICS_REQUIREMENTS.md), [kế hoạch chuyển engine](docs/UNREAL_MIGRATION.md), [kiểm chứng hiện tại](docs/UNREAL_VALIDATION.md), [danh sách asset cần bổ sung](docs/art/asset-manifest.json) và [nội dung gốc người dùng cung cấp](docs/inputs/GRAPHICS_BRIEF_2026-11-07.txt). Nanite/Lumen là mục tiêu cấu hình desktop riêng; mobile có pipeline riêng cần kiểm trên thiết bị. Chưa mua/tải gói Fab hoặc asset thương mại và chưa tuyên bố đạt hình ảnh tham chiếu.
+
 ## Bản nền tảng 3D
 
 Dự án Godot 4.6.3 ở `game3d/`, dùng Compatibility renderer và nội dung đóng gói. Có đi bộ, xoay camera, va chạm, tương tác khi ở gần điểm tham quan và lưu tiến trình local. Các cảnh tạo theo quy tắc là cảnh minh họa; chưa số hóa địa hình hoặc toàn bộ tỉnh ngoài thực tế.

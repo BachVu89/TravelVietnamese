@@ -172,3 +172,9 @@ Oppo Find X7 Ultra và iPhone13 là thiết bị mục tiêu do người dùng n
 ## Xác nhận phân phối 0.5
 
 Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `apk-download`. [Tải APK 0.5.0](https://github.com/BachVu89/TravelVietnamese/raw/refs/heads/apk-download/doc-mien-viet-3d-0.5.0.apk). Trạng thái local-ready phía trên là ghi nhận trước phân phối; hiện đã giao trên GitHub. Không bổ sung kết quả kiểm thử thiết bị.
+
+## PO-13 — Hướng đồ họa UE5 theo yêu cầu mới, 07/11/2026
+
+Yêu cầu mới ưu tiên chuyển engine và một đoạn đèo mẫu, theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt). Phạm vi mobile offline Android/iOS vẫn giữ; không mặc định Nanite/Lumen/plugin desktop hoạt động trên điện thoại. Người dùng chưa có engine/asset; trước mắt giao source scaffold, tiêu chí, danh sách tài nguyên và kiểm tra tiền đề, không gọi là bản nâng đồ họa đã chạy.
+
+Các cổng độc lập: (A) UHT/UBT/editor/map chạy; (B) vật liệu/asset có provenance+license và render so với tham chiếu; (C) vòng xe→đỗ→đi bộ→POI/save thực; (D) cook/cài standalone offline; (E) đo trên Oppo Find X7 Ultra/iPhone 13. Hiện A–E chưa nghiệm thu. Source scaffold/static checks không đóng các cổng này. Chưa mở mua asset/plugin hoặc phát hành store. Catalog đảo vẫn cần nguồn/license/coverage, không tự xem đã hoàn thành sau chuyển engine.

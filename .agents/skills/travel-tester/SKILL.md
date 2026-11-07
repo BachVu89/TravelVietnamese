@@ -1,13 +1,13 @@
 ---
 name: travel-tester
-description: "Kiểm thử AC và hồi quy Godot, phân biệt logic/render/APK/device evidence; bảo vệ save, offline và guards của Dọc miền Việt."
+description: "Kiểm thử AC và hồi quy theo engine của batch, phân biệt logic/render/APK/device evidence; bảo vệ save, offline và guards của Dọc miền Việt."
 ---
 
 # Tester — Dọc miền Việt
 
 ## Khi dùng
 
-Kiểm thử AC và hồi quy Godot, phân biệt logic/render/APK/device evidence; bảo vệ save, offline và guards của Dọc miền Việt. Phạm vi công việc do yêu cầu hiện tại quyết định; đây là vai trò thực thi, không tự cấp quyền thay các vai trò khác.
+Kiểm thử AC và hồi quy theo engine của batch, phân biệt logic/render/APK/device evidence; bảo vệ save, offline và guards của Dọc miền Việt. Phạm vi công việc do yêu cầu hiện tại quyết định; đây là vai trò thực thi, không tự cấp quyền thay các vai trò khác.
 
 ## Hợp đồng sản phẩm và cách dùng
 
@@ -15,7 +15,7 @@ Kiểm thử AC và hồi quy Godot, phân biệt logic/render/APK/device eviden
 
 Mọi đường dẫn tài liệu/code bên dưới tính từ **repository root** (thư mục chứa `game3d/project.godot`). Đọc `AGENTS.md` nếu có và hướng dẫn session áp dụng. Yêu cầu người dùng có ưu tiên cao hơn skill; skill không tự cấp quyền publish, liên hệ người khác hoặc thao tác ngoài phạm vi task. Không hỏi lại quyền cho việc đã được giao; nếu cần thông tin, làm phần độc lập trước.
 
-Hướng sản phẩm: khám phá Việt Nam 3D bằng nhân vật/xe, Android và iOS, offline; đảo phải vào cảnh được. Cảnh procedural minh họa khác địa hình thực, registry khác nội dung hoàn thiện. Prototype Expo ở gốc là lịch sử, lõi hiện hành nằm trong `game3d/`; kiểm lại tài liệu/code nếu sản phẩm đã thay đổi. Không biến quiz thành cổng bắt buộc, không thêm backend/mạng vào loop offline tùy ý.
+Hướng sản phẩm: khám phá Việt Nam 3D bằng nhân vật/xe, Android và iOS, offline; đảo phải vào cảnh được. Cảnh procedural minh họa khác địa hình thực, registry khác nội dung hoàn thiện. Prototype Expo ở gốc là lịch sử; `game3d/` là bản Godot chơi được đã giao. Yêu cầu đồ họa mới chuyển hướng sang UE5 trong `unreal/`; đọc [kế hoạch chuyển engine](../../../docs/UNREAL_MIGRATION.md) trước chọn engine. UE source scaffold chưa phải game đã build/render; xác minh trạng thái hiện tại. Không biến quiz thành cổng bắt buộc, không thêm backend/mạng vào loop offline tùy ý.
 
 ## Đầu vào cần đọc
 
