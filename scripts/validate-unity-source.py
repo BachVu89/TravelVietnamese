@@ -18,6 +18,13 @@ def check(value,label):
 manifest=json.loads((PROJECT/'Packages/manifest.json').read_text())
 check(manifest['dependencies']['com.unity.render-pipelines.universal']=='17.0.3','pinned URP')
 check('com.unity.render-pipelines.high-definition' not in manifest['dependencies'],'no HDRP mobile dependency')
+# Legacy Input is an Editor/player setting, not an installable built-in module.
+invalid_modules={'com.unity.modules.inputlegacy','com.unity.modules.adaptiveperformance',
+                 'com.unity.modules.physicscore2d','com.unity.modules.textgen'}
+for project_name in ('TravelVietnamese','TravelVietnamese-HDRP'):
+    deps=json.loads((ROOT/'unity'/project_name/'Packages/manifest.json').read_text())['dependencies']
+    check(not invalid_modules.intersection(deps),'no invalid built-in module IDs: '+project_name)
+
 check('m_EditorVersion: 6000.0.32f1' in (PROJECT/'ProjectSettings/ProjectVersion.txt').read_text(),'pinned editor')
 domain=PROJECT/'Assets/TravelVietnamese/Runtime/PassRules.cs'
 check('UnityEngine' not in domain.read_text() and 'UnityEditor' not in domain.read_text(),'Domain source independent engine')
