@@ -1,0 +1,77 @@
+{
+  "seed": 71130,
+  "generator": "scripts/art/create-unity-forest-assets.py",
+  "blender": "4.3.2",
+  "source": "original procedural geometry; no scans/downloads/textures",
+  "assets": [
+    {
+      "name": "SM_BroadleafTree",
+      "file": "SM_BroadleafTree.fbx",
+      "triangles": 7808,
+      "vertices": 8960,
+      "dimensions_m": [
+        6.0797,
+        5.8923,
+        6.6627
+      ],
+      "material_slots": [
+        "M_Forest_Bark",
+        "M_Forest_LeafDeep",
+        "M_Forest_LeafMid",
+        "M_Forest_LeafSun",
+        "M_Forest_PineNeedles"
+      ],
+      "uv_layers": [
+        "UVMap"
+      ],
+      "pivot": "base Z0",
+      "sha256": "89cef0e65b9263ac5eee6e66b9ae8bc1d02353d33b452b8672c27e01e3763845"
+    },
+    {
+      "name": "SM_PineTree",
+      "file": "SM_PineTree.fbx",
+      "triangles": 6958,
+      "vertices": 7627,
+      "dimensions_m": [
+        4.5971,
+        4.7153,
+        6.8023
+      ],
+      "material_slots": [
+        "M_Forest_Bark",
+        "M_Forest_LeafDeep",
+        "M_Forest_LeafMid",
+        "M_Forest_LeafSun",
+        "M_Forest_PineNeedles"
+      ],
+      "uv_layers": [
+        "UVMap"
+      ],
+      "pivot": "base Z0",
+      "sha256": "99ccd8a3fbc1327ed81c02237444f28abce75c3e7509df5bc5706486ccf6e713"
+    },
+    {
+      "name": "SM_ForestBush",
+      "file": "SM_ForestBush.fbx",
+      "triangles": 3916,
+      "vertices": 4114,
+      "dimensions_m": [
+        2.0024,
+        1.7909,
+        1.2971
+      ],
+      "material_slots": [
+        "M_Forest_Bark",
+        "M_Forest_LeafDeep",
+        "M_Forest_LeafMid",
+        "M_Forest_LeafSun",
+        "M_Forest_PineNeedles"
+      ],
+      "uv_layers": [
+        "UVMap"
+      ],
+      "pivot": "base Z0",
+      "sha256": "6f99ea83ffb9110f3928f7755eec80dd46bbca6d947f393c41ac57cc4ea7bf3b"
+    }
+  ]
+}

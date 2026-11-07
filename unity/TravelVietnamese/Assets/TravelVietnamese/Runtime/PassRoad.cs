@@ -4,13 +4,12 @@ namespace TravelVietnamese.UnityPrototype
 {
     public sealed class PassRoad : MonoBehaviour
     {
-        public void Build(Material road,Material shoulder,Material rock,Material foliage)
+        public void Build(Material road,Material shoulder,Material rock,Material foliage,bool scenic=false)
         {
             Strip("Road",-3.5f,3.5f,road,true,false,false);
             Strip("Left shoulder",-4.25f,-3.5f,shoulder,true,false,false);
             Strip("Right shoulder and stopping bays",3.5f,4.25f,shoulder,true,false,false,true);
-            Strip("Rock slope",-65,-4.25f,rock,false,true,false);
-            Strip("Valley slope",4.25f,90,foliage,false,false,true);
+            if(!scenic){Strip("Rock slope",-65,-4.25f,rock,false,true,false);Strip("Valley slope",4.25f,90,foliage,false,false,true); }
             for(int s=0;s<750;s+=5)
             {
                 foreach(float side in new float[]{-1,1})

@@ -28,3 +28,21 @@ for name,left,right,cliff,valley,widened in strips:
     assert all(math.isfinite(y) and y>0 for y in normals),(name,min(normals))
     print(f'NUMERICAL: {name}: 600 triangles, min signed normal Y={min(normals):.6f}, none flipped/degenerate in XZ')
 print('SOURCE-EQUATION AUDIT ONLY: 3000 sampled triangles, no local XZ winding flip; not proof against global intersections, rendering/camera clipping or Unity collider bugs.')
+
+# New scenic terrain: derive strip bounds from current source, independently audit XZ.
+from pathlib import Path
+import re
+landscape=(Path(__file__).resolve().parents[1]/'Assets/TravelVietnamese/Runtime/PassLandscape.cs').read_text()
+for left,right in re.findall(r'TerrainChunk\(chunk,(-?[\d.]+)f?,(-?[\d.]+)f?,',landscape):
+    left,right=float(left),float(right);signed=[]
+    for chunk in range(15):
+        for z in range(20):
+            station=chunk*50+z*2.5
+            for x in range(20):
+                lane=left+(right-left)*x/20;next_lane=left+(right-left)*(x+1)/20
+                a,b=vertex(station,lane),vertex(station+2.5,lane)
+                c,d=vertex(station,next_lane),vertex(station+2.5,next_lane)
+                signed.extend((cross(sub(b,a),sub(c,a))[1],cross(sub(b,c),sub(d,c))[1]))
+    flipped=sum(v<=0 for v in signed)
+    print(f'SCENIC XZ AUDIT: lanes {left}..{right}; {len(signed)} triangles, nonpositive={flipped}, minY={min(signed):.6f}')
+    assert flipped==0,'Decorative scenic grid folds in XZ; height noise cannot remove planar self fold'

@@ -7,6 +7,9 @@ namespace TravelVietnamese.UnityPrototype
         public Material RoadMaterial,ShoulderMaterial,RockMaterial,FoliageMaterial;
         public GameObject BikeVisualPrefab,WalkerVisualPrefab,TreePrefab;
         public GameObject RockPrefab,FernPrefab,BananaPrefab;
+        public GameObject BroadleafPrefab,PinePrefab,BushPrefab,RiderVisualPrefab;
+        public bool ScenicQuality=true,ForceTouchControls=false;
+        public float RidingCameraDistance=7,WalkingCameraDistance=5,CameraFieldOfView=69;
         public bool BuildOnAwake=true;
         public PassBike Bike {get;private set;}
         public PassWalker Walker {get;private set;}
@@ -18,18 +21,19 @@ namespace TravelVietnamese.UnityPrototype
         {
             if(initialized)return;initialized=true;
             State=PassJournal.Load(out message);allowSave=string.IsNullOrEmpty(message);
-            GameObject road=new GameObject("Procedural pass — illustrative, not GIS");road.transform.SetParent(transform,false);road.AddComponent<PassRoad>().Build(RoadMaterial,ShoulderMaterial,RockMaterial,FoliageMaterial);
+            GameObject road=new GameObject("Procedural pass — illustrative, not GIS");road.transform.SetParent(transform,false);road.AddComponent<PassRoad>().Build(RoadMaterial,ShoulderMaterial,RockMaterial,FoliageMaterial,ScenicQuality);
             GameObject bike=new GameObject("Original arcade motorbike");bike.transform.SetParent(transform,false);Bike=bike.AddComponent<PassBike>();Bike.Place(State.BikeS,State.BikeLane);
             bikeVisual=Visual(bike.transform,BikeVisualPrefab,true);
-            riderVisual=new GameObject("Original rider silhouette");riderVisual.transform.SetParent(bike.transform,false);
+            if(RiderVisualPrefab!=null){riderVisual=Instantiate(RiderVisualPrefab,bike.transform);riderVisual.transform.localPosition=Vector3.zero;foreach(Collider collider in riderVisual.GetComponentsInChildren<Collider>())collider.enabled=false;}
+            else {riderVisual=new GameObject("Original rider silhouette");riderVisual.transform.SetParent(bike.transform,false);
             Primitive(riderVisual,PrimitiveType.Cube,new Vector3(0,1.45f,-0.12f),new Vector3(0.46f,0.65f,0.3f));
             Primitive(riderVisual,PrimitiveType.Sphere,new Vector3(0,1.99f,-0.04f),Vector3.one*0.48f);
-            foreach(float side in new float[]{-1,1}){Primitive(riderVisual,PrimitiveType.Cube,new Vector3(side*0.28f,1.15f,0.23f),new Vector3(0.12f,0.12f,0.65f));Primitive(riderVisual,PrimitiveType.Cube,new Vector3(side*0.26f,0.77f,-0.1f),new Vector3(0.17f,0.65f,0.19f));}
+            foreach(float side in new float[]{-1,1}){Primitive(riderVisual,PrimitiveType.Cube,new Vector3(side*0.28f,1.15f,0.23f),new Vector3(0.12f,0.12f,0.65f));Primitive(riderVisual,PrimitiveType.Cube,new Vector3(side*0.26f,0.77f,-0.1f),new Vector3(0.17f,0.65f,0.19f));}}
             GameObject walker=new GameObject("An — walking");walker.transform.SetParent(transform,false);Walker=walker.AddComponent<PassWalker>();Visual(walker.transform,WalkerVisualPrefab,false);
             Riding=true;Walker.SetActive(false);
             if(!State.Riding && PassRules.CanDismount(0,State.BikeS,State.BikeLane))ToggleVehicle();
             controls=gameObject.AddComponent<PassInput>();
-            GameObject cameraObject=new GameObject("Third person camera");view=cameraObject.AddComponent<Camera>();cameraRig=cameraObject.AddComponent<PassCameraRig>();view.fieldOfView=69;view.farClipPlane=450;view.nearClipPlane=0.12f;
+            GameObject cameraObject=new GameObject("Third person camera");view=cameraObject.AddComponent<Camera>();cameraRig=cameraObject.AddComponent<PassCameraRig>();view.fieldOfView=Mathf.Clamp(CameraFieldOfView,45,85);view.farClipPlane=850;view.nearClipPlane=0.12f;
             if(Camera.main!=null && Camera.main!=view)Camera.main.enabled=false;cameraObject.tag="MainCamera";
             orbitYaw=Bike.transform.eulerAngles.y;
             for(int i=0;i<2;i++)
@@ -37,7 +41,8 @@ namespace TravelVietnamese.UnityPrototype
                 GameObject marker=GameObject.CreatePrimitive(PrimitiveType.Cylinder);marker.name=PassRules.StopIds[i];marker.transform.position=PassRoute.At(PassRules.StopDistances[i],10)+Vector3.up;
                 marker.transform.localScale=new Vector3(0.5f,1,0.5f);marker.GetComponent<Renderer>().sharedMaterial=ShoulderMaterial;
             }
-            if(TreePrefab!=null)for(int i=0;i<140;i++){float s=i*5.25f;float side=i%2==0?-1:1;float lane=side*(18+(i%9)*3);Vector3 p=PassRoute.At(s,lane);p.y+=(Mathf.Abs(lane)-4.25f)*(side<0?0.72f:-0.55f);Instantiate(TreePrefab,p,Quaternion.Euler(0,(i*137)%360,0),transform);}
+            if(!ScenicQuality && TreePrefab!=null)for(int i=0;i<140;i++){float s=i*5.25f;float side=i%2==0?-1:1;float lane=side*(18+(i%9)*3);Vector3 p=PassRoute.At(s,lane);p.y+=(Mathf.Abs(lane)-4.25f)*(side<0?0.72f:-0.55f);Instantiate(TreePrefab,p,Quaternion.Euler(0,(i*137)%360,0),transform);}
+            if(ScenicQuality)road.AddComponent<PassLandscape>().Build(RockMaterial,FoliageMaterial,BroadleafPrefab,PinePrefab,BushPrefab,RockPrefab);
             Decorations();
             RenderSettings.fog=true;RenderSettings.fogMode=FogMode.Exponential;RenderSettings.fogDensity=0.004f;RenderSettings.fogColor=new Color(0.65f,0.71f,0.7f);
             Physics.SyncTransforms();
@@ -49,7 +54,7 @@ namespace TravelVietnamese.UnityPrototype
             {
                 float s=10+i*7.3f;float side=i%2==0?-1:1;float lane=side*(side<0?7+(i%5)*2:18+(i%5)*3);
                 GameObject prefab=i%3==0?RockPrefab:(i%3==1?FernPrefab:BananaPrefab);if(prefab==null)continue;
-                Vector3 p=PassRoute.At(s,lane);p.y+=(Mathf.Abs(lane)-4.25f)*(side<0?0.72f+Mathf.Sin(s*0.07f)*0.08f:-0.55f);
+                Vector3 p=ScenicQuality?PassLandscape.SurfacePoint(s,lane):PassRoute.At(s,lane);if(!ScenicQuality)p.y+=(Mathf.Abs(lane)-4.25f)*(side<0?0.72f+Mathf.Sin(s*0.07f)*0.08f:-0.55f);
                 GameObject decoration=Instantiate(prefab,p,Quaternion.Euler(0,(i*137)%360,0),transform);
                 foreach(Collider collider in decoration.GetComponentsInChildren<Collider>())collider.enabled=false;
             }
@@ -77,7 +82,7 @@ namespace TravelVietnamese.UnityPrototype
             if(Riding && controls.Look.sqrMagnitude<0.01f)orbitYaw=Mathf.LerpAngle(orbitYaw,Bike.transform.eulerAngles.y,Time.deltaTime*1.8f);
             Vector3 target=active.position+Vector3.up*1.6f;
             Quaternion rotation=Quaternion.Euler(pitch,orbitYaw,0);
-            cameraRig.Apply(view,target,rotation,Riding?7:5,Bike.transform,Walker.transform,Time.deltaTime);
+            cameraRig.Apply(view,target,rotation,Riding?Mathf.Max(3,RidingCameraDistance):Mathf.Max(3,WalkingCameraDistance),Bike.transform,Walker.transform,Time.deltaTime);
         }
         public bool ToggleVehicle()
         {
@@ -136,17 +141,27 @@ namespace TravelVietnamese.UnityPrototype
         void OnGUI()
         {
             if(!initialized)return;
-            float scale=Mathf.Max(1,Screen.height/720f);GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,Vector3.one*scale);
+            Matrix4x4 oldMatrix=GUI.matrix;Color oldBackground=GUI.backgroundColor;
+            float scale=Mathf.Max(1,Screen.height/900f);GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,Vector3.one*scale);
             float width=Screen.width/scale,height=Screen.height/scale;
-            GUI.Box(new Rect(12,10,width-24,115),"DỌC MIỀN VIỆT · UNITY SOURCE PROTOTYPE");
-            GUI.Label(new Rect(25,38,width-50,28),(Riding?"Xe máy · "+(Bike.Speed*3.6f).ToString("0")+" km/h":"Đi bộ")+" · "+State.Visited.Count+"/2 dấu · "+PassRoute.Distance(Bike.transform.position).ToString("0")+" / ≈750 m cảnh");
-            if(GUI.Button(new Rect(25,72,150,40),Riding?"Xuống xe [F]":"Lên xe [F]"))ToggleVehicle();
-            if(GUI.Button(new Rect(185,72,150,40),"Khám phá [E]"))Inspect();
-            if(GUI.Button(new Rect(345,72,130,40),"Về lối an toàn [R]"))ResetToCheckpoint();
-            if(GUI.Button(new Rect(485,72,90,40),"Lưu"))Save();
-            GUI.Box(new Rect(20,height-95,width-40,80),message+"\nWASD: lái/đi bộ · W: ga · S: phanh · Chuột phải/kéo phải: camera · Dừng trong vịnh bên phải để xuống xe");
-            GUI.Box(new Rect(20,height-210,160,90),"CẦN TRÁI\nLái / đi bộ");
-            GUI.Box(new Rect(width*0.70f,height-210,width*0.14f,95),"PHANH");GUI.Box(new Rect(width*0.86f,height-210,width*0.13f,95),"GA");
+            bool touch=Application.isMobilePlatform || ForceTouchControls;float actionHeight=touch?44:29;
+            GUI.backgroundColor=new Color(0.12f,0.19f,0.17f,0.58f);
+            GUI.Box(new Rect(12,10,Mathf.Min(width-24,780),touch?90:72),"");
+            GUI.Label(new Rect(24,16,750,24),"DỌC MIỀN VIỆT  ·  "+(Riding?(Bike.Speed*3.6f).ToString("0")+" km/h":"ĐI BỘ")+"  ·  "+State.Visited.Count+"/2 dấu  ·  "+PassRoute.Distance(Bike.transform.position).ToString("0")+" / ≈750 m cảnh");
+            if(GUI.Button(new Rect(24,44,130,actionHeight),Riding?"Xuống xe [F]":"Lên xe [F]"))ToggleVehicle();
+            if(GUI.Button(new Rect(161,44,130,actionHeight),"Khám phá [E]"))Inspect();
+            if(GUI.Button(new Rect(298,44,145,actionHeight),"Điểm an toàn [R]"))ResetToCheckpoint();
+            if(GUI.Button(new Rect(450,44,75,actionHeight),"Lưu"))Save();
+            string footer=string.IsNullOrEmpty(message)?"WASD: lái / đi bộ · W: ga · S: phanh · Chuột phải: camera · Đỗ bên phải để xuống xe":message;
+            GUI.Box(new Rect(18,height-48,Mathf.Min(width-36,1050),35),footer);
+            if(touch)
+            {
+                // Match PassInput's normalised touch zones, expressed here in GUI coordinates.
+                GUI.Box(new Rect(width*0.035f,height*0.72f,width*0.19f,height*0.14f),"CẦN TRÁI\nLái / đi bộ");
+                GUI.Box(new Rect(width*0.70f,height*0.70f,width*0.14f,height*0.16f),"PHANH");
+                GUI.Box(new Rect(width*0.86f,height*0.70f,width*0.13f,height*0.16f),"GA");
+            }
+            GUI.backgroundColor=oldBackground;GUI.matrix=oldMatrix;
         }
         GameObject Visual(Transform parent,GameObject prefab,bool bike)
         {

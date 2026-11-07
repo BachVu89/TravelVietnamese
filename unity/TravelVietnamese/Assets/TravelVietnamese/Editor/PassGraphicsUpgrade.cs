@@ -84,8 +84,8 @@ namespace TravelVietnamese.Editor
         public static void UpdateSceneGraphics()
         {
             PassGame game=UnityEngine.Object.FindFirstObjectByType<PassGame>();
-            ApplyTo(game);
-            Debug.Log("GRAPHICS_V2_ASSIGNED: save scene (Ctrl+S), then Play. Original procedural PBR maps, not scanned/photoreal assets.");
+            PassScenicUpgrade.ApplyTo(game);
+            Debug.Log("SCENIC_V3_ASSIGNED: save scene (Ctrl+S), then Play. New terrain/forest/character art; inspect image and performance in Unity.");
         }
     }
 }

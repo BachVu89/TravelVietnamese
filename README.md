@@ -14,6 +14,10 @@ Người dùng đã chuyển lựa chọn engine sang Unity 6. Source mobile ở
 
 Xem [migration](docs/UNITY_MIGRATION.md) và [bằng chứng/giới hạn](docs/UNITY_VALIDATION.md). Môi trường thiếu Editor/license, truy cập kênh tải chính thức hiện bị proxy trả CONNECT 403. Tỷ lệ chất lượng “90–95%”, kích thước bộ cài, hiệu năng và plugin thương mại chưa được xác minh. Godot 0.5 vẫn là bản APK chơi được đã giao; UE giữ lại như công việc lịch sử.
 
+### Scenic V3 — cập nhật cảnh Unity đang có
+
+[Hướng dẫn V3](docs/UNITY_SCENIC_V3.md): menu **Update Scene Graphics** hiện gán rừng, xe/người và địa hình có khối vào scene cũ. Xem [asset rừng](docs/art/forest-preview.png) và [xe/người](docs/art/travel-characters-preview.png) được render bằng Blender, không phải Unity. Asset vẫn cách điệu; chưa có nghiệm thu ảnh Unity hoặc hiệu năng mobile.
+
 ## Hướng UE5 trước khi chuyển Unity
 
 Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đã bổ sung source Character đi bộ/camera và [ba asset gốc từ Blender](docs/art/ORIGINAL_ASSETS.md), kèm [ảnh preview Blender](docs/art/asset-preview.png). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.

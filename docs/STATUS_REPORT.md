@@ -163,3 +163,7 @@ Mốc kế tiếp: đề xuất catalog đảo v0 có nguồn/version/license/ID
 ## Phản hồi chạy Unity thực tế và hướng sửa
 
 Người dùng đã mở/chạy project và gửi ảnh lỗi đường nhấp nháy chỉ khi xe chạy; đồ họa hiện còn prototype. Team bổ sung camera query lọc actor, near-plane guard và recovery; menu cập nhật scene cũ với chín map PBR gốc. Đây là source patch và kiểm logic, chưa tái hiện/đánh dấu hết lỗi trong Unity. Xem [UNITY_CAMERA_GRAPHICS_FIX.md](UNITY_CAMERA_GRAPHICS_FIX.md).
+
+## Phản hồi chất lượng hình ảnh — Scenic V3
+
+Sau khi người dùng tiếp tục từ chối chất lượng texture-only, batch này thay đổi cấu trúc cảnh/asset: ridged terrain, núi xa, rừng instancing, xe/người gốc và HUD desktop gọn. Có ảnh Blender và FBX readback thực, sửa mesh fold bằng audit số; chưa có Unity screenshot/performance do team chạy và chưa đạt ảnh tham chiếu. Xem [UNITY_SCENIC_V3.md](UNITY_SCENIC_V3.md).

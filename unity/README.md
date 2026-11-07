@@ -59,3 +59,7 @@ Lệnh gọi `TravelVietnamese.Editor.DesktopPassSetup.CreateDesktopPass`; chưa
 ## Scene cũ còn vật liệu phẳng hoặc camera chớp khi chạy
 
 Đã bổ sung source camera và menu **TravelVietnamese → Update Scene Graphics** để gán map PBR vào scene hiện có. Stop Play, cập nhật source, chạy menu và Ctrl+S trước khi thử lại. [Hướng dẫn và giới hạn bản sửa](../docs/UNITY_CAMERA_GRAPHICS_FIX.md). Chưa có Unity runtime validation trong môi trường team.
+
+## Scenic V3 — nâng cấp hình dáng cảnh
+
+**Update Scene Graphics** hiện áp cả địa hình có khối, núi xa, rừng và model xe/người mới vào scene đang có. Stop Play → cập nhật source → chạy menu → Ctrl+S → Play. [Hướng dẫn, ảnh asset và giới hạn](../docs/UNITY_SCENIC_V3.md). Chưa có ảnh render Unity của batch này; model vẫn stylized và mobile LOD/performance chưa được xác minh.

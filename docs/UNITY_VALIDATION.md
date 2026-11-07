@@ -5,7 +5,7 @@
 ## Đã thực thi
 
 - `scripts/test-unity-domain.sh`: **92 assertions PASS**, exit 0. .NET SDK 8.0.427 compile và chạy **source `PassRules.cs` và `CameraOcclusionRules.cs` thực** cùng console harness `Tests/DomainHarness.cs`; không mock UnityEngine, không compile Unity assembly. Project `net8.0` không có package phụ thuộc ngoài SDK.
-- `python3 scripts/validate-unity-source.py`: **110 static checks PASS**, exit 0. Kiểm Editor/URP pin, mobile không có HDRP dependency, Domain không tham chiếu Unity, Editor references nằm trong Editor folder, tên MonoBehaviour khớp file, compile inputs của harness, local documentation links, SHA256 ba FBX copy vào Unity khớp report nguồn, isolation URP/HDRP, manifest parity và exact shared Runtime/Art file-set/byte parity, provenance SHA256 và PNG IHDR 512×512 của đủ 9 surface maps.
+- `python3 scripts/validate-unity-source.py`: **146 static checks PASS**, exit 0. Kiểm Editor/URP pin, mobile không có HDRP dependency, Domain không tham chiếu Unity, Editor references nằm trong Editor folder, tên MonoBehaviour khớp file, compile inputs của harness, local documentation links, SHA256 ba FBX copy vào Unity khớp report nguồn, isolation URP/HDRP, manifest parity và exact shared Runtime/Art file-set/byte parity, provenance SHA256 và PNG IHDR 512×512 của đủ 9 surface maps.
 - `python3 scripts/build-unity.py --editor /opt/Unity/Editor/Unity --check-only`: **BLOCKED**, exit 2, executable không tồn tại; không gọi Unity compile/build. `Unity`/`unity-editor` không tìm thấy trên PATH.
 
 Lần đầu chạy .NET trong sandbox gặp home read-only, đã đặt `DOTNET_CLI_HOME` ở `/tmp` trong wrapper. Sandbox tiếp tục chặn named mutex `NuGet-Migrations`; chạy đúng harness qua execution được automatic approval cho phép đã thành công. Wrapper tắt .NET CLI telemetry. Kết quả test không dựa trên hai lần khởi tạo SDK thất bại.
@@ -53,4 +53,31 @@ Play Mode regression vẫn cần chạy bằng Unity: không có obstacle thì c
 
 Graphics V2 source được review riêng: 9 PNG gốc (Road/Rock/Soil ×BaseColor/Normal/Mask), import albedo sRGB và normal/mask linear; normal maps dùng TextureImporterType.NormalMap, mipmaps/repeat, procedural road tính tangents. `Update Scene Graphics` là đường nâng cấp scene cũ riêng, chặn Play, ghi Undo, gán material/prefab version mới dưới Generated/GraphicsV2, đánh dấu dirty và yêu cầu Ctrl+S scene; không trông chờ `Surface()` cũ trả asset hiện hữu để áp defaults mới. Đây là review source, chưa chạy menu/Undo/import/shader trong Unity; ảnh PNG không phải screenshot gameplay.
 
-Final static sau đồng bộ: **110 checks PASS**, exit 0; hai profile Runtime/FBX/SurfaceMaps đã khớp, HDRP bootstrap gọi graphics upgrade và HDRP normal keywords hiện gồm `_NORMALMAP` cùng `_NORMALMAP_TANGENT_SPACE`. Không rerun Domain sau lần 92 PASS vì pure C# logic không thay đổi. Chưa có Unity Editor execution bổ sung.
+Final static sau đồng bộ: **146 checks PASS**, exit 0; hai profile Runtime/FBX/SurfaceMaps đã khớp, HDRP bootstrap gọi graphics upgrade và HDRP normal keywords hiện gồm `_NORMALMAP` cùng `_NORMALMAP_TANGENT_SPACE`. Không rerun Domain sau lần 92 PASS vì pure C# logic không thay đổi. Chưa có Unity Editor execution bổ sung.
+
+## Art/landscape V3 — bằng chứng bổ sung
+
+Người dùng tiếp tục phản hồi ảnh trong Unity chưa đạt chất lượng mong muốn. Vòng này có **asset hình học mới thực tế**, không chỉ tăng số test logic. QA nhập lại FBX bằng Blender 4.3.2 với `Tests/ArtReadback.py` (lệnh `blender --background --factory-startup --python-exit-code 1 --python unity/TravelVietnamese/Tests/ArtReadback.py -- <report>`), kiểm SHA256, vertex/triangle count, UV, finite coordinates, material count và dimensions. Final exports **6/6 PASS**, exit 0:
+
+| Asset | Vertices | Triangles | Material slots |
+| --- | ---: | ---: | ---: |
+| Broadleaf tree | 8960 | 7808 | 5 |
+| Pine tree | 7627 | 6958 | 5 |
+| Forest bush | 4114 | 3916 | 5 |
+| Touring motorbike | 3178 | 6008 | 8 |
+| Seated rider | 1608 | 3116 | 7 |
+| Standing explorer | 1608 | 3116 | 7 |
+
+Reports: `Assets/TravelVietnamese/Art/ForestSource/forest-generation-report.json` và `Art/TravelSource/provenance.json` trong project mobile. Đã nhìn actual Blender previews `docs/art/forest-preview.png` và `docs/art/travel-characters-preview.png`: có branches/leaf clusters, bike/rider hình học riêng, vẫn mang phong cách procedural/stylized. Đây không phải Unity screenshots, photogrammetry hoặc bằng chứng đạt 95% ảnh tham chiếu. Chưa đo hiệu năng của forest trên thiết bị.
+
+Source landscape thêm 30 grid chunks và 3 world-space background ridges (14,214 vertices/25,680 triangles theo kích thước lưới source), tối đa 1020 tree +380 bush/rock placement attempts, shared-mesh GPU instancing theo chunk và khoảng cách cull. Không thêm gameplay collider vào landscape/forest; ba road/shoulder collision strips và checkpoint rules giữ nguyên. Số trên là geometry/config budget, không phải FPS hoặc số cây chắc chắn render cùng lúc. Domain92 không rerun vì rules không thay đổi.
+
+QA phát hiện hai rủi ro hình học source trước freeze: ridge terrain có thể nhô vào pad dừng, và offset valley145 m làm fold tại bend. Dev đã cap visualterrain dưới pad trong vùng bay, giảm valley offset90 và forest positive lane≤83. Audit độc lập `python3 unity/TravelVietnamese/Tests/RoadGeometryAudit.py` trên công thức XZ và bounds đọc từ source: **24,000 scenic triangles không có signed normal Y≤0**, min trái1.708720/phải0.215852; road/shoulder/old-strip audit3000 triangles vẫn không flip. Bản145 trước sửa có276/12000 right triangles flip. Đây là numerical finding/fix cụ thể, chưa phải tái hiện hoặc xác nhận hết nhấp nháy trong Unity. Height-noise visual seams, normal/tangent, bay intersection và world-space backdrop vẫn cần Editor review.
+
+V3 Editor review: `Apply Scenic V3` gán sáu prefab field, bật ScenicQuality, dùng generated palette/prefabs dưới `Generated/ScenicV3` để tránh tái dùng material V2 cũ, giảm độ bóng road, và gán URP sky/ambient/key light rõ ràng. Source FBX material remaps dùng tên provenance để tránh giả định thứ tự unused slots. Chú ý: `ModelImporter.AddRemap`/reimport đổi importer của FBX nguồn dùng chung, nên reference cũ tới model cũng có thể đổi appearance; Undo của PassGame không tự khôi phục importer remaps. Chưa chạy upgrade/import/Undo/shader trong Unity. `.blend` authoring được chuyển ra `art-source/unity` ngoài Assets để không buộc Unity gọi Blender import.
+
+Sau neck adjustment, travel FBX đã được nhập lại thêm một lần: bike kích thước giữ nguyên, seated height1.66 m và standing1.75 m khớp report mới; counts/UV/slots/hash vẫn PASS. Preview Blender cập nhật đã được nhìn lại, phần cổ nối liền hơn; chất lượng cuối trong Unity vẫn chưa được QA xác minh.
+
+Final V3 static: `python3 scripts/validate-unity-source.py` **146 checks PASS**, exit 0; exact Runtime/art parity URP↔HDRP, provenance hashes cho 6 asset mới và không có `.blend` bên trong Assets. `python3 scripts/create-unity-hdrp-reference.py --verify` cũng PASS. Identity prefab wrapper giữ FBX conversion transform trên child để placement/instancing không bỏ scale/axis; chỉ được review source, Unity import orientation vẫn cần kiểm.
+
+Leaf palette cố ý giữ back-face culling: forest generator tạo front/back faces riêng, tách 2 mm; không khẳng định shader bật Two Sided. Scene V3 gán camera FOV60 và arm5.5 m riding/4.5 m walking qua serialized fields; default fallback cũ69/7/5 vẫn trong runtime. Đây là chỉnh framing source, không phải ảnh gameplay đã được QA nhìn trong Unity. Domain92 giữ nguyên từ lần chạy thực trước, không rerun khi chỉ thay art/terrain/framing. QA hiện chưa xác nhận chất lượng hình ảnh hoặc việc lỗi screen-flash hết trên máy người dùng.

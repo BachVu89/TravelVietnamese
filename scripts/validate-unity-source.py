@@ -29,6 +29,7 @@ for project_name in ('TravelVietnamese','TravelVietnamese-HDRP'):
 check('m_EditorVersion: 6000.0.32f1' in (PROJECT/'ProjectSettings/ProjectVersion.txt').read_text(),'pinned editor')
 domain=PROJECT/'Assets/TravelVietnamese/Runtime/PassRules.cs'
 check('UnityEngine' not in domain.read_text() and 'UnityEditor' not in domain.read_text(),'Domain source independent engine')
+check(not list((PROJECT/'Assets').rglob('*.blend')),'no Blender authoring source under mobile Assets')
 for source in (PROJECT/'Assets').rglob('*.cs'):
     text=source.read_text()
     if 'UnityEditor' in text:check('Editor' in source.parts,'Editor references isolated: '+source.name)
@@ -39,6 +40,14 @@ for asset in report['assets']:
     export=PROJECT/'Assets/TravelVietnamese/Art/Original'/asset['export']
     check(export.is_file(),'original FBX exists '+asset['name'])
     check(hashlib.sha256(export.read_bytes()).hexdigest()==asset['sha256'],'copied FBX checksum '+asset['name'])
+for relative in ('ForestSource/forest-generation-report.json','TravelSource/provenance.json'):
+    report_path=PROJECT/'Assets/TravelVietnamese/Art'/relative
+    art_report=json.loads(report_path.read_text())
+    check(len(art_report['assets'])==3,'three assets in '+relative)
+    for entry in art_report['assets']:
+        export=report_path.parent/entry['file']
+        check(export.is_file() and export.read_bytes().startswith(b'Kaydara FBX Binary'),'art export '+entry['name'])
+        check(hashlib.sha256(export.read_bytes()).hexdigest()==entry['sha256'],'art checksum '+entry['name'])
 maps=PROJECT/'Assets/TravelVietnamese/Art/SurfaceMaps'
 provenance=json.loads((maps/'provenance.json').read_text())
 check(provenance['resolution']==512 and len(provenance['maps'])==9,'nine 512 original maps provenance')
@@ -59,12 +68,13 @@ for document in ('unity/README.md','docs/UNITY_MIGRATION.md','docs/UNITY_VALIDAT
         if not re.match(r'[a-zA-Z]+:',target) and not target.startswith('#'):
             check((path.parent/target.split('#')[0]).exists(),'local link '+target)
 hdrp=ROOT/'unity/TravelVietnamese-HDRP'
+check(not list((hdrp/'Assets').rglob('*.blend')),'no Blender authoring source under HDRP Assets')
 hdrp_dependencies=json.loads((hdrp/'Packages/manifest.json').read_text())['dependencies']
 check(hdrp_dependencies.get('com.unity.render-pipelines.high-definition')=='17.0.3','HDRP desktop package pinned')
 check('com.unity.render-pipelines.universal' not in hdrp_dependencies,'HDRP project excludes URP')
 check({k:v for k,v in manifest['dependencies'].items() if k!='com.unity.render-pipelines.universal'}=={k:v for k,v in hdrp_dependencies.items() if k!='com.unity.render-pipelines.high-definition'},'only pipeline package differs between profiles')
 check((hdrp/'ProjectSettings/ProjectVersion.txt').read_bytes()==(PROJECT/'ProjectSettings/ProjectVersion.txt').read_bytes(),'same editor pin across profiles')
-for folder in ('Runtime','Art/Original','Art/SurfaceMaps'):
+for folder in ('Runtime','Art/Original','Art/SurfaceMaps','Art/ForestSource','Art/TravelSource'):
     relative=Path('Assets/TravelVietnamese')/folder
     mobile={f.relative_to(PROJECT/relative):f for f in (PROJECT/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}
     desktop={f.relative_to(hdrp/relative):f for f in (hdrp/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}
