@@ -159,3 +159,7 @@ Mốc kế tiếp: đề xuất catalog đảo v0 có nguồn/version/license/ID
 ---
 
 **Nguồn báo cáo:** kết quả Git; QA 417 của 0.4 và 466/13 suite của 0.5; render smoke, ảnh đối chiếu và kiểm APK do root/Tester xác nhận; `game3d/scripts/main.gd`, `mountain_pass.gd`, `pass/`, `road_save.gd`, `pass_materials.gd`; danh sách artifact local; `VALIDATION_0.3.md`, `PRODUCT.md`, `PRODUCT_BACKLOG.md`, `TEAM.md` và `GEOGRAPHIC_SCOPE.md`. Báo cáo này không thay đổi app code hoặc tự xuất bản source.
+
+## Phản hồi chạy Unity thực tế và hướng sửa
+
+Người dùng đã mở/chạy project và gửi ảnh lỗi đường nhấp nháy chỉ khi xe chạy; đồ họa hiện còn prototype. Team bổ sung camera query lọc actor, near-plane guard và recovery; menu cập nhật scene cũ với chín map PBR gốc. Đây là source patch và kiểm logic, chưa tái hiện/đánh dấu hết lỗi trong Unity. Xem [UNITY_CAMERA_GRAPHICS_FIX.md](UNITY_CAMERA_GRAPHICS_FIX.md).

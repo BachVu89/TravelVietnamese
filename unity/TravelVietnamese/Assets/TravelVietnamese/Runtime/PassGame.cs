@@ -12,7 +12,7 @@ namespace TravelVietnamese.UnityPrototype
         public PassWalker Walker {get;private set;}
         public JourneyState State {get;private set;}
         public bool Riding {get;private set;}
-        PassInput controls;Camera view;float orbitYaw,pitch=16,autosave;bool initialized,allowSave=true,focused=true;
+        PassCameraRig cameraRig;PassInput controls;Camera view;float orbitYaw,pitch=16,autosave;bool initialized,allowSave=true,focused=true;
         string message=""; GameObject bikeVisual,riderVisual;
         public void Build()
         {
@@ -29,7 +29,7 @@ namespace TravelVietnamese.UnityPrototype
             Riding=true;Walker.SetActive(false);
             if(!State.Riding && PassRules.CanDismount(0,State.BikeS,State.BikeLane))ToggleVehicle();
             controls=gameObject.AddComponent<PassInput>();
-            GameObject cameraObject=new GameObject("Third person camera");view=cameraObject.AddComponent<Camera>();view.fieldOfView=69;view.farClipPlane=450;view.nearClipPlane=0.12f;
+            GameObject cameraObject=new GameObject("Third person camera");view=cameraObject.AddComponent<Camera>();cameraRig=cameraObject.AddComponent<PassCameraRig>();view.fieldOfView=69;view.farClipPlane=450;view.nearClipPlane=0.12f;
             if(Camera.main!=null && Camera.main!=view)Camera.main.enabled=false;cameraObject.tag="MainCamera";
             orbitYaw=Bike.transform.eulerAngles.y;
             for(int i=0;i<2;i++)
@@ -76,10 +76,8 @@ namespace TravelVietnamese.UnityPrototype
             Transform active=Riding?Bike.transform:Walker.transform;
             if(Riding && controls.Look.sqrMagnitude<0.01f)orbitYaw=Mathf.LerpAngle(orbitYaw,Bike.transform.eulerAngles.y,Time.deltaTime*1.8f);
             Vector3 target=active.position+Vector3.up*1.6f;
-            Quaternion rotation=Quaternion.Euler(pitch,orbitYaw,0);Vector3 desired=target-rotation*Vector3.forward*(Riding?7:5);
-            RaycastHit hit;Vector3 direction=desired-target;
-            if(Physics.SphereCast(target,0.2f,direction.normalized,out hit,direction.magnitude,1<<0,QueryTriggerInteraction.Ignore))desired=target+direction.normalized*Mathf.Max(0.5f,hit.distance-0.2f);
-            view.transform.position=desired;view.transform.LookAt(target);
+            Quaternion rotation=Quaternion.Euler(pitch,orbitYaw,0);
+            cameraRig.Apply(view,target,rotation,Riding?7:5,Bike.transform,Walker.transform,Time.deltaTime);
         }
         public bool ToggleVehicle()
         {
@@ -93,7 +91,7 @@ namespace TravelVietnamese.UnityPrototype
                 if(!PassRules.CanMount(Vector3.Distance(Walker.transform.position,Bike.transform.position))){message="Đi lại gần xe trong phạm vi 3 m để lên xe.";return false;}
                 Riding=true;Bike.Riding=true;riderVisual.SetActive(true);Walker.SetActive(false);orbitYaw=Bike.transform.eulerAngles.y;
             }
-            if(controls!=null)controls.Clear();if(allowSave && controls!=null)Save(false);return true;
+            if(controls!=null)controls.Clear();if(cameraRig!=null)cameraRig.RequestSnap();if(allowSave && controls!=null)Save(false);return true;
         }
         Vector3 SafeWalkExitPosition()
         {
@@ -125,15 +123,15 @@ namespace TravelVietnamese.UnityPrototype
             Vector3 p=Riding?Bike.transform.position:Walker.transform.position;float checkpoint=PassRules.LatestPassedCheckpoint(PassRoute.Distance(p));
             Bike.Place(Mathf.Max(5,checkpoint),checkpoint>0?8:1.7f);
             if(!Riding)Walker.Place(SafeWalkExitPosition());
-            controls.Clear();message="Đã về điểm an toàn đã đi qua; giữ các dấu khám phá.";if(allowSave)Save(false);
+            controls.Clear();if(cameraRig!=null)cameraRig.RequestSnap();message="Đã về điểm an toàn đã đi qua; giữ các dấu khám phá.";if(allowSave)Save(false);
         }
         public bool Save(bool explicitSave=true)
         {
             State.BikeS=PassRoute.Distance(Bike.transform.position);State.BikeLane=PassRoute.Lane(Bike.transform.position);State.Riding=Riding;
             string error;bool ok=PassJournal.Save(State,out error);if(explicitSave && ok){allowSave=true;message="Đã lưu offline trên thiết bị.";}if(!ok)message=error;return ok;
         }
-        void OnApplicationFocus(bool value){focused=value;if(!value && initialized){controls.Clear();Bike.Stop();if(allowSave)Save(false);}}
-        void OnApplicationPause(bool paused){focused=!paused;if(paused && initialized){controls.Clear();Bike.Stop();if(allowSave)Save(false);}}
+        void OnApplicationFocus(bool value){focused=value;if(cameraRig!=null)cameraRig.RequestSnap();if(!value && initialized){controls.Clear();Bike.Stop();if(allowSave)Save(false);}}
+        void OnApplicationPause(bool paused){focused=!paused;if(cameraRig!=null)cameraRig.RequestSnap();if(paused && initialized){controls.Clear();Bike.Stop();if(allowSave)Save(false);}}
         void OnApplicationQuit(){if(initialized && allowSave)Save(false);}
         void OnGUI()
         {

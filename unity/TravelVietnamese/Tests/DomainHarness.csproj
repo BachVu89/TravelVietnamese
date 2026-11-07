@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../Assets/TravelVietnamese/Runtime/PassRules.cs" />
+    <Compile Include="../Assets/TravelVietnamese/Runtime/CameraOcclusionRules.cs" />
     <Compile Include="DomainHarness.cs" />
   </ItemGroup>
 </Project>

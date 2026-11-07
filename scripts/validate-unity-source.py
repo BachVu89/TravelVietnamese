@@ -4,6 +4,7 @@ import json
 import hashlib
 import re
 import shutil
+import struct
 from pathlib import Path
 import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
@@ -38,9 +39,17 @@ for asset in report['assets']:
     export=PROJECT/'Assets/TravelVietnamese/Art/Original'/asset['export']
     check(export.is_file(),'original FBX exists '+asset['name'])
     check(hashlib.sha256(export.read_bytes()).hexdigest()==asset['sha256'],'copied FBX checksum '+asset['name'])
+maps=PROJECT/'Assets/TravelVietnamese/Art/SurfaceMaps'
+provenance=json.loads((maps/'provenance.json').read_text())
+check(provenance['resolution']==512 and len(provenance['maps'])==9,'nine 512 original maps provenance')
+check({entry['file'] for entry in provenance['maps']}=={f'{surface}_{kind}.png' for surface in ('Road','Rock','Soil') for kind in ('BaseColor','Normal','Mask')},'complete PBR map family')
+for entry in provenance['maps']:
+    data=(maps/entry['file']).read_bytes()
+    check(hashlib.sha256(data).hexdigest()==entry['sha256'],'surface map hash '+entry['file'])
+    check(data[:8]==b'\x89PNG\r\n\x1a\n' and struct.unpack('>II',data[16:24])==(512,512),'PNG size '+entry['file'])
 project=ET.parse(PROJECT/'Tests/DomainHarness.csproj').getroot()
 includes=[p.attrib['Include'] for p in project.findall('.//Compile')]
-check(len(includes)==2,'domain harness includes actual domain and harness only')
+check(set(includes)=={'../Assets/TravelVietnamese/Runtime/PassRules.cs','../Assets/TravelVietnamese/Runtime/CameraOcclusionRules.cs','DomainHarness.cs'},'domain harness includes actual pure domain sources and harness only')
 for include in includes:check((PROJECT/'Tests'/include).is_file(),'harness compile source exists '+include)
 check(not project.findall('.//PackageReference'),'no external harness packages')
 for document in ('unity/README.md','docs/UNITY_MIGRATION.md','docs/UNITY_VALIDATION.md'):
@@ -55,7 +64,7 @@ check(hdrp_dependencies.get('com.unity.render-pipelines.high-definition')=='17.0
 check('com.unity.render-pipelines.universal' not in hdrp_dependencies,'HDRP project excludes URP')
 check({k:v for k,v in manifest['dependencies'].items() if k!='com.unity.render-pipelines.universal'}=={k:v for k,v in hdrp_dependencies.items() if k!='com.unity.render-pipelines.high-definition'},'only pipeline package differs between profiles')
 check((hdrp/'ProjectSettings/ProjectVersion.txt').read_bytes()==(PROJECT/'ProjectSettings/ProjectVersion.txt').read_bytes(),'same editor pin across profiles')
-for folder in ('Runtime','Art/Original'):
+for folder in ('Runtime','Art/Original','Art/SurfaceMaps'):
     relative=Path('Assets/TravelVietnamese')/folder
     mobile={f.relative_to(PROJECT/relative):f for f in (PROJECT/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}
     desktop={f.relative_to(hdrp/relative):f for f in (hdrp/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}

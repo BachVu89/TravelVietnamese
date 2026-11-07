@@ -41,7 +41,7 @@ namespace TravelVietnamese.UnityPrototype
                 if(i<segments){int a=i*2,j=i*6;triangles[j]=a;triangles[j+1]=a+2;triangles[j+2]=a+1;triangles[j+3]=a+1;triangles[j+4]=a+2;triangles[j+5]=a+3;}
             }
             GameObject go=new GameObject(title);go.transform.SetParent(transform,false);
-            Mesh mesh=new Mesh();mesh.name=title;mesh.vertices=vertices;mesh.triangles=triangles;mesh.uv=uv;mesh.RecalculateNormals();mesh.RecalculateBounds();
+            Mesh mesh=new Mesh();mesh.name=title;mesh.vertices=vertices;mesh.triangles=triangles;mesh.uv=uv;mesh.RecalculateNormals();mesh.RecalculateTangents();mesh.RecalculateBounds();
             go.AddComponent<MeshFilter>().sharedMesh=mesh;go.AddComponent<MeshRenderer>().sharedMaterial=material;
             if(collision)go.AddComponent<MeshCollider>().sharedMesh=mesh;
         }

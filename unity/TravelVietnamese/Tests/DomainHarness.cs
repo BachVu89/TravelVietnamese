@@ -58,6 +58,37 @@ class DomainHarness
         Check(PassRules.Normalize(new JourneyState{Version=999,Visited=new List<string>{a}}).Visited.Count==0,"unknown schema rejected");
         Check(PassRules.Normalize(new JourneyState{Visited=null}).Visited.Count==0,"null list normalized");
         foreach(float endpoint in new[]{0f,750f})Check(PassRules.Normalize(new JourneyState{BikeS=endpoint}).BikeS==endpoint,"route endpoint accepted");
+        Check(!CameraOcclusionRules.ShouldIgnore(false,false),"world obstacle retained");
+        Check(CameraOcclusionRules.ShouldIgnore(true,false),"trigger ignored");
+        Check(CameraOcclusionRules.ShouldIgnore(false,true),"active or parked owned collider ignored");
+        Check(CameraOcclusionRules.ShouldIgnore(true,true),"owned trigger ignored");
+        float radius=CameraOcclusionRules.CollisionRadius(.12f,69,16f/9);
+        Check(radius>=.28f,"minimum camera sphere radius");
+        foreach(float aspect in new[]{.5625f,1f,16f/9,2.4f}) {
+            float r=CameraOcclusionRules.CollisionRadius(.5f,100,aspect);
+            double half=.5*Math.Tan(100*Math.PI/360);
+            double corner=Math.Sqrt(.25+half*half*(1+aspect*aspect));
+            Check(r>=corner,"sphere contains near-plane corner "+aspect);
+        }
+        Check(CameraOcclusionRules.CollisionRadius(.5f,100,2.4f)>CameraOcclusionRules.CollisionRadius(.5f,100,1),"wide screen requires bigger sphere");
+        Check(CameraOcclusionRules.AllowedDistance(7,float.PositiveInfinity,.08f)==7,"no world hit preserves desired arm");
+        Check(Math.Abs(CameraOcclusionRules.AllowedDistance(7,.3f,.08f)-.22f)<.0001,"near wall no old half-metre overshoot");
+        Check(CameraOcclusionRules.AllowedDistance(7,20,.08f)==7,"far hit never extends camera");
+        Check(CameraOcclusionRules.AllowedDistance(7,0,.08f)==0,"zero distance hit never pushed beyond obstacle");
+        Check(CameraOcclusionRules.AllowedDistance(7,.03f,.08f)==0,"wall closer than margin never overshot");
+        Check(Math.Abs(CameraOcclusionRules.RecoverDistance(0,7,.05f,6,false)-.3f)<.0001,"zero arm valid and recovers gradually");
+        Check(CameraOcclusionRules.RecoverDistance(1,0,.016f,6,false)==0,"zero clearance retracts all way to pivot");
+        Check(CameraOcclusionRules.RecoverDistance(7,1,.016f,6,false)==1,"inward collision retracts immediately");
+        Check(Math.Abs(CameraOcclusionRules.RecoverDistance(1,7,.05f,6,false)-1.3f)<.0001,"outward recovery bounded by speed");
+        Check(CameraOcclusionRules.RecoverDistance(1,7,0,6,false)==1,"zero delta does not extend");
+        Check(CameraOcclusionRules.RecoverDistance(1,7,-1,6,false)==1,"negative delta ignored");
+        Check(CameraOcclusionRules.RecoverDistance(1,7,.016f,6,true)==7,"mode reset snaps without old distance");
+        Check(CameraOcclusionRules.RecoverDistance(6.9f,7,.1f,6,false)==7,"recovery no overshoot");
+        foreach(float invalid in new[]{float.NaN,float.PositiveInfinity,float.NegativeInfinity}) {
+            Check(PassRules.Finite(CameraOcclusionRules.CollisionRadius(invalid,invalid,invalid)),"invalid lens finite");
+            Check(PassRules.Finite(CameraOcclusionRules.AllowedDistance(invalid,invalid,invalid)),"invalid arm finite");
+            Check(PassRules.Finite(CameraOcclusionRules.RecoverDistance(invalid,invalid,invalid,invalid,false)),"invalid recovery finite");
+        }
         Console.WriteLine("DOMAIN PASS: "+count+" assertions; actual pure C# Domain only, not Unity compile/runtime.");
     }
 }

@@ -55,3 +55,7 @@ Lệnh gọi `TravelVietnamese.Editor.DesktopPassSetup.CreateDesktopPass`; chưa
 Đóng Editor/nhấn **Quit**, cập nhật `codex-work`, rồi mở đúng thư mục `unity/TravelVietnamese`. Đã bỏ khai báo sai `com.unity.modules.inputlegacy`; legacy Input là cài đặt Editor, không phải package cần tải. Sau khi cập nhật manifest, nếu lock/cache vẫn giữ dependency lỗi, đóng Editor rồi đổi tên `Packages/packages-lock.json` và thư mục `Library` để Unity tạo lại. Không xóa `Assets` hoặc `ProjectSettings`.
 
 Ảnh lỗi của người dùng còn có `com.unity.modules.adaptiveperformance`, `com.unity.modules.physicscore2d`, `com.unity.modules.textgen`; các mục này không có trong manifest source team. Nếu bản local có chúng, dùng manifest đã cập nhật của đúng project, sau khi lưu lại bản local để giữ các dependency riêng. Không đổi tên chúng sang package khác một cách máy móc. Nếu vẫn lỗi với manifest đúng, cần Editor.log/UPM log để phân biệt package registry, bản cài Editor hoặc cache; chưa xác nhận chỉ đổi manifest sẽ giải quyết mọi lỗi.
+
+## Scene cũ còn vật liệu phẳng hoặc camera chớp khi chạy
+
+Đã bổ sung source camera và menu **TravelVietnamese → Update Scene Graphics** để gán map PBR vào scene hiện có. Stop Play, cập nhật source, chạy menu và Ctrl+S trước khi thử lại. [Hướng dẫn và giới hạn bản sửa](../docs/UNITY_CAMERA_GRAPHICS_FIX.md). Chưa có Unity runtime validation trong môi trường team.
