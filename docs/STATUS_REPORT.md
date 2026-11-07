@@ -4,7 +4,15 @@
 
 **Bản thử mới nhất là 3D 0.5, đã đăng APK và ZIP source lên GitHub.** Mã nguồn ở **`codex-work`**, bản cài ở **`apk-download`**. 466 kiểm tra/13 suite, ảnh đối chiếu và vòng chơi GUI đạt trong phạm vi desktop. **Chưa kiểm trên điện thoại thực; hình ảnh vẫn là prototype cách điệu.**
 
-## Yêu cầu đồ họa mới — 07/11/2026
+## Quyết định mới nhất — Unity 6/C#
+
+Người dùng chuyển từ UE sang Unity 6, đề xuất HDRP và hệ sinh thái Unity Asset Store. Team tách **URP mobile Android/iOS** và **HDRP desktop**, vì HDRP không hỗ trợ hai nền tảng mobile này. Source mới ở `unity/`, giữ Godot/UE như lịch sử, không gọi APK Godot là bản Unity.
+
+Đã chuẩn bị source vòng xe arcade → đỗ đúng vịnh → đi bộ → hai POI theo thứ tự → lên xe, camera, input và journal offline; scene/bootstrap URP, entrypoint build, companion HDRP và bản sao ba FBX gốc. **60 assertion Domain chạy thực bằng .NET**, tách khỏi Unity compile, JSON/file runtime và gameplay. Xem [UNITY_VALIDATION.md](UNITY_VALIDATION.md), [hướng dẫn](../unity/README.md).
+
+Chưa có Unity Editor/license để resolve packages, compile toàn project, tạo scene, render/cook/build APK/IPA hoặc thử điện thoại. Kênh tải Editor chính thức trả CONNECT 403 qua proxy; source/.NET test vẫn tiếp tục được. Chưa mua gói Asset Store, chưa có asset scan hoặc kết quả “90–95%” hình ảnh. Cổng kế tiếp là mở đúng Editor/pipeline, kiểm mini-loop và render thực, sau đó đo Android/iOS.
+
+## Yêu cầu UE5 trước đó — 07/11/2026
 
 Người dùng yêu cầu UE5 và hệ sinh thái PBR/scan/rừng nhiệt đới/đường ướt/sương theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt), sau đó xác nhận chưa có UE hoặc asset sẵn. Team đã chuẩn bị project C++ UE5.5, spline/mesh đường, Character đi bộ/camera góc thứ ba, material slots, script tạo material PBR và map trong Editor, cấu hình mobile, entrypoint build và kế hoạch chuyển engine. Đã tạo ba FBX gốc (đá/dương xỉ/chuối) với UV/materials, source Blender và [ảnh render Blender](art/asset-preview.png); importer và HISM cho UE đã có source. Chưa nhập/chạy các file này trong UE. Xem [hướng dẫn](../unreal/README.md), [tiêu chí đồ họa](GRAPHICS_REQUIREMENTS.md), [kiểm chứng](UNREAL_VALIDATION.md).
 

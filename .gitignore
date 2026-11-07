@@ -32,3 +32,16 @@ __pycache__/
 # Blender automatic source backups
 *.blend1
 *.blend2
+
+# Unity generated/cache files and standalone domain test output
+unity/**/Library/
+unity/**/Temp/
+unity/**/Obj/
+unity/**/Logs/
+unity/**/UserSettings/
+unity/**/MemoryCaptures/
+unity/**/Recordings/
+unity/**/bin/
+unity/**/obj/
+unity/**/*.csproj.user
+artifacts/unity-*/

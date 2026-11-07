@@ -8,7 +8,13 @@ Bản 0.4 bổ sung tuyến đèo mẫu, xe máy, giao thông và hai điểm d�
 
 Bản 0.5 cải thiện cây/đá/mặt đường/chiều sâu cảnh, thêm hai mức chi tiết và mục tiêu tuyến. Vào trực tiếp bằng **Chơi đèo mẫu**; [kết quả 0.5](docs/VALIDATION_0.5.md), [ảnh đối chiếu cùng camera](docs/ART_COMPARE_0.5.md). Oppo Find X7 Ultra và iPhone 13 là thiết bị đích được người dùng nêu, chưa phải thiết bị đã kiểm chứng.
 
-## Hướng đồ họa mới: Unreal Engine 5
+## Hướng hiện tại: Unity 6/C#
+
+Người dùng đã chuyển lựa chọn engine sang Unity 6. Source mobile ở [`unity/TravelVietnamese`](unity/README.md), dùng **URP** cho Android/iOS; [`TravelVietnamese-HDRP`](unity/TravelVietnamese-HDRP/README.md) là companion **desktop riêng**. HDRP không phải pipeline phát hành cho hai điện thoại mục tiêu. Có source vòng xe→dừng→đi bộ→hai POI, save offline, input cảm ứng và script dựng scene với ba asset gốc. **Chưa compile/chạy bằng Unity Editor**, chưa có scene sinh từ Editor hoặc APK/IPA Unity. Logic Domain thuần C# đã chạy test .NET riêng; đó không phải kiểm gameplay/graphics Unity.
+
+Xem [migration](docs/UNITY_MIGRATION.md) và [bằng chứng/giới hạn](docs/UNITY_VALIDATION.md). Môi trường thiếu Editor/license, truy cập kênh tải chính thức hiện bị proxy trả CONNECT 403. Tỷ lệ chất lượng “90–95%”, kích thước bộ cài, hiệu năng và plugin thương mại chưa được xác minh. Godot 0.5 vẫn là bản APK chơi được đã giao; UE giữ lại như công việc lịch sử.
+
+## Hướng UE5 trước khi chuyển Unity
 
 Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đã bổ sung source Character đi bộ/camera và [ba asset gốc từ Blender](docs/art/ORIGINAL_ASSETS.md), kèm [ảnh preview Blender](docs/art/asset-preview.png). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.
 

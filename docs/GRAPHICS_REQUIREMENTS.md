@@ -1,5 +1,7 @@
 # Yêu cầu đồ họa mới — UE5, cảnh đèo Việt Nam
 
+**Quyết định engine mới nhất:** người dùng đã chuyển sang Unity 6/C#. Áp dụng các tiêu chí hình ảnh bên dưới cho URP mobile và HDRP desktop riêng; tên UE/Nanite/Lumen trong brief được giữ để trace lịch sử, không còn là engine bắt buộc. Xem [UNITY_MIGRATION.md](UNITY_MIGRATION.md). Chưa có ảnh render Unity hoặc bằng chứng đạt tham chiếu.
+
 ## Nguồn, mục tiêu và trạng thái
 
 Nguồn đầu vào: tệp người dùng `Văn bản đã dán.txt` trong attachment `b9f54ef2-0c46-4411-bf6f-6d57d765008e`, đã đọc đầy đủ. Yêu cầu mới hướng tới UE5 và hệ sinh thái tài sản scan/PBR để tiến gần ảnh tham chiếu: đường nhựa ướt, vách đá, rừng nhiệt đới, thung lũng có sương, người lái xe và chi tiết Việt Nam. Tài liệu này chuyển các đề xuất thành điều kiện triển khai/nghiệm thu; lời quảng bá, giá, ngưỡng miễn phí, thời gian “vài phút” và hỗ trợ nền tảng trong tệp chưa được xác minh.

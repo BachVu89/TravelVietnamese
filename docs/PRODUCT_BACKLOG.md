@@ -178,3 +178,7 @@ Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `a
 Yêu cầu mới ưu tiên chuyển engine và một đoạn đèo mẫu, theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt). Phạm vi mobile offline Android/iOS vẫn giữ; không mặc định Nanite/Lumen/plugin desktop hoạt động trên điện thoại. Người dùng chưa có engine/asset; trước mắt giao source scaffold, tiêu chí, danh sách tài nguyên và kiểm tra tiền đề, không gọi là bản nâng đồ họa đã chạy.
 
 Các cổng độc lập: (A) UHT/UBT/editor/map chạy; (B) vật liệu/asset có provenance+license và render so với tham chiếu; (C) vòng xe→đỗ→đi bộ→POI/save thực; (D) cook/cài standalone offline; (E) đo trên Oppo Find X7 Ultra/iPhone 13. Hiện A–E chưa nghiệm thu. Source scaffold/static checks không đóng các cổng này. Chưa mở mua asset/plugin hoặc phát hành store. Catalog đảo vẫn cần nguồn/license/coverage, không tự xem đã hoàn thành sau chuyển engine.
+
+## PO-14 — Chuyển Unity 6/C# theo yêu cầu mới
+
+Thay lựa chọn engine UE của PO-13 bằng Unity 6; giữ yêu cầu mobile offline và phạm vi nội dung đã chốt. URP là pipeline mobile; companion HDRP chỉ desktop và cần Wizard/Volume riêng. Source mini-loop đã chuẩn bị, Domain .NET có bằng chứng chạy; các cổng Editor/visual/mobile/signing vẫn chưa qua. Không nghiệm thu chất lượng bằng tỷ lệ 90–95% không đo được; không coi plugin thành tính năng đã mua/đã có. Danh mục đảo/nguồn/license và toàn quốc vẫn mở. Xem [UNITY_MIGRATION.md](UNITY_MIGRATION.md), [UNITY_VALIDATION.md](UNITY_VALIDATION.md).

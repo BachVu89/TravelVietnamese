@@ -76,3 +76,7 @@ Người dùng gửi brief UE5/PBR/scan/cây nhiệt đới/sương và xác nh�
 ## Tiếp tục UE — asset gốc và Character nguồn
 
 Designer đã tạo/xuất ba FBX, Blender source và render preview thật bằng Blender. Dev thêm source Character đi bộ/camera và input, chưa có xe máy/save/POI port. Root chuẩn bị importer/hard references/HISM trang trí; QA kiểm cấu trúc và đọc lại FBX bằng Blender, tách khỏi Unreal runtime. UE chưa có để compile/render/cook; truy cập repo Epic chính thức không thành công trong phiên. Không có APK mới và chưa đạt ảnh tham chiếu.
+
+## Chuyển Unity 6/C# theo người dùng
+
+Source mới ở `unity/`: Dev làm mini-loop, SA tách mobile URP và desktop HDRP, root làm scene/bootstrap/build entrypoints và tái sử dụng ba FBX gốc, QA chạy Domain bằng .NET và review source. UE/Godot được giữ lại. Không có Unity Editor/license trong môi trường; download chính thức bị CONNECT 403. Chưa có Unity scene/render/APK hay kết quả thiết bị; không gọi source scaffold là đồ họa đã đạt.
