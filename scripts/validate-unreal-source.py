@@ -1,12 +1,35 @@
 #!/usr/bin/env python3
 """Structural source checks only; never substitutes for Unreal compile/cook/run."""
 import ast
+import hashlib
+import sys
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT / 'unreal/TravelVietnamese'
+
+if '--fbx-readback' in sys.argv:
+    import bpy
+    import math
+    root = PROJECT / 'ArtSource'
+    report=json.loads((root/'asset-generation-report.json').read_text())
+    for entry in report['assets']:
+     bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
+     bpy.ops.import_scene.fbx(filepath=str(root/entry['export']))
+     objects=[o for o in bpy.context.scene.objects if o.type=='MESH']
+     assert len(objects)==1, (entry['name'],len(objects))
+     o=objects[0];m=o.data;m.calc_loop_triangles()
+     assert len(m.vertices)==entry['vertices'],entry['name']
+     assert len(m.loop_triangles)==entry['triangles'],entry['name']
+     assert len(m.uv_layers)>0 and all(math.isfinite(v) for p in m.vertices for v in p.co),entry['name']
+     assert len(m.materials)==len(entry['material_slots']),entry['name']
+     assert all(abs(a-b)<.001 for a,b in zip(o.dimensions,entry['dimensions_m'])),(entry['name'],tuple(o.dimensions))
+     print('FBX_READBACK_PASS',entry['name'],len(m.vertices),len(m.loop_triangles),tuple(round(v,4) for v in o.dimensions))
+    print('FBX_READBACK_ALL_PASS: 3 independent imports, geometry/UV/material-count/dimensions/finite checked; not UE import')
+    raise SystemExit(0)
+
 checks = 0
 
 def check(condition, label):
@@ -21,6 +44,22 @@ modules = project['Modules']
 check(len(modules) == 1 and modules[0]['Name'] == 'TravelVietnamese' and modules[0]['Type'] == 'Runtime', 'runtime module')
 for name in ('TravelVietnamese.Target.cs', 'TravelVietnameseEditor.Target.cs', 'TravelVietnamese/TravelVietnamese.Build.cs', 'TravelVietnamese/TravelVietnamese.cpp', 'TravelVietnamese/TravelPassEnvironment.h', 'TravelVietnamese/TravelPassEnvironment.cpp', 'TravelVietnamese/TravelPassGameMode.h', 'TravelVietnamese/TravelPassGameMode.cpp'):
     check((PROJECT / 'Source' / name).is_file(), 'source exists: ' + name)
+for name in ('TravelExplorerCharacter.h', 'TravelExplorerCharacter.cpp'):
+    check((PROJECT / 'Source/TravelVietnamese' / name).is_file(), 'grounded character source: ' + name)
+character = (PROJECT / 'Source/TravelVietnamese/TravelExplorerCharacter.cpp').read_text()
+header = (PROJECT / 'Source/TravelVietnamese/TravelExplorerCharacter.h').read_text()
+mode = (PROJECT / 'Source/TravelVietnamese/TravelPassGameMode.cpp').read_text()
+inputs = (PROJECT / 'Config/DefaultInput.ini').read_text()
+check('public ACharacter' in header and 'ATravelExplorerCharacter::StaticClass()' in mode, 'grounded pawn declaration and GameMode reference')
+for kind, binding in re.findall(r'Bind(Axis|Action)\(TEXT\("([^"]+)"\)', character):
+    check(f'{kind}Name="{binding}"' in inputs, 'bound input has mapping: ' + binding)
+check('StopMovementImmediately()' in character and 'ConsumeMovementInputVector()' in character and 'bHasSafeSpawn' in character, 'reset declares movement clearing and initialized-spawn guard (static only)')
+report = json.loads((PROJECT / 'ArtSource/asset-generation-report.json').read_text())
+check(len(report['assets']) == 3, 'three original mesh report entries')
+for asset in report['assets']:
+    export = PROJECT / 'ArtSource' / asset['export']
+    check(export.is_file() and export.read_bytes().startswith(b'Kaydara FBX Binary'), 'binary FBX: ' + asset['name'])
+    check(hashlib.sha256(export.read_bytes()).hexdigest() == asset['sha256'], 'FBX checksum: ' + asset['name'])
 plugins = {p['Name']: p for p in project['Plugins']}
 for name in ('PythonScriptPlugin', 'EditorScriptingUtilities'):
     check(plugins[name]['Enabled'] and plugins[name]['TargetAllowList'] == ['Editor'], 'editor-only plugin: ' + name)

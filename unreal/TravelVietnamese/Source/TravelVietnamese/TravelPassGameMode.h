@@ -3,7 +3,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TravelPassGameMode.generated.h"
 
-/** Flying inspection pawn only. Motorcycle gameplay is intentionally not represented. */
+/** Grounded exploration source proof; motorcycle and full mobile HUD remain unported. */
 UCLASS()
 class TRAVELVIETNAMESE_API ATravelPassGameMode : public AGameModeBase
 {
@@ -11,4 +11,7 @@ class TRAVELVIETNAMESE_API ATravelPassGameMode : public AGameModeBase
 public:
     ATravelPassGameMode();
     virtual void StartPlay() override;
+    virtual void RestartPlayer(AController* NewPlayer) override;
+private:
+    void PlaceAtRouteStart(AController* Player);
 };

@@ -26,13 +26,13 @@ Bảng này xác định hướng nền tảng, không tuyên bố tính năng c
 
 ### 1. Xác minh toolchain và scaffold
 
-Cài UE 5.5 qua kênh Epic hợp lệ hoặc build source theo quyền truy cập/license tương ứng. Dùng toolchain C++ được phiên bản UE hỗ trợ. Mở `.uproject`, tạo project files, compile module và xác minh GameMode/DefaultPawn, spawn, input và collision. Chốt working map rồi lưu một map `.umap` thật; mã C++ tự tạo actor không đồng nghĩa đã có startup map hợp lệ.
+Cài UE 5.5 qua kênh Epic hợp lệ hoặc build source theo quyền truy cập/license tương ứng. Dùng toolchain C++ được phiên bản UE hỗ trợ. Mở `.uproject`, tạo project files, compile module và xác minh GameMode/Character, spawn, input và collision. Chốt working map rồi lưu một map `.umap` thật; mã C++ tự tạo actor không đồng nghĩa đã có startup map hợp lệ.
 
 Cổng qua bước: editor mở được, không lỗi module/asset/map, PIE chạy được, có log build và smoke test. Chưa đạt cổng này thì chỉ giao source scaffold.
 
 ### 2. Một đoạn đèo chơi được
 
-Dựng một đoạn đường spline nhỏ có mesh/collision nhất quán, nhân vật/xe điều khiển được, camera tránh vật cản, traffic tối thiểu, dừng/xuống xe và một POI. DefaultPawn dùng để kiểm tra scene không được nghiệm thu thay xe máy third-person. Tách gameplay và profile hình ảnh; không dùng ảnh tham khảo làm texture hoặc tài nguyên có bản quyền chưa rõ.
+Dựng một đoạn đường spline nhỏ có mesh/collision nhất quán, nhân vật/xe điều khiển được, camera tránh vật cản, traffic tối thiểu, dừng/xuống xe và một POI. Character đi bộ thử nghiệm không được nghiệm thu thay xe máy third-person. Tách gameplay và profile hình ảnh; không dùng ảnh tham khảo làm texture hoặc tài nguyên có bản quyền chưa rõ.
 
 Cổng qua bước: người chơi hoàn thành vòng lái → phanh → đỗ → đi bộ → tương tác, không xuyên đường/rào/traffic hoặc mắc kẹt; save/load hoạt động; cảnh thể hiện rõ đang minh họa. Phải đánh giá đường và chiều dài theo dữ liệu thực nếu muốn quảng bá là tái hiện đèo Khánh Lê.
 
@@ -79,6 +79,12 @@ Yêu cầu hình ảnh nguyên văn được giữ tại `docs/inputs/GRAPHICS_B
 
 ## Đối chiếu scaffold thực tế
 
-`ATravelPassEnvironment` cung cấp spline `Route`, `UProceduralMeshComponent` cho bề mặt, HISM cho cây/rào và các material slots. `Regenerate()` hỗ trợ CallInEditor; `RoutePosition()`/`RouteLengthCm()` dùng centimet của Unreal. `ATravelPassGameMode` hiện chọn `ADefaultPawn` chỉ để quan sát; chưa chuyển gameplay xe, traffic, POI, touch và save Godot sang UE. Targets là `TravelVietnamese` và `TravelVietnameseEditor`, module runtime `TravelVietnamese`.
+`ATravelPassEnvironment` cung cấp spline `Route`, `UProceduralMeshComponent` cho bề mặt, HISM cho cây/rào và các material slots. `Regenerate()` hỗ trợ CallInEditor; `RoutePosition()`/`RouteLengthCm()` dùng centimet của Unreal. `ATravelPassGameMode` hiện chọn `ATravelExplorerCharacter` đi bộ với camera góc thứ ba ở mức source chưa chạy; chưa chuyển gameplay xe, traffic, POI, touch và save Godot sang UE. Targets là `TravelVietnamese` và `TravelVietnameseEditor`, module runtime `TravelVietnamese`.
 
 `Content/Python/bootstrap_pass.py` chỉ chạy sau compile Editor để tạo `/Game/Maps/PassPreview` với actor môi trường/đèn/sương/PlayerStart và từ chối ghi đè map sẵn có. Startup/game/cook config trỏ `/Game/Maps/PassPreview`; map chưa có trong source và phải sinh/lưu qua bootstrap. Script từ chối map trùng và map hiện tại còn thay đổi chưa lưu. Build wrapper Android chặn nếu thiếu file `.umap`. `create_mobile_materials.py` là công cụ Editor tạo material PBR tham số (wetness trộn màu/roughness), giữ asset có sẵn và bootstrap gán slots còn trống; chưa có texture scan/normal/puddle/weather và chưa có bằng chứng script đã thực thi hoặc `.uasset` được cook. Config thử nghiệm dùng app ID riêng `com.travelvietnamese.unrealproof`, không thay thế sandbox/save Godot. PCG được bật nhưng chưa có graph hoặc nội dung PCG được bake; Python chỉ được bật cho Editor.
+
+## Tiến triển source và asset gốc sau scaffold
+
+Source đã thêm `ATravelExplorerCharacter` với CharacterMovement/camera collision, input và điểm phục hồi đầu tuyến; chưa kiểm runtime. Đã có ba mesh FBX gốc từ Blender (đá/dương xỉ/chuối), source `.blend`, UV và material slots, không có scan/Marketplace. Xem [ORIGINAL_ASSETS.md](art/ORIGINAL_ASSETS.md). Preview Blender không phải ảnh UE hoặc bằng chứng đạt tham chiếu. Importer UE cùng HISM optional hard references đã chuẩn bị; còn phải kiểm scale, hai mặt lá, shader, map/cook và điện thoại. Không đóng cổng editor/gameplay/device của lộ trình chỉ vì các file nguồn có mặt.
+
+Kiểm tra kênh source Epic chính thức trong phiên này trả `Repository not found`, nên chưa thể tải/cài từ kênh đó với danh tính hiện tại. Không dùng mirror không rõ quyền hoặc bỏ qua quyền truy cập. Cần bản engine được cung cấp hợp lệ hoặc tài khoản Epic/GitHub đã có entitlement được cấu hình trong môi trường để tiếp tục compile thực; không gửi token/mật khẩu vào tài liệu hoặc cuộc trò chuyện.

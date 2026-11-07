@@ -28,3 +28,7 @@ unreal/**/*.opensdf
 artifacts/unreal-*/
 __pycache__/
 *.py[cod]
+
+# Blender automatic source backups
+*.blend1
+*.blend2

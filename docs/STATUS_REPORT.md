@@ -6,7 +6,7 @@
 
 ## Yêu cầu đồ họa mới — 07/11/2026
 
-Người dùng yêu cầu UE5 và hệ sinh thái PBR/scan/rừng nhiệt đới/đường ướt/sương theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt), sau đó xác nhận chưa có UE hoặc asset sẵn. Team đã chuẩn bị project C++ UE5.5, spline/mesh đường và cảnh placeholder, material slots, script tạo material PBR tham số và map trong Editor, cấu hình mobile, entrypoint build, danh sách asset và kế hoạch chuyển engine. Xem [hướng dẫn](../unreal/README.md), [tiêu chí đồ họa](GRAPHICS_REQUIREMENTS.md), [kiểm chứng](UNREAL_VALIDATION.md).
+Người dùng yêu cầu UE5 và hệ sinh thái PBR/scan/rừng nhiệt đới/đường ướt/sương theo [brief gốc](inputs/GRAPHICS_BRIEF_2026-11-07.txt), sau đó xác nhận chưa có UE hoặc asset sẵn. Team đã chuẩn bị project C++ UE5.5, spline/mesh đường, Character đi bộ/camera góc thứ ba, material slots, script tạo material PBR và map trong Editor, cấu hình mobile, entrypoint build và kế hoạch chuyển engine. Đã tạo ba FBX gốc (đá/dương xỉ/chuối) với UV/materials, source Blender và [ảnh render Blender](art/asset-preview.png); importer và HISM cho UE đã có source. Chưa nhập/chạy các file này trong UE. Xem [hướng dẫn](../unreal/README.md), [tiêu chí đồ họa](GRAPHICS_REQUIREMENTS.md), [kiểm chứng](UNREAL_VALIDATION.md).
 
 **Chưa có UE trong môi trường để compile/render/cook. Chưa có map/material `.uasset` sinh từ Editor, APK/IPA Unreal, xe máy/touch/save đã port hoặc bằng chứng đồ họa đạt mẫu.** Kiểm tra source/config không thay runtime. Godot 0.5 vẫn là APK chơi được đã giao; UE là nhánh công việc mới trong cùng `codex-work`, không phải bản nâng đồ họa đã cài được.
 

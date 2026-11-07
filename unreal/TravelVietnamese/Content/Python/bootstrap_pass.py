@@ -26,7 +26,8 @@ for slot, asset_name in {"road_material": "M_RoadWet", "rock_material": "M_RockW
                          "foliage_material": "M_FoliageWet", "trunk_material": "M_BarkWet"}.items():
     if environment.get_editor_property(slot) is None:
         environment.set_editor_property(slot, materials[asset_name])
-environment.regenerate()
+import import_original_pass_assets
+import_original_pass_assets.assign_empty_slots(environment)
 sun = actors.spawn_actor_from_class(unreal.DirectionalLight, unreal.Vector(0, 0, 10000), unreal.Rotator(-45, -30, 0))
 sun.set_actor_label("Preview Sun")
 actors.spawn_actor_from_class(unreal.SkyAtmosphere, unreal.Vector(0, 0, 0))

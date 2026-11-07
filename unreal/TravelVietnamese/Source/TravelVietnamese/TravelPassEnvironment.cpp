@@ -16,7 +16,9 @@ ATravelPassEnvironment::ATravelPassEnvironment()
     Route->SetupAttachment(SceneRoot);
     Surface = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("RoadAndTerrain"));
     Surface->SetupAttachment(SceneRoot);
-    Surface->bUseAsyncCooking = true;
+    // Bounded proof mesh: finish floor collision before the grounded pawn is spawned.
+    // Revisit startup cost and baked collision when profiling production maps.
+    Surface->bUseAsyncCooking = false;
     Surface->bUseComplexAsSimpleCollision = true;
     Surface->SetCollisionProfileName(TEXT("BlockAll"));
     Guardrails = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("Guardrails"));
@@ -27,6 +29,15 @@ ATravelPassEnvironment::ATravelPassEnvironment()
         Component->SetupAttachment(SceneRoot);
         Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
         Component->SetCullDistances(0, 45000);
+    }
+    RockOutcrops = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("OriginalRockOutcrops"));
+    FernPlants = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("OriginalFerns"));
+    BananaPlants = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("OriginalBananas"));
+    for (auto* Component : {RockOutcrops.Get(), FernPlants.Get(), BananaPlants.Get()})
+    {
+        Component->SetupAttachment(SceneRoot);
+        Component->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Component->SetCullDistances(0, 22000);
     }
     Guardrails->SetCollisionProfileName(TEXT("BlockAll"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> Cube(TEXT("/Engine/BasicShapes/Cube.Cube"));
@@ -165,6 +176,48 @@ void ATravelPassEnvironment::BuildInstances()
     if (FoliageMaterial) TreeCrowns->SetMaterial(0, FoliageMaterial);
 }
 
+FVector ATravelPassEnvironment::TerrainPosition(float S, float Offset) const
+{
+    FVector P = RoutePosition(S, Offset);
+    if (Offset < -425.0f)
+        P.Z += (-Offset - 425.0f) * (0.72f + 0.08f * FMath::Sin(S * 0.0007f));
+    else if (Offset > 425.0f)
+        P.Z -= (Offset - 425.0f) * 0.55f;
+    return P;
+}
+
+void ATravelPassEnvironment::BuildOriginalArt()
+{
+    RockOutcrops->ClearInstances(); FernPlants->ClearInstances(); BananaPlants->ClearInstances();
+    RockOutcrops->SetStaticMesh(RockOutcropMesh.Get());
+    FernPlants->SetStaticMesh(FernMesh.Get());
+    BananaPlants->SetStaticMesh(BananaMesh.Get());
+    // Separate seed: adding understory never changes baseline trees, collisions or the route.
+    FRandomStream Random(GenerationSeed ^ 0x51A7);
+    if (RockOutcropMesh)
+    {
+        for (int32 Index = 0; Index < 72; ++Index)
+        {
+            const float S = Random.FRandRange(500.0f, RouteLengthCm()-500.0f);
+            const float Offset = -Random.FRandRange(850.0f, 2200.0f);
+            const float Scale = Random.FRandRange(0.65f, 1.8f);
+            RockOutcrops->AddInstance(FTransform(FRotator(0, Random.FRandRange(0,360), 0),
+                TerrainPosition(S, Offset) - FVector(0,0,20), FVector(Scale)));
+        }
+    }
+    for (int32 Index = 0; Index < FMath::Clamp(UnderstoryCount, 0, 500); ++Index)
+    {
+        const float S = Random.FRandRange(500.0f, RouteLengthCm()-500.0f);
+        const float Offset = Index % 2 == 0 ? -Random.FRandRange(600.0f, 1700.0f)
+            : Random.FRandRange(FMath::Max(1500.0f, OuterEdge(S)+200.0f), 3200.0f);
+        const float Yaw = Random.FRandRange(0,360);
+        const float Scale = Random.FRandRange(0.7f,1.3f);
+        const FTransform Placement(FRotator(0,Yaw,0), TerrainPosition(S, Offset), FVector(Scale));
+        if (Index % 4 == 0 && BananaMesh) BananaPlants->AddInstance(Placement);
+        else if (FernMesh) FernPlants->AddInstance(Placement);
+    }
+}
+
 void ATravelPassEnvironment::Regenerate()
 {
     BuildSpline();
@@ -178,4 +231,5 @@ void ATravelPassEnvironment::Regenerate()
     BuildStrip(7, 425, 1300, ShoulderMaterial, false, false, RouteLengthCm()*0.73f-2100, RouteLengthCm()*0.73f+2100);
     BuildMarkings();
     BuildInstances();
+    BuildOriginalArt();
 }

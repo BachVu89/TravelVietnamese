@@ -72,3 +72,7 @@ Root đã push source `b800021` lên `codex-work` và artifact `3b3b35a` lên `a
 ## Yêu cầu chuyển đồ họa UE5 — 07/11/2026
 
 Người dùng gửi brief UE5/PBR/scan/cây nhiệt đới/sương và xác nhận chưa có engine/asset. Bắt đầu source scaffold trong `unreal/`, giữ bản Godot đã giao. SA chốt mobile pipeline riêng không mặc định Nanite/Lumen; Designer lập tiêu chí và manifest ứng viên chưa mua/license chưa xác minh; Dev chuẩn bị C++/bootstrap; QA review tĩnh và ghi rõ chưa có UE để compile/render/cook. Root tích hợp build wrapper và material generator tham số. Đây chưa phải bản chơi Unreal hoặc chất lượng hình ảnh đã được nghiệm thu. Chi tiết [UNREAL_MIGRATION.md](UNREAL_MIGRATION.md), [UNREAL_VALIDATION.md](UNREAL_VALIDATION.md).
+
+## Tiếp tục UE — asset gốc và Character nguồn
+
+Designer đã tạo/xuất ba FBX, Blender source và render preview thật bằng Blender. Dev thêm source Character đi bộ/camera và input, chưa có xe máy/save/POI port. Root chuẩn bị importer/hard references/HISM trang trí; QA kiểm cấu trúc và đọc lại FBX bằng Blender, tách khỏi Unreal runtime. UE chưa có để compile/render/cook; truy cập repo Epic chính thức không thành công trong phiên. Không có APK mới và chưa đạt ảnh tham chiếu.

@@ -10,7 +10,7 @@ Bản 0.5 cải thiện cây/đá/mặt đường/chiều sâu cảnh, thêm hai
 
 ## Hướng đồ họa mới: Unreal Engine 5
 
-Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.
+Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đã bổ sung source Character đi bộ/camera và [ba asset gốc từ Blender](docs/art/ORIGINAL_ASSETS.md), kèm [ảnh preview Blender](docs/art/asset-preview.png). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.
 
 Xem [yêu cầu đồ họa và tiêu chí](docs/GRAPHICS_REQUIREMENTS.md), [kế hoạch chuyển engine](docs/UNREAL_MIGRATION.md), [kiểm chứng hiện tại](docs/UNREAL_VALIDATION.md), [danh sách asset cần bổ sung](docs/art/asset-manifest.json) và [nội dung gốc người dùng cung cấp](docs/inputs/GRAPHICS_BRIEF_2026-11-07.txt). Nanite/Lumen là mục tiêu cấu hình desktop riêng; mobile có pipeline riêng cần kiểm trên thiết bị. Chưa mua/tải gói Fab hoặc asset thương mại và chưa tuyên bố đạt hình ảnh tham chiếu.
 
