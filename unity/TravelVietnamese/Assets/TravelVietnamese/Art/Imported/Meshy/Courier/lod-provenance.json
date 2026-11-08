@@ -1,0 +1,37 @@
+{
+  "source": "User-provided Meshy Courier, original archive retained in workspace; not a rigged/animated character",
+  "source_fbx": "Meshy_AI_Expedition_Courier_20261108_texture.fbx",
+  "source_bytes": 55385228,
+  "source_sha256": "89280dc55f1e551fca843548dd92aa1e65dce731c6f4446f41e36806686e2278",
+  "source_triangles": 1148034,
+  "generator": "scripts/art/prepare-meshy-courier.py",
+  "blender": "4.3.2",
+  "lods": [
+    {
+      "file": "Courier_LOD0.fbx",
+      "vertices": 49843,
+      "triangles": 99998,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "db514f147ec428c851c61328485422843e9922eae8f92b609cb3e452d7481ff5"
+    },
+    {
+      "file": "Courier_LOD1.fbx",
+      "vertices": 14844,
+      "triangles": 30000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "960c4fdfbdc6a7f9f8dac8aa8d8796facc459a7bf82b3e3e326b9cf6ad8d46fd"
+    }
+  ],
+  "rigging_performed": false,
+  "unity_render_or_mobile_verified": false
+}

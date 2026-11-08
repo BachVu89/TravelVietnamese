@@ -63,3 +63,11 @@ Lệnh gọi `TravelVietnamese.Editor.DesktopPassSetup.CreateDesktopPass`; chưa
 ## Scenic V3 — nâng cấp hình dáng cảnh
 
 **Update Scene Graphics** hiện áp cả địa hình có khối, núi xa, rừng và model xe/người mới vào scene đang có. Stop Play → cập nhật source → chạy menu → Ctrl+S → Play. [Hướng dẫn, ảnh asset và giới hạn](../docs/UNITY_SCENIC_V3.md). Chưa có ảnh render Unity của batch này; model vẫn stylized và mobile LOD/performance chưa được xác minh.
+
+## Meshy assets đã gửi
+
+Cột mốc có thể gán bằng **Apply Meshy Assets**. Nhân vật Expedition Courier đã tạo static LOD prefab và cảnh **Review Meshy Assets**; chưa rig hoặc gán làm người lái/nhân vật đi bộ có animation. [Hướng dẫn và trạng thái từng file](../docs/UNITY_MESHY_ASSETS.md). Gói xe máy đang chờ các phần nhỏ hơn 32 MiB.
+
+## Batch Meshy: 6 nhóm model thực nhận
+
+**Apply Meshy Assets** chuẩn bị thư viện, gán cột mốc và 8 mảng dương xỉ trang trí; **Review Meshy Assets** mở gallery chưa lưu. Hai nhân vật chưa rig, asset xe là pickup, bộ jungle là ba diorama ghép nên không tự thay avatar/xe máy/địa hình. [Bảng phân loại và hướng dẫn](../docs/UNITY_MESHY_ASSETS.md). LOD đã giảm nhưng Unity render/animation/FPS vẫn cần kiểm thật.

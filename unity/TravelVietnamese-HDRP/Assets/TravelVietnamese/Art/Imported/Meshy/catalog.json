@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "id": "milestone",
+      "label": "Da Lat milestone",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/Milestone",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyMilestone",
+      "available": true,
+      "has_lod1": false,
+      "review_yaw_degrees": 180,
+      "intended_use": "POI visual; preserve gameplay collider and stable IDs",
+      "apply_in_demo": true
+    },
+    {
+      "id": "courier",
+      "label": "Expedition Courier — static A-pose",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/Courier",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyCourier",
+      "available": true,
+      "has_lod1": true,
+      "review_yaw_degrees": 180,
+      "intended_use": "Unrigged character review only; not a seated rider",
+      "apply_in_demo": false
+    },
+    {
+      "id": "urban_explorer",
+      "label": "Urban Explorer — static A-pose",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/UrbanExplorer",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyUrbanExplorer",
+      "available": true,
+      "has_lod1": true,
+      "review_yaw_degrees": 180,
+      "intended_use": "Alternative unrigged character review only",
+      "apply_in_demo": false
+    },
+    {
+      "id": "pickup",
+      "label": "Expedition pickup truck",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/VehicleReference",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyVehicleReference",
+      "available": true,
+      "has_lod1": true,
+      "review_yaw_degrees": -90,
+      "intended_use": "Static pickup body; not a motorcycle or rigged wheel vehicle",
+      "apply_in_demo": false
+    },
+    {
+      "id": "fern_terraces",
+      "label": "Fern ground patch",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/FernTerraces",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyFernTerraces",
+      "available": true,
+      "has_lod1": true,
+      "review_yaw_degrees": 0,
+      "intended_use": "Bounded ground decoration using visually reviewed high-detail LODs; profile in Unity/mobile",
+      "apply_in_demo": true
+    },
+    {
+      "id": "mountain_jungle",
+      "label": "Three forest cliff dioramas",
+      "source_folder": "Assets/TravelVietnamese/Art/Imported/Meshy/MountainJungle",
+      "output_folder": "Assets/TravelVietnamese/Generated/MeshyMountainJungle",
+      "available": true,
+      "has_lod1": true,
+      "review_yaw_degrees": 0,
+      "intended_use": "Composite review only; separate chunks before terrain integration",
+      "apply_in_demo": false
+    }
+  ]
+}

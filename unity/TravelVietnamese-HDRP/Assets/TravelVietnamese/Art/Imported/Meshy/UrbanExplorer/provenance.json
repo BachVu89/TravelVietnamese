@@ -1,0 +1,54 @@
+{
+  "source": "User-provided Meshy AI split archive",
+  "original_fbx": {
+    "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture.fbx",
+    "bytes": 54500028,
+    "sha256": "754c33ed6f8b2025c877e0c29cf3f5549260d77dc26114ae19d068abcdaae8a3",
+    "location": "Workspace source library; Unity uses derived static LODs"
+  },
+  "files": [
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_normal.png",
+      "bytes": 5509520,
+      "sha256": "c8339a9aff628827e697ed7fcf1f2ea5c27fe785cf0de8bec5812131509715d3"
+    },
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture.png",
+      "bytes": 6573511,
+      "sha256": "4189858e6dd68296012c25be3277ebcc879e74d9e3e139c8ad56401d05b2df20"
+    },
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_metallic.png",
+      "bytes": 93271,
+      "sha256": "2fdd34515fdab37ffc246a1592698b526583a34770e5d0d2f894c6a6eb0a8704"
+    },
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_roughness.png",
+      "bytes": 1444501,
+      "sha256": "0be13993c8e87ae9d6fc3f363afe98785ecbf835beaea730b7856fa2adc9d35c"
+    }
+  ],
+  "license_document_in_source_package": false,
+  "rigging_performed": false,
+  "volume_receipt": {
+    "parts": [
+      {
+        "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_fbx_2.7z.001",
+        "bytes": 25165824,
+        "sha256": "456dca54a0679ac46a9b2750781a41a91e4710eedc2bb43d8a26122e13227949"
+      },
+      {
+        "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_fbx_2.7z.002",
+        "bytes": 25165824,
+        "sha256": "5cbe7e19c5412b4504a4c6c51f049ac0878c248a1e31ace0fefa72f7e79c45f9"
+      },
+      {
+        "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_fbx_2.7z.003",
+        "bytes": 15699524,
+        "sha256": "39cd9282ba2a6a792c341ef0b7f25ee536fd2116889ae62df5eedd2f3d52ff8c"
+      }
+    ],
+    "archive_sha256": "674884608c7b610b5b12249ae5747b58a7a2c4743dcc824c5877af5f6cc94aa6"
+  },
+  "source_identity_note": "Package content was inspected; filename alone is not used to choose gameplay role."
+}

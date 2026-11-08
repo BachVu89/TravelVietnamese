@@ -8,6 +8,10 @@ namespace TravelVietnamese.UnityPrototype
         public GameObject BikeVisualPrefab,WalkerVisualPrefab,TreePrefab;
         public GameObject RockPrefab,FernPrefab,BananaPrefab;
         public GameObject BroadleafPrefab,PinePrefab,BushPrefab,RiderVisualPrefab;
+        public GameObject MilestoneVisualPrefab;
+        public GameObject MeshyFernPatchPrefab;
+        [Tooltip("Visual-only yaw relative to the road direction; -90 faces the road from the right-hand bay.")]
+        public float MilestoneYawOffset=-90;
         public bool ScenicQuality=true,ForceTouchControls=false;
         public float RidingCameraDistance=7,WalkingCameraDistance=5,CameraFieldOfView=69;
         public bool BuildOnAwake=true;
@@ -40,14 +44,52 @@ namespace TravelVietnamese.UnityPrototype
             {
                 GameObject marker=GameObject.CreatePrimitive(PrimitiveType.Cylinder);marker.name=PassRules.StopIds[i];marker.transform.position=PassRoute.At(PassRules.StopDistances[i],10)+Vector3.up;
                 marker.transform.localScale=new Vector3(0.5f,1,0.5f);marker.GetComponent<Renderer>().sharedMaterial=ShoulderMaterial;
+                if(MilestoneVisualPrefab!=null)
+                {
+                    // Keep the existing named cylinder and its collider completely unchanged.
+                    // The authored visual has its own unscaled parent, never the cylinder's scale.
+                    marker.GetComponent<MeshRenderer>().enabled=false;
+                    GameObject displayRoot=new GameObject("Milestone visual — "+PassRules.StopIds[i]);
+                    displayRoot.transform.SetParent(transform,false);
+                    displayRoot.transform.position=PassRoute.At(PassRules.StopDistances[i],10);
+                    Vector3 facing=PassRoute.Forward(PassRules.StopDistances[i]);facing.y=0;
+                    displayRoot.transform.rotation=Quaternion.LookRotation(facing.normalized,Vector3.up)*Quaternion.Euler(0,MilestoneYawOffset,0);
+                    GameObject visual=Instantiate(MilestoneVisualPrefab,displayRoot.transform,false);
+                    visual.transform.localPosition=Vector3.zero;visual.transform.localRotation=Quaternion.identity;
+                    foreach(Collider collider in visual.GetComponentsInChildren<Collider>(true))collider.enabled=false;
+                }
             }
             if(!ScenicQuality && TreePrefab!=null)for(int i=0;i<140;i++){float s=i*5.25f;float side=i%2==0?-1:1;float lane=side*(18+(i%9)*3);Vector3 p=PassRoute.At(s,lane);p.y+=(Mathf.Abs(lane)-4.25f)*(side<0?0.72f:-0.55f);Instantiate(TreePrefab,p,Quaternion.Euler(0,(i*137)%360,0),transform);}
             if(ScenicQuality)road.AddComponent<PassLandscape>().Build(RockMaterial,FoliageMaterial,BroadleafPrefab,PinePrefab,BushPrefab,RockPrefab);
             Decorations();
+            if(ScenicQuality && MeshyFernPatchPrefab!=null)PlaceMeshyFernPatches();
             RenderSettings.fog=true;RenderSettings.fogMode=FogMode.Exponential;RenderSettings.fogDensity=0.004f;RenderSettings.fogColor=new Color(0.65f,0.71f,0.7f);
             Physics.SyncTransforms();
         }
 
+        void PlaceMeshyFernPatches()
+        {
+            // This source is one rectangular fern/soil patch, not a single-frond kit.
+            // Exactly 8 decorative instances: 2 stops x 2 station offsets x 2 safe lanes.
+            float[] offsets={-12,12};float[] lanes={-8,16};
+            for(int stop=0;stop<PassRules.StopDistances.Length;stop++)
+                for(int offset=0;offset<offsets.Length;offset++)
+                    for(int side=0;side<lanes.Length;side++)
+                    {
+                        float station=PassRules.StopDistances[stop]+offsets[offset],lane=lanes[side];
+                        Vector3 position=PassLandscape.SurfacePoint(station,lane);
+                        Vector3 forward=PassLandscape.SurfacePoint(station+0.25f,lane)-PassLandscape.SurfacePoint(station-0.25f,lane);
+                        Vector3 across=PassLandscape.SurfacePoint(station,lane+0.25f)-PassLandscape.SurfacePoint(station,lane-0.25f);
+                        Vector3 normal=Vector3.Cross(forward,across);
+                        if(!PassRules.Finite(normal.x)||!PassRules.Finite(normal.y)||!PassRules.Finite(normal.z)||normal.sqrMagnitude<0.000001f)normal=Vector3.up;
+                        else {normal.Normalize();if(normal.y<0)normal=-normal;}
+                        float yaw=(stop*97+offset*137+side*71)%360;
+                        Quaternion rotation=Quaternion.FromToRotation(Vector3.up,normal)*Quaternion.Euler(0,yaw,0);
+                        GameObject patch=Instantiate(MeshyFernPatchPrefab,position-normal*0.10f,rotation,transform);
+                        patch.name="Meshy fern soil patch — decorative "+stop+"_"+offset+"_"+side;
+                        foreach(Collider collider in patch.GetComponentsInChildren<Collider>(true))collider.enabled=false;
+                    }
+        }
         void Decorations()
         {
             for(int i=0;i<100;i++)

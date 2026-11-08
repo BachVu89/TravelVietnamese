@@ -167,3 +167,11 @@ Người dùng đã mở/chạy project và gửi ảnh lỗi đường nhấp n
 ## Phản hồi chất lượng hình ảnh — Scenic V3
 
 Sau khi người dùng tiếp tục từ chối chất lượng texture-only, batch này thay đổi cấu trúc cảnh/asset: ridged terrain, núi xa, rừng instancing, xe/người gốc và HUD desktop gọn. Có ảnh Blender và FBX readback thực, sửa mesh fold bằng audit số; chưa có Unity screenshot/performance do team chạy và chưa đạt ảnh tham chiếu. Xem [UNITY_SCENIC_V3.md](UNITY_SCENIC_V3.md).
+
+## Asset Meshy người dùng cung cấp — 08/11/2026
+
+Đã kiểm tra milestone và ghép đủ ba phần Expedition Courier. Source Unity chuẩn bị material/prefab cột mốc và preview Courier với hai LOD; Courier gốc không rig/animation nên chưa thay player/rider. Moped vẫn chưa tải được. Có PBR inspection Blender/readback/mask audit, không gọi là Unity runtime nghiệm thu. [UNITY_MESHY_ASSETS.md](UNITY_MESHY_ASSETS.md).
+
+## Batch upload Meshy bổ sung
+
+Đã ghép đủ 14+14+3+3 phần của 4 nhóm bổ sung, đọc và render nguồn bằng Blender. VehicleReference là pickup, không xe máy; hai nhân vật không rig; Fern là mảng nền cây; Jungle là 3 diorama ghép. Chuẩn bị static LOD/PBR/catalog/gallery và gán giới hạn cột mốc/dương xỉ, không giả lập nhân vật có animation hay thay đường gameplay bằng diorama. Xem [UNITY_MESHY_ASSETS.md](UNITY_MESHY_ASSETS.md). Chưa có Unity runtime/điện thoại nghiệm thu.

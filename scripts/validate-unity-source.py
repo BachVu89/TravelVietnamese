@@ -48,6 +48,44 @@ for relative in ('ForestSource/forest-generation-report.json','TravelSource/prov
         export=report_path.parent/entry['file']
         check(export.is_file() and export.read_bytes().startswith(b'Kaydara FBX Binary'),'art export '+entry['name'])
         check(hashlib.sha256(export.read_bytes()).hexdigest()==entry['sha256'],'art checksum '+entry['name'])
+imported=PROJECT/'Assets/TravelVietnamese/Art/Imported/Meshy'
+catalog=json.loads((imported/'catalog.json').read_text())
+check(catalog['schema_version']==1 and len(catalog['assets'])==6,'six imported asset families in catalog')
+ids=[entry['id'] for entry in catalog['assets']]
+check(len(ids)==len(set(ids)),'unique imported catalog IDs')
+for entry in catalog['assets']:
+    source=PROJECT/entry['source_folder']
+    output=Path(entry['output_folder'])
+    check(entry['source_folder'].startswith('Assets/TravelVietnamese/Art/Imported/Meshy/') and '..' not in Path(entry['source_folder']).parts,'catalog source contained '+entry['id'])
+    check(str(output).startswith('Assets/TravelVietnamese/Generated/') and '..' not in output.parts,'catalog output contained '+entry['id'])
+    if entry['available']:
+        check((source/'unity-import.json').is_file(),'catalog import spec exists '+entry['id'])
+        if entry['has_lod1']:check((source/'unity-import-lod1.json').is_file(),'catalog LOD spec exists '+entry['id'])
+for folder in sorted(imported.iterdir()):
+    if not folder.is_dir():continue
+    check(all(p.stat().st_size<100*1024*1024 for p in folder.rglob('*') if p.is_file()),'all imported source files below 100MiB '+folder.name)
+    provenance=json.loads((folder/'provenance.json').read_text())
+    for entry in provenance['files']:
+        raw=folder/entry['file']
+        check(raw.is_file() and raw.stat().st_size==entry['bytes'],'imported source size '+folder.name+'/'+entry['file'])
+        check(raw.stat().st_size<100*1024*1024,'source file under 100MiB '+raw.name)
+        check(hashlib.sha256(raw.read_bytes()).hexdigest()==entry['sha256'],'imported source checksum '+raw.name)
+    mask=json.loads((folder/'unity-mask-provenance.json').read_text())
+    for entry in mask['inputs']+[{'file':mask['output'],'sha256':mask['sha256']}]:
+        check(hashlib.sha256((folder/entry['file']).read_bytes()).hexdigest()==entry['sha256'],'imported mask checksum '+folder.name+'/'+entry['file'])
+    if (folder/'lod-provenance.json').is_file():
+        lods=json.loads((folder/'lod-provenance.json').read_text())
+        check(lods['rigging_performed'] is False,'LOD processing does not claim rigging '+folder.name)
+        check(not (folder/lods['source_fbx']).exists(),'heavy original retained outside Unity Assets '+folder.name)
+        for lod in lods['lods']:
+            check(hashlib.sha256((folder/lod['file']).read_bytes()).hexdigest()==lod['sha256'],'derived LOD checksum '+lod['file'])
+    for import_spec in folder.glob('unity-import*.json'):
+        references=json.loads(import_spec.read_text())
+        for key in ('fbx','base_color','normal','mask'):
+            check(Path(references[key]).name==references[key] and (folder/references[key]).is_file(),'safe import variant '+folder.name+'/'+import_spec.name+'/'+key)
+    spec=json.loads((folder/'unity-import.json').read_text())
+    for key in ('fbx','base_color','normal','mask'):
+        check(Path(spec[key]).name==spec[key] and (folder/spec[key]).is_file(),'safe existing import reference '+folder.name+'/'+key)
 maps=PROJECT/'Assets/TravelVietnamese/Art/SurfaceMaps'
 provenance=json.loads((maps/'provenance.json').read_text())
 check(provenance['resolution']==512 and len(provenance['maps'])==9,'nine 512 original maps provenance')
@@ -74,7 +112,7 @@ check(hdrp_dependencies.get('com.unity.render-pipelines.high-definition')=='17.0
 check('com.unity.render-pipelines.universal' not in hdrp_dependencies,'HDRP project excludes URP')
 check({k:v for k,v in manifest['dependencies'].items() if k!='com.unity.render-pipelines.universal'}=={k:v for k,v in hdrp_dependencies.items() if k!='com.unity.render-pipelines.high-definition'},'only pipeline package differs between profiles')
 check((hdrp/'ProjectSettings/ProjectVersion.txt').read_bytes()==(PROJECT/'ProjectSettings/ProjectVersion.txt').read_bytes(),'same editor pin across profiles')
-for folder in ('Runtime','Art/Original','Art/SurfaceMaps','Art/ForestSource','Art/TravelSource'):
+for folder in ('Runtime','Art/Original','Art/SurfaceMaps','Art/ForestSource','Art/TravelSource','Art/Imported'):
     relative=Path('Assets/TravelVietnamese')/folder
     mobile={f.relative_to(PROJECT/relative):f for f in (PROJECT/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}
     desktop={f.relative_to(hdrp/relative):f for f in (hdrp/relative).rglob('*') if f.is_file() and f.suffix!='.meta'}

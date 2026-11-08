@@ -1,0 +1,162 @@
+{
+  "source_zip": null,
+  "zip_sha256": null,
+  "asset_dir": "/tmp/meshy-courier/extracted",
+  "blender": "4.3.2",
+  "files": [
+    {
+      "name": "Meshy_AI_Expedition_Courier_20261108_texture.fbx",
+      "bytes": 55385228,
+      "sha256": "89280dc55f1e551fca843548dd92aa1e65dce731c6f4446f41e36806686e2278"
+    },
+    {
+      "name": "Meshy_AI_Expedition_Courier_20261108_texture.png",
+      "bytes": 6484638,
+      "sha256": "c0d553dfde313c1c60479f94053156c6c6884f60df4bd8891ac2e04250158bbc"
+    },
+    {
+      "name": "Meshy_AI_Expedition_Courier_20261108_texture_metallic.png",
+      "bytes": 22611,
+      "sha256": "0e216467d0b1cec1c8eca2f54d8e434c60e79e24a3fb4b20256433d19afc06a0"
+    },
+    {
+      "name": "Meshy_AI_Expedition_Courier_20261108_texture_normal.png",
+      "bytes": 5456271,
+      "sha256": "e7cdc9df61bd04b4cc4146d921add16e4507d09a16bddb4132522213c30b0bbc"
+    },
+    {
+      "name": "Meshy_AI_Expedition_Courier_20261108_texture_roughness.png",
+      "bytes": 1516744,
+      "sha256": "3494c153fd3bc2568cfcf78564f9587fb4fcdc01af4cf4f7d94ac709aaed933f"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 573861,
+      "polygons": 1148034,
+      "triangles": 1148034,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "dimensions": [
+        1.2560759782791138,
+        0.5989120006561279,
+        1.9006850719451904
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation_euler": [
+        -4.371138828673793e-08,
+        0.0,
+        0.0
+      ],
+      "modifiers": [],
+      "normal_attributes": [],
+      "vertex_groups": [],
+      "shape_keys": [],
+      "armature_modifier_targets": []
+    }
+  ],
+  "armatures": [],
+  "actions": [],
+  "bones": {},
+  "images_imported": [
+    "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/Image_0.jpg",
+    "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/Image_2.jpg",
+    "",
+    "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/texture_0_metallic.png",
+    "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/texture_0_roughness.png",
+    ""
+  ],
+  "materials_before_override": [
+    {
+      "name": "Dots Stroke",
+      "uses_nodes": false,
+      "image_nodes": []
+    },
+    {
+      "name": "Material",
+      "uses_nodes": true,
+      "image_nodes": []
+    },
+    {
+      "name": "Material.001",
+      "uses_nodes": true,
+      "image_nodes": [
+        "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/Image_0.jpg",
+        "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/Image_2.jpg",
+        "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/texture_0_roughness.png",
+        "/tmp/meshy-courier-inspection/Meshy_AI_Expedition_Courier_20261108_texture.fbm/texture_0_metallic.png"
+      ]
+    }
+  ],
+  "world_bounds": {
+    "min": [
+      -0.6274009943008423,
+      -0.2951720356941223,
+      -0.9510830044746399
+    ],
+    "max": [
+      0.6286749839782715,
+      0.3037400245666504,
+      0.9496020078659058
+    ],
+    "dimensions": [
+      1.2560759782791138,
+      0.5989120602607727,
+      1.9006850719451904
+    ],
+    "note": "Blender importer world units, not real object dimensions guaranteed"
+  },
+  "explicit_review_maps": [
+    {
+      "file": "Meshy_AI_Expedition_Courier_20261108_texture.png",
+      "slot": "Base Color",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "sRGB"
+    },
+    {
+      "file": "Meshy_AI_Expedition_Courier_20261108_texture_metallic.png",
+      "slot": "Metallic",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Expedition_Courier_20261108_texture_roughness.png",
+      "slot": "Roughness",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Expedition_Courier_20261108_texture_normal.png",
+      "slot": "Normal",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    }
+  ],
+  "render_note": "Actual Blender CPU Cycles inspection using supplied maps; not Unity/Unreal, not device fidelity acceptance. Front/reverse are camera labels, not verified actual front orientation."
+}

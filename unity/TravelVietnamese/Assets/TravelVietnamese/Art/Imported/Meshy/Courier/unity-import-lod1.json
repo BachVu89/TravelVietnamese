@@ -1,0 +1,10 @@
+{
+  "fbx": "Courier_LOD1.fbx",
+  "prefab_name": "CourierLOD1",
+  "base_color": "Meshy_AI_Expedition_Courier_20261108_texture.png",
+  "normal": "Meshy_AI_Expedition_Courier_20261108_texture_normal.png",
+  "mask": "Unity_Mask.png",
+  "target_height_m": 1.75,
+  "yaw_offset_degrees": 0,
+  "flip_normal_green": false
+}

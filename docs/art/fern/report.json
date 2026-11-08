@@ -1,0 +1,164 @@
+{
+  "blender": "4.3.2",
+  "source_fbx": "/tmp/meshy-fern-terraces/raw/Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbx",
+  "source_bytes": 354385788,
+  "source_sha256": "5538a9aa9f09b5a069418688deb1e18f2a56c75bcacde5786b6501600832aad2",
+  "source_modified": false,
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 3849683,
+      "polygons": 7735978,
+      "triangles": 7735978,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "dimensions": [
+        1.9043030738830566,
+        1.2673499584197998,
+        0.9291809797286987
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        -4.371138828673793e-08,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "vertex_groups": [],
+      "modifiers": [],
+      "shape_keys": []
+    }
+  ],
+  "renders": [
+    {
+      "file": "front-blender.png",
+      "camera_direction": [
+        1,
+        -3,
+        1
+      ]
+    },
+    {
+      "file": "reverse-blender.png",
+      "camera_direction": [
+        -1,
+        3,
+        0.8
+      ]
+    },
+    {
+      "file": "top-blender.png",
+      "camera_direction": [
+        0,
+        -0.01,
+        3
+      ]
+    }
+  ],
+  "note": "Actual Blender CPU Cycles inspection, not Unity/HDRP/URP or mobile performance validation.",
+  "object_types": {
+    "MESH": 1
+  },
+  "armatures": [],
+  "actions": [],
+  "materials_before_override": [
+    {
+      "name": "Dots Stroke",
+      "image_nodes": []
+    },
+    {
+      "name": "Material",
+      "image_nodes": []
+    },
+    {
+      "name": "Material.001",
+      "image_nodes": [
+        "/tmp/meshy-fern-terraces/raw/Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbm/Image_0.jpg",
+        "/tmp/meshy-fern-terraces/raw/Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbm/Image_2.jpg",
+        "/tmp/meshy-fern-terraces/raw/Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbm/texture_0_roughness.png",
+        "/tmp/meshy-fern-terraces/raw/Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbm/texture_0_metallic.png"
+      ]
+    }
+  ],
+  "world_bounds": {
+    "min": [
+      -0.953902006149292,
+      -0.64096999168396,
+      -0.48197102546691895
+    ],
+    "max": [
+      0.9504010081291199,
+      0.6263800263404846,
+      0.44721004366874695
+    ],
+    "dimensions": [
+      1.9043030738830566,
+      1.2673499584197998,
+      0.9291810989379883
+    ],
+    "units": "Blender importer world units; real dimensions/up-axis need visual verification"
+  },
+  "explicit_review_maps": [
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture.png",
+      "slot": "Base Color",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "sRGB"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_metallic.png",
+      "slot": "Metallic",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_roughness.png",
+      "slot": "Roughness",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_normal.png",
+      "slot": "Normal",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    }
+  ],
+  "render_settings": {
+    "engine": "CPU Cycles",
+    "samples": 8,
+    "resolution": [
+      700,
+      700
+    ],
+    "denoising": false,
+    "threads_max": 4
+  },
+  "source_sha256_after": "5538a9aa9f09b5a069418688deb1e18f2a56c75bcacde5786b6501600832aad2",
+  "peak_process_rss_kib_linux": 8037948,
+  "completed": true
+}

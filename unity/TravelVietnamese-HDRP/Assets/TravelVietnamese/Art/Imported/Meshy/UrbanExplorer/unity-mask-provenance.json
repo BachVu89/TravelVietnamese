@@ -1,0 +1,21 @@
+{
+  "generator": "scripts/art/pack-meshy-mask.py",
+  "output": "Unity_Mask.png",
+  "sha256": "06f5e6dd36d1015839cd813d82eec8c7ea6de8b5fb9c85f884108fa2baca01a2",
+  "inputs": [
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_metallic.png",
+      "sha256": "2fdd34515fdab37ffc246a1592698b526583a34770e5d0d2f894c6a6eb0a8704"
+    },
+    {
+      "file": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture_roughness.png",
+      "sha256": "0be13993c8e87ae9d6fc3f363afe98785ecbf835beaea730b7856fa2adc9d35c"
+    }
+  ],
+  "channels": {
+    "R": "source metallic",
+    "G": "255 (no AO supplied)",
+    "B": "128 (neutral HDRP detail)",
+    "A": "255 - source roughness"
+  }
+}

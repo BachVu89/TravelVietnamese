@@ -1,0 +1,40 @@
+{
+  "source": "User-provided Meshy static source, original retained in workspace; no rigging/animation performed",
+  "source_fbx": "Meshy_AI_Urban_Explorer_Character_Sheet_20261108_texture.fbx",
+  "source_bytes": 54500028,
+  "source_sha256": "754c33ed6f8b2025c877e0c29cf3f5549260d77dc26114ae19d068abcdaae8a3",
+  "source_triangles": 1126822,
+  "generator": "scripts/art/prepare-meshy-courier.py",
+  "blender": "4.3.2",
+  "lods": [
+    {
+      "file": "UrbanExplorer_LOD0.fbx",
+      "vertices": 39804,
+      "triangles": 80000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "ad9a26f611f67a7e839ce90605ce1f40a10411bada45de94a3f92a2c8d31c829",
+      "independent_readback_triangles": 80000
+    },
+    {
+      "file": "UrbanExplorer_LOD1.fbx",
+      "vertices": 9804,
+      "triangles": 20000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "2166998d8c738b9a3ae9ed54797ae017dd270201f61a35bea97730df51ab4e02",
+      "independent_readback_triangles": 20000
+    }
+  ],
+  "rigging_performed": false,
+  "unity_render_or_mobile_verified": false,
+  "triangle_count_stage": "triangles is pre-export Blender data; independent FBX readback may remove degenerates"
+}

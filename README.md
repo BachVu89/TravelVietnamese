@@ -18,6 +18,10 @@ Xem [migration](docs/UNITY_MIGRATION.md) và [bằng chứng/giới hạn](docs/
 
 [Hướng dẫn V3](docs/UNITY_SCENIC_V3.md): menu **Update Scene Graphics** hiện gán rừng, xe/người và địa hình có khối vào scene cũ. Xem [asset rừng](docs/art/forest-preview.png) và [xe/người](docs/art/travel-characters-preview.png) được render bằng Blender, không phải Unity. Asset vẫn cách điệu; chưa có nghiệm thu ảnh Unity hoặc hiệu năng mobile.
 
+### Thư viện Meshy người dùng cung cấp
+
+[Batch Meshy](docs/UNITY_MESHY_ASSETS.md) gồm cột mốc, hai nhân vật tĩnh, pickup, mảng dương xỉ và ba diorama jungle ghép chung. **Apply Meshy Assets** gán cột mốc/dương xỉ; **Review Meshy Assets** mở gallery chưa lưu. Các model khác chưa thay avatar/xe máy/địa hình. Có kiểm tra Blender/PBR/LOD; chưa có nghiệm thu Unity hoặc hiệu năng điện thoại.
+
 ## Hướng UE5 trước khi chuyển Unity
 
 Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đã bổ sung source Character đi bộ/camera và [ba asset gốc từ Blender](docs/art/ORIGINAL_ASSETS.md), kèm [ảnh preview Blender](docs/art/asset-preview.png). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.

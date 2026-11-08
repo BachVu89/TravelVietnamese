@@ -103,6 +103,7 @@ namespace TravelVietnamese.Editor
             RenderSettings.fog=true;RenderSettings.fogMode=FogMode.ExponentialSquared;
             RenderSettings.fogDensity=.003f;RenderSettings.fogColor=new Color(.48f,.55f,.57f);
             PassScenicUpgrade.ApplyTo(game);
+            PassMeshyUpgrade.ApplyTo(game);
             if(!EditorSceneManager.SaveScene(scene,ScenePath)) throw new IOException("Scene save failed.");
             EditorBuildSettings.scenes=new[]{new EditorBuildSettingsScene(ScenePath,true)};
             AssetDatabase.SaveAssets();

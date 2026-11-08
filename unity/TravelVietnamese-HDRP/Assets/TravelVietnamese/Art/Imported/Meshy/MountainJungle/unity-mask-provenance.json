@@ -1,0 +1,21 @@
+{
+  "generator": "scripts/art/pack-meshy-mask.py",
+  "output": "Unity_Mask.png",
+  "sha256": "a49f4bbd368afbfae9cbadcf45bd8014539b7d738161428e99ef1ddd11d251b4",
+  "inputs": [
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_metallic.png",
+      "sha256": "3b2fef1a02febca084f8448819c972e3d85518007fb107285e963d99b8ca18bc"
+    },
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_roughness.png",
+      "sha256": "915d5f78fba4240ea08339e1d188730dacd91f7f464a34a91c0347a9d0b1d28b"
+    }
+  ],
+  "channels": {
+    "R": "source metallic",
+    "G": "255 (no AO supplied)",
+    "B": "128 (neutral HDRP detail)",
+    "A": "255 - source roughness"
+  }
+}

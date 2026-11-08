@@ -1,0 +1,40 @@
+{
+  "source": "User-provided Meshy static source, original retained in workspace; no rigging/animation performed",
+  "source_fbx": "Meshy_AI_Vietnam_Adventure_Vehicle_Reference_20261108_texture.fbx",
+  "source_bytes": 55112812,
+  "source_sha256": "16d0525690b05d6ad37e3c4600106976a8ed5fc6fe74bc19738a33f3588efb30",
+  "source_triangles": 1153926,
+  "generator": "scripts/art/prepare-meshy-courier.py",
+  "blender": "4.3.2",
+  "lods": [
+    {
+      "file": "VehicleReference_LOD0.fbx",
+      "vertices": 39638,
+      "triangles": 80000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "91fcb324458a99e33299409c11c8a0b126185aeb8f0cb746f844df6b12458eb8",
+      "independent_readback_triangles": 80000
+    },
+    {
+      "file": "VehicleReference_LOD1.fbx",
+      "vertices": 9638,
+      "triangles": 20000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "942bba8a652085f4a90a7ea0e4f79b2ea58c0566b5b4379da44906e670d4a8fb",
+      "independent_readback_triangles": 20000
+    }
+  ],
+  "rigging_performed": false,
+  "unity_render_or_mobile_verified": false,
+  "triangle_count_stage": "triangles is pre-export Blender data; independent FBX readback may remove degenerates"
+}

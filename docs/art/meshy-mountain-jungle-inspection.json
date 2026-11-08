@@ -1,0 +1,162 @@
+{
+  "blender": "4.3.2",
+  "source_fbx": "/tmp/meshy-mountain-jungle/content/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_fbx/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.fbx",
+  "source_bytes": 337994060,
+  "source_sha256": "45149c3f65da45f92c464b72d663df571e81d6d4a655f9303e4b0d6a3eb8c786",
+  "source_modified": false,
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 3864148,
+      "polygons": 7746512,
+      "triangles": 7746512,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "dimensions": [
+        1.8981139659881592,
+        1.8192219734191895,
+        0.3516179919242859
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_euler": [
+        -4.371138828673793e-08,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "vertex_groups": [],
+      "modifiers": [],
+      "shape_keys": []
+    }
+  ],
+  "renders": [
+    {
+      "file": "front-blender.png",
+      "camera_direction": [
+        1,
+        -3,
+        1
+      ]
+    },
+    {
+      "file": "reverse-blender.png",
+      "camera_direction": [
+        -1,
+        3,
+        0.8
+      ]
+    },
+    {
+      "file": "top-blender.png",
+      "camera_direction": [
+        0,
+        -0.01,
+        3
+      ]
+    }
+  ],
+  "note": "Actual Blender CPU Cycles inspection, not Unity/HDRP/URP or mobile performance validation.",
+  "object_types": {
+    "MESH": 1
+  },
+  "armatures": [],
+  "actions": [],
+  "materials_before_override": [
+    {
+      "name": "Dots Stroke",
+      "image_nodes": []
+    },
+    {
+      "name": "Material",
+      "image_nodes": []
+    },
+    {
+      "name": "Material.001",
+      "image_nodes": [
+        "/tmp/meshy-mountain-jungle/content/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_fbx/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.fbm/Image_0.jpg",
+        "/tmp/meshy-mountain-jungle/content/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_fbx/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.fbm/Image_2.jpg",
+        "/tmp/meshy-mountain-jungle/content/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_fbx/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.fbm/texture_0_roughness.png",
+        "/tmp/meshy-mountain-jungle/content/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_fbx/Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.fbm/texture_0_metallic.png"
+      ]
+    }
+  ],
+  "world_bounds": {
+    "min": [
+      -0.95210200548172,
+      -0.908873975276947,
+      -0.18410104513168335
+    ],
+    "max": [
+      0.946012020111084,
+      0.9103479981422424,
+      0.1675170511007309
+    ],
+    "dimensions": [
+      1.8981139659881592,
+      1.8192219734191895,
+      0.35161811113357544
+    ],
+    "units": "Blender importer world units; real dimensions/up-axis need visual verification"
+  },
+  "explicit_review_maps": [
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture.png",
+      "slot": "Base Color",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "sRGB"
+    },
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_metallic.png",
+      "slot": "Metallic",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_roughness.png",
+      "slot": "Roughness",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Mist_Shrouded_Mountain_Jungle_Asset_20261108_texture_normal.png",
+      "slot": "Normal",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    }
+  ],
+  "render_settings": {
+    "engine": "CPU Cycles",
+    "samples": 8,
+    "resolution": [
+      700,
+      700
+    ],
+    "denoising": false
+  },
+  "source_sha256_after": "45149c3f65da45f92c464b72d663df571e81d6d4a655f9303e4b0d6a3eb8c786",
+  "completed": true
+}

@@ -1,0 +1,173 @@
+{
+  "inspected_fbx": "FernTerraces_LOD1.fbx",
+  "source_zip": null,
+  "zip_sha256": null,
+  "asset_dir": "unity/TravelVietnamese/Assets/TravelVietnamese/Art/Imported/Meshy/FernTerraces",
+  "blender": "4.3.2",
+  "files": [
+    {
+      "name": "FernTerraces_LOD0.fbx",
+      "bytes": 8981900,
+      "sha256": "6061dbcc74d981f37d3532405bdfdf0123c7ea68714368bbfa77573803a3b874"
+    },
+    {
+      "name": "FernTerraces_LOD1.fbx",
+      "bytes": 4129932,
+      "sha256": "c7276836a9fc403ac1475b954db79bd673cb4a2c8fc6f260633a044bee10a32b"
+    },
+    {
+      "name": "Meshy_AI_Floating_Fern_Terraces_20261108_texture.png",
+      "bytes": 4627700,
+      "sha256": "afdfe98e5d312cea9c6f147baeb4d2e763c7a13a0d9c4958ad07cab4e3b53677"
+    },
+    {
+      "name": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_metallic.png",
+      "bytes": 34987,
+      "sha256": "925d2182ac10911298613625834b27311e4ac11ced1f8b7dc27f4f93b3fd2a4d"
+    },
+    {
+      "name": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_normal.png",
+      "bytes": 5636588,
+      "sha256": "ef3a816d32818a9acf6a78d3d91a1b2ffc193d65017f6590744af765d03ad017"
+    },
+    {
+      "name": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_roughness.png",
+      "bytes": 1675189,
+      "sha256": "d885bb7d934fa1e08b2638387a2d2069e3e5efea7133bce72720785bb252d73b"
+    },
+    {
+      "name": "Unity_Mask.png",
+      "bytes": 2071806,
+      "sha256": "8c2aeb63c8fedf444dbffbc24bc311ba147c9481f213d0a7fd8b41b061b99da3"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "FernTerraces_LOD1",
+      "vertices": 30749,
+      "polygons": 98107,
+      "triangles": 98107,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "dimensions": [
+        1.8007442951202393,
+        1.1829527616500854,
+        0.8387705087661743
+      ],
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "rotation_euler": [
+        -1.6292067073209182e-07,
+        0.0,
+        0.0
+      ],
+      "modifiers": [],
+      "normal_attributes": [],
+      "vertex_groups": [],
+      "shape_keys": [],
+      "armature_modifier_targets": []
+    }
+  ],
+  "armatures": [],
+  "actions": [],
+  "bones": {},
+  "images_imported": [
+    "/tmp/meshylowfern/Image_0.jpg",
+    "/tmp/meshylowfern/Image_2.jpg",
+    "",
+    "/tmp/meshylowfern/texture_0_metallic.png",
+    "/tmp/meshylowfern/texture_0_roughness.png",
+    ""
+  ],
+  "materials_before_override": [
+    {
+      "name": "Dots Stroke",
+      "uses_nodes": false,
+      "image_nodes": []
+    },
+    {
+      "name": "Material",
+      "uses_nodes": true,
+      "image_nodes": []
+    },
+    {
+      "name": "Material.001",
+      "uses_nodes": true,
+      "image_nodes": [
+        "/tmp/meshylowfern/Image_0.jpg",
+        "/tmp/meshylowfern/Image_2.jpg",
+        "/tmp/meshylowfern/texture_0_roughness.png",
+        "/tmp/meshylowfern/texture_0_metallic.png"
+      ]
+    }
+  ],
+  "world_bounds": {
+    "min": [
+      -0.9113253355026245,
+      -0.593650758266449,
+      -0.4451073408126831
+    ],
+    "max": [
+      0.88941890001297,
+      0.589302122592926,
+      0.39366331696510315
+    ],
+    "dimensions": [
+      1.8007442951202393,
+      1.182952880859375,
+      0.8387706279754639
+    ],
+    "note": "Blender importer world units, not real object dimensions guaranteed"
+  },
+  "explicit_review_maps": [
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture.png",
+      "slot": "Base Color",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "sRGB"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_metallic.png",
+      "slot": "Metallic",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_roughness.png",
+      "slot": "Roughness",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    },
+    {
+      "file": "Meshy_AI_Floating_Fern_Terraces_20261108_texture_normal.png",
+      "slot": "Normal",
+      "resolution": [
+        2048,
+        2048
+      ],
+      "colorspace": "Non-Color"
+    }
+  ],
+  "render_note": "Actual Blender CPU Cycles inspection using supplied maps; not Unity/Unreal, not device fidelity acceptance. Front/reverse are camera labels, not verified actual front orientation."
+}

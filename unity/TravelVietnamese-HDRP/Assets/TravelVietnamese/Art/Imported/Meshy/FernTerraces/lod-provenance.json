@@ -1,0 +1,42 @@
+{
+  "pipeline_version": 2,
+  "lod1_derived_from": "LOD0",
+  "source": "User-provided Meshy static source, original retained in workspace; no rigging/animation performed",
+  "source_fbx": "Meshy_AI_Floating_Fern_Terraces_20261108_texture.fbx",
+  "source_bytes": 354385788,
+  "source_sha256": "5538a9aa9f09b5a069418688deb1e18f2a56c75bcacde5786b6501600832aad2",
+  "source_triangles": 7735978,
+  "generator": "scripts/art/prepare-meshy-courier.py",
+  "blender": "4.3.2",
+  "lods": [
+    {
+      "file": "FernTerraces_LOD0.fbx",
+      "vertices": 281694,
+      "triangles": 600000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "3a961c6318638dfc320d510ed8dc9740e45b82a53b6fe209c46cafdc6a796f6f",
+      "independent_readback_triangles": 599998
+    },
+    {
+      "file": "FernTerraces_LOD1.fbx",
+      "vertices": 131694,
+      "triangles": 300000,
+      "uv_layers": [
+        "UVMap"
+      ],
+      "materials": [
+        "Material.001"
+      ],
+      "sha256": "eed43893d9dc7b1a4fe518c38426f23bc96c7b5ab706bedcb583f035ebee8cfc",
+      "independent_readback_triangles": 299998
+    }
+  ],
+  "rigging_performed": false,
+  "unity_render_or_mobile_verified": false,
+  "triangle_count_stage": "triangles is pre-export Blender data; independent FBX readback may remove degenerates"
+}
