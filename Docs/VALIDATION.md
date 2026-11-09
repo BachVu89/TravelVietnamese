@@ -28,3 +28,7 @@ Final freeze: chạy lại VerifyProject166 PASS, metadata `--check` PASS và Ro
 ## Bổ sung đồng bộ hình ảnh và cỏ
 
 Source bổ sung global SharedPainterlyLook/profile dùng chung, tán cây tròn trên overworld, GrassPatch instancing theo chunk và shader gió có neo gốc. Kiểm tra cấu trúc hiện tại:180 PASS; kiểm tra cú pháp cập nhật13 file C# không lỗi parse. Chưa có Unity Editor để compile API/shader, xác nhận post-processing, batching/instancing, bounds culling, gió hoặc FPS trên thiết bị. Các kết quả Core trước đó giữ nguyên vì không sửa quy tắc chơi.
+
+## Sửa setup sau Safe Mode
+
+Ảnh Console từ máy người dùng báo palette không tải được dù PNG nằm trong source. Setup trước đây chạy từ InitializeOnLoad, thời điểm non-script assets có thể chưa import xong. Đổi lịch chạy sang OnPostprocessAllAssets sau domain reload; chờ Editor hết compiling/updating, kiểm tra file nguồn rồi import palette đồng bộ trước khi LoadAssetAtPath. Thông báo mới phân biệt thiếu file với lỗi importer. Kiểm tra cú pháp13 file và cấu trúc180 PASS; chưa tái hiện/kiểm chứng trong Unity Editor tại môi trường này.

@@ -13,7 +13,6 @@ using VietTrail.Rendering;
 
 namespace VietTrail.Editor
 {
-    [InitializeOnLoad]
     public static class TrailProjectSetup
     {
         public const string EntryPath = "Assets/VietTrail/Scenes/Entry.unity";
@@ -21,14 +20,20 @@ namespace VietTrail.Editor
         const string RendererPath = Theme + "/PainterlyRenderer.asset";
         const string PipelinePath = Theme + "/PainterlyPipeline.asset";
 
-        static TrailProjectSetup()
+        internal static void QueuePrepare()
         {
+            EditorApplication.delayCall -= AutoPrepare;
             EditorApplication.delayCall += AutoPrepare;
         }
 
         static void AutoPrepare()
         {
-            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling) return;
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (EditorApplication.isCompiling || EditorApplication.isUpdating)
+            {
+                QueuePrepare();
+                return;
+            }
             try { Prepare(); }
             catch (Exception error) { Debug.LogError("VietTrail setup needs attention: " + error); }
         }
@@ -37,9 +42,15 @@ namespace VietTrail.Editor
         public static void Prepare()
         {
             Directory.CreateDirectory(Theme);
-            AssetDatabase.Refresh();
-            var palette = AssetDatabase.LoadAssetAtPath<Texture2D>(Theme + "/PainterlyPalette.png");
-            if (palette == null) throw new InvalidOperationException("Original painterly palette is missing.");
+            // Safe Mode can finish compiling scripts before non-script assets have been imported.
+            // Check the source separately, then force import it before requesting a Texture2D.
+            string palettePath = Theme + "/PainterlyPalette.png";
+            if (!File.Exists(palettePath))
+                throw new FileNotFoundException("Palette source is absent. Update codex-work in this project root.", palettePath);
+            AssetDatabase.ImportAsset(palettePath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+            var palette = AssetDatabase.LoadAssetAtPath<Texture2D>(palettePath);
+            if (palette == null)
+                throw new InvalidOperationException("Palette PNG exists but Unity could not import it as Texture2D. Check earlier texture import errors in Console: " + palettePath);
             var importer = AssetImporter.GetAtPath(Theme + "/PainterlyPalette.png") as TextureImporter;
             if (importer != null && (importer.filterMode != FilterMode.Point || importer.mipmapEnabled || importer.textureCompression != TextureImporterCompression.Uncompressed || importer.wrapMode != TextureWrapMode.Clamp || importer.maxTextureSize != 512 || !importer.sRGBTexture || importer.alphaSource != TextureImporterAlphaSource.None))
             {
@@ -170,6 +181,13 @@ namespace VietTrail.Editor
 
     public sealed class PainterlyPaletteImporter : AssetPostprocessor
     {
+        static void OnPostprocessAllAssets(string[] imported, string[] deleted,
+            string[] moved, string[] movedFrom, bool didDomainReload)
+        {
+            // Unlike InitializeOnLoad, this callback runs after the asset import pass.
+            if (didDomainReload) TrailProjectSetup.QueuePrepare();
+        }
+
         void OnPreprocessTexture()
         {
             if (assetPath == "Assets/VietTrail/Resources/Theme/PainterlyPalette.png")
