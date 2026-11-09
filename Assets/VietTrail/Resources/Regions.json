@@ -1,0 +1,315 @@
+{
+  "schemaVersion": 1,
+  "snapshotDate": "2025-07-01",
+  "snapshotNote": "Danh mục cấp tỉnh sau sắp xếp 2025, 34 đơn vị (28 tỉnh, 6 thành phố). Snapshot dùng cho tổ chức nội dung, không phải dữ liệu địa giới/GIS cập nhật thời gian thực.",
+  "administrativeReference": "Nghị quyết 202/2025/QH15 về sắp xếp đơn vị hành chính cấp tỉnh năm 2025; tham chiếu văn bản, không kèm geometry hoặc tuyên bố đối soát trực tiếp mọi dữ liệu pháp lý.",
+  "islandCoverageVerified": false,
+  "coverageNote": "34 bản ghi hành chính đều planned; bốn chương du lịch chỉ chương Hà Giang được chọn làm demo hiện tại. Sáu điểm đảo tiêu biểu đều planned, không phải danh mục đầy đủ mọi đảo có tên. Registry hoặc trạng thái demo không xác nhận scene/build/thiết bị đã nghiệm thu.",
+  "provinces": [
+    {
+      "id": "tuyen-quang",
+      "name": "Tuyên Quang",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "cao-bang",
+      "name": "Cao Bằng",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "lai-chau",
+      "name": "Lai Châu",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "lao-cai",
+      "name": "Lào Cai",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "thai-nguyen",
+      "name": "Thái Nguyên",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "dien-bien",
+      "name": "Điện Biên",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "lang-son",
+      "name": "Lạng Sơn",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "son-la",
+      "name": "Sơn La",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "phu-tho",
+      "name": "Phú Thọ",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "bac-ninh",
+      "name": "Bắc Ninh",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "quang-ninh",
+      "name": "Quảng Ninh",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "ha-noi",
+      "name": "Hà Nội",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "hai-phong",
+      "name": "Hải Phòng",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "hung-yen",
+      "name": "Hưng Yên",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "ninh-binh",
+      "name": "Ninh Bình",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "thanh-hoa",
+      "name": "Thanh Hóa",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "nghe-an",
+      "name": "Nghệ An",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "ha-tinh",
+      "name": "Hà Tĩnh",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "quang-tri",
+      "name": "Quảng Trị",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "hue",
+      "name": "Huế",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "da-nang",
+      "name": "Đà Nẵng",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "quang-ngai",
+      "name": "Quảng Ngãi",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "gia-lai",
+      "name": "Gia Lai",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "khanh-hoa",
+      "name": "Khánh Hòa",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "dak-lak",
+      "name": "Đắk Lắk",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "lam-dong",
+      "name": "Lâm Đồng",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "dong-nai",
+      "name": "Đồng Nai",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "tay-ninh",
+      "name": "Tây Ninh",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "ho-chi-minh",
+      "name": "TP. Hồ Chí Minh",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "dong-thap",
+      "name": "Đồng Tháp",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "vinh-long",
+      "name": "Vĩnh Long",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "can-tho",
+      "name": "Cần Thơ",
+      "kind": "municipality",
+      "status": "planned"
+    },
+    {
+      "id": "an-giang",
+      "name": "An Giang",
+      "kind": "province",
+      "status": "planned"
+    },
+    {
+      "id": "ca-mau",
+      "name": "Cà Mau",
+      "kind": "province",
+      "status": "planned"
+    }
+  ],
+  "tourismChapters": [
+    {
+      "id": "ha-giang",
+      "name": "Hà Giang",
+      "provinceIds": [
+        "tuyen-quang"
+      ],
+      "status": "demo",
+      "note": "Tên chương du lịch của vùng Hà Giang trước sắp xếp 2025, thuộc tỉnh Tuyên Quang trong snapshot này. Chỉ là khu mẫu miền núi phía Bắc; không tái hiện toàn tỉnh hoặc đèo thực địa. Demo là phạm vi phát triển được chọn, chưa phải bằng chứng Editor/build/thiết bị đã đạt.",
+      "subtitle": "Đường núi phía Bắc · chương demo",
+      "mapX": 0.46,
+      "mapZ": 0.86
+    },
+    {
+      "id": "hue",
+      "name": "Huế",
+      "provinceIds": [
+        "hue"
+      ],
+      "status": "planned",
+      "note": "Chương dự kiến; chưa có cảnh chơi được được xác nhận.",
+      "subtitle": "Kinh thành và dòng Hương · dự kiến",
+      "mapX": 0.53,
+      "mapZ": 0.51
+    },
+    {
+      "id": "da-lat",
+      "name": "Đà Lạt",
+      "provinceIds": [
+        "lam-dong"
+      ],
+      "status": "planned",
+      "note": "Tên điểm đến du lịch thuộc Lâm Đồng; không phải tỉnh riêng. Chương dự kiến.",
+      "subtitle": "Cao nguyên và rừng thông · dự kiến",
+      "mapX": 0.66,
+      "mapZ": 0.28
+    },
+    {
+      "id": "ca-mau",
+      "name": "Cà Mau",
+      "provinceIds": [
+        "ca-mau"
+      ],
+      "status": "planned",
+      "note": "Chương dự kiến; không đại diện toàn tỉnh chỉ vì có trong danh mục.",
+      "subtitle": "Miệt vườn và đất mũi · dự kiến",
+      "mapX": 0.33,
+      "mapZ": 0.08
+    }
+  ],
+  "representativeIslands": [
+    {
+      "id": "phu-quoc",
+      "name": "Phú Quốc",
+      "provinceId": "an-giang",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    },
+    {
+      "id": "con-dao",
+      "name": "Côn Đảo",
+      "provinceId": "ho-chi-minh",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    },
+    {
+      "id": "ly-son",
+      "name": "Lý Sơn",
+      "provinceId": "quang-ngai",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    },
+    {
+      "id": "phu-quy",
+      "name": "Phú Quý",
+      "provinceId": "lam-dong",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    },
+    {
+      "id": "co-to",
+      "name": "Cô Tô",
+      "provinceId": "quang-ninh",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    },
+    {
+      "id": "cat-ba",
+      "name": "Cát Bà",
+      "provinceId": "hai-phong",
+      "status": "planned",
+      "geometryAvailable": false,
+      "sceneAvailable": false
+    }
+  ],
+  "mapCoordinateNote": "mapX/mapZ là layout minh họa chuẩn hóa 0–1, không phải kinh/vĩ độ hoặc vị trí GIS; không dùng dẫn đường."
+}

@@ -1,64 +1,33 @@
-# Dọc miền Việt 3D
+# Phượt Xuyên Việt — Painterly
 
-Hướng sản phẩm hiện tại là **tự điều khiển nhân vật tham quan Việt Nam trong không gian 3D**, offline trên Android/iOS. Bản câu đố Expo 0.1 được giữ lại để tham khảo, không còn là gameplay chính.
+Bản viết lại hoàn toàn mới trên Unity 6 URP, chơi offline, hướng tới Android và iOS. Source và asset của các bản trước đã được gỡ khỏi cây làm việc; vẫn có thể tra cứu lịch sử Git trước commit viết lại.
 
-Bản 0.3 đã triển khai ba yêu cầu đầu của Product Owner: hướng dẫn bằng thao tác thật, chỉ hướng POI chưa ghé và tùy chỉnh camera/bóng đổ. Xem [kết quả xác minh 0.3](docs/VALIDATION_0.3.md), [nghiên cứu PO](docs/market/RESEARCH.md), [backlog](docs/PRODUCT_BACKLOG.md) và [thành viên/quy trình team](docs/TEAM.md).
+## Mở bản mới
 
-Bản 0.4 bổ sung tuyến đèo mẫu, xe máy, giao thông và hai điểm dừng để xuống đi bộ. Vào **Đổi địa điểm → LÁI XE TRÊN ĐÈO MÂY**. Xem [kết quả 0.4 và giới hạn chất lượng](docs/VALIDATION_0.4.md), [báo cáo BA](docs/STATUS_REPORT.md). Nhánh source đang phát triển là **`codex-work`**; APK phân phối ở **`apk-download`**.
+1. Đóng project Unity cũ rồi cập nhật nhánh `codex-work`.
+2. Trong Unity Hub chọn **Add → Add project from disk**, chọn **thư mục gốc TravelVietnamese**, nơi có `Assets`, `Packages`, `ProjectSettings`. Không mở đường dẫn `unity/TravelVietnamese` của bản cũ.
+3. Dùng Unity **6000.0.32f1** và chờ Package Manager tải URP lần đầu. Sau đó game không cần mạng để chơi.
+4. Mở scene `Assets/VietTrail/Scenes/Entry.unity`, hoặc menu **VietTrail → Open journey** để mở scene; nhấn Play.
 
-Bản 0.5 cải thiện cây/đá/mặt đường/chiều sâu cảnh, thêm hai mức chi tiết và mục tiêu tuyến. Vào trực tiếp bằng **Chơi đèo mẫu**; [kết quả 0.5](docs/VALIDATION_0.5.md), [ảnh đối chiếu cùng camera](docs/ART_COMPARE_0.5.md). Oppo Find X7 Ultra và iPhone 13 là thiết bị đích được người dùng nêu, chưa phải thiết bị đã kiểm chứng.
+Không cần mua plugin hay nhập các file Meshy cũ. Unity Editor có thể cần tải gói khi mở lần đầu; điều này tách biệt với gameplay offline.
 
-## Hướng hiện tại: Unity 6/C#
+## Phạm vi hiện tại
 
-Người dùng đã chuyển lựa chọn engine sang Unity 6. Source mobile ở [`unity/TravelVietnamese`](unity/README.md), dùng **URP** cho Android/iOS; [`TravelVietnamese-HDRP`](unity/TravelVietnamese-HDRP/README.md) là companion **desktop riêng**. HDRP không phải pipeline phát hành cho hai điện thoại mục tiêu. Có source vòng xe→dừng→đi bộ→hai POI, save offline, input cảm ứng và script dựng scene với ba asset gốc. **Chưa compile/chạy bằng Unity Editor**, chưa có scene sinh từ Editor hoặc APK/IPA Unity. Logic Domain thuần C# đã chạy test .NET riêng; đó không phải kiểm gameplay/graphics Unity.
+- Cảnh đèo miền Bắc minh họa: đường uốn cong, ruộng bậc thang, cây, núi, bãi dừng, xe và người dựng mới bằng mesh dùng palette màu chung.
+- Shader stylized có ánh sáng, màu theo độ cao, sương mù và bầu trời ấm; không dùng vật liệu PBR của bản cũ.
+- Lái xe, đi bộ ở bãi dừng, khám phá ba điểm, lưu tiến trình cục bộ và tải cảnh theo phân đoạn.
+- Bản đồ tổng phục vụ chọn hành trình; danh mục 34 tỉnh/thành không đồng nghĩa đã có 34 màn chơi. Các điểm đảo còn trong kế hoạch. Địa hình minh họa chưa sử dụng DEM, không phải bản đồ địa lý chính xác.
 
-Xem [migration](docs/UNITY_MIGRATION.md) và [bằng chứng/giới hạn](docs/UNITY_VALIDATION.md). Môi trường thiếu Editor/license, truy cập kênh tải chính thức hiện bị proxy trả CONNECT 403. Tỷ lệ chất lượng “90–95%”, kích thước bộ cài, hiệu năng và plugin thương mại chưa được xác minh. Godot 0.5 vẫn là bản APK chơi được đã giao; UE giữ lại như công việc lịch sử.
+Xem [yêu cầu và tiêu chí nghiệm thu](Docs/PRODUCT.md), [định hướng hình ảnh](Docs/ART_STYLE.md), [lộ trình](Docs/ROADMAP.md) và [kết quả kiểm tra](Docs/VALIDATION.md).
 
-### Scenic V3 — cập nhật cảnh Unity đang có
+## Điều khiển
 
-[Hướng dẫn V3](docs/UNITY_SCENIC_V3.md): menu **Update Scene Graphics** hiện gán rừng, xe/người và địa hình có khối vào scene cũ. Xem [asset rừng](docs/art/forest-preview.png) và [xe/người](docs/art/travel-characters-preview.png) được render bằng Blender, không phải Unity. Asset vẫn cách điệu; chưa có nghiệm thu ảnh Unity hoặc hiệu năng mobile.
+Trong cảnh lái xe: W ga, S phanh, A/D rẽ; F lên/xuống xe tại bãi nghỉ, E ghi dấu, R về điểm nghỉ đã qua. Khi đi bộ dùng WASD. Chuột phải để nhìn; điện thoại có nút cảm ứng. Bản đồ chọn chương hỗ trợ kéo để xoay, cuộn chuột hoặc hai ngón để zoom; các nút +/− và xoay là lựa chọn thay thế.
 
-### Thư viện Meshy người dùng cung cấp
+Bản đồ được dùng để chọn hành trình trước khi vào cảnh lái xe riêng, không phải thế giới mở toàn quốc thu nhỏ. Mây và xe trên bản đồ là chuyển động minh họa.
 
-[Batch Meshy](docs/UNITY_MESHY_ASSETS.md) gồm cột mốc, hai nhân vật tĩnh, pickup, mảng dương xỉ và ba diorama jungle ghép chung. **Apply Meshy Assets** gán cột mốc/dương xỉ; **Review Meshy Assets** mở gallery chưa lưu. Các model khác chưa thay avatar/xe máy/địa hình. Có kiểm tra Blender/PBR/LOD; chưa có nghiệm thu Unity hoặc hiệu năng điện thoại.
+## Kiểm tra và build
 
-## Hướng UE5 trước khi chuyển Unity
+`python3 Tools/VerifyProject.py` kiểm tra cấu trúc và tham chiếu asset. `Tests/run-core.sh` kiểm tra quy tắc thuần C#; `Tests/run-syntax.sh` kiểm tra cú pháp source. Các kiểm tra này **không thay thế compile, chạy và xem hình trong Unity**.
 
-Theo yêu cầu đồ họa ngày 07/11/2026, team bắt đầu chuyển sang UE5.5+ trong [`unreal/`](unreal/README.md). Đã bổ sung source Character đi bộ/camera và [ba asset gốc từ Blender](docs/art/ORIGINAL_ASSETS.md), kèm [ảnh preview Blender](docs/art/asset-preview.png). Đây là **project nguồn khởi đầu, chưa biên dịch/render/cook bằng UE**, chưa có APK/IPA mới. Môi trường hiện không có Unreal Editor; người dùng cũng chưa có engine/asset sẵn. APK Godot 0.5 vẫn là bản chơi được đã giao trước đó, không phải bản đáp ứng chất lượng mới.
-
-Xem [yêu cầu đồ họa và tiêu chí](docs/GRAPHICS_REQUIREMENTS.md), [kế hoạch chuyển engine](docs/UNREAL_MIGRATION.md), [kiểm chứng hiện tại](docs/UNREAL_VALIDATION.md), [danh sách asset cần bổ sung](docs/art/asset-manifest.json) và [nội dung gốc người dùng cung cấp](docs/inputs/GRAPHICS_BRIEF_2026-11-07.txt). Nanite/Lumen là mục tiêu cấu hình desktop riêng; mobile có pipeline riêng cần kiểm trên thiết bị. Chưa mua/tải gói Fab hoặc asset thương mại và chưa tuyên bố đạt hình ảnh tham chiếu.
-
-## Bản nền tảng 3D
-
-Dự án Godot 4.6.3 ở `game3d/`, dùng Compatibility renderer và nội dung đóng gói. Có đi bộ, xoay camera, va chạm, tương tác khi ở gần điểm tham quan và lưu tiến trình local. Các cảnh tạo theo quy tắc là cảnh minh họa; chưa số hóa địa hình hoặc toàn bộ tỉnh ngoài thực tế.
-
-Danh mục hiện có **34 tỉnh/thành và 13 vùng đảo/đặc khu**, lấy từ bộ dữ liệu cộng đồng có nguồn và giấy phép MIT. Mọi mục có đường vào khu tham quan 3D. **13 vùng đảo không phải toàn bộ đảo có tên của Việt Nam**; chưa có dữ liệu mọi đảo thành phần, đường bờ, độ cao và nội dung đặc trưng đầy đủ. Xem [phạm vi địa lý và kế hoạch bổ sung](docs/GEOGRAPHIC_SCOPE.md).
-
-## Mở dự án và điều khiển
-
-Mở `game3d/project.godot` trong Godot 4.6.3 và chạy scene chính, hoặc:
-
-```sh
-/opt/godot/4.6.3/Godot_v4.6.3-stable_linux.x86_64 --path /workspace/TravelVietnamese/game3d
-```
-
-Trên mobile dùng joystick bên trái để đi và kéo vùng bên phải để xoay camera. Trên máy tính dùng WASD/phím mũi tên; thao tác camera và tương tác được hướng dẫn trong game. Đến gần cột mốc để mở nội dung tham quan. Đổi địa điểm qua danh mục có tìm kiếm; các đảo cũng vào được cảnh riêng.
-
-## Skill cho Codex và Muse
-
-[Bộ 7 Skill của team và cách sử dụng](docs/skills/README.md) nằm trong `.agents/skills/`, bao gồm Product Owner, BA, SA, Designer, Developer, Tester và điều phối. Codex dùng repository skills; Muse có hướng dẫn đọc Markdown trực tiếp, chưa kiểm chứng tích hợp native.
-
-## Tài liệu và kiểm chứng
-
-- [Sản phẩm và tiêu chí nghiệm thu](docs/PRODUCT.md)
-- [Kiến trúc Godot và offline](docs/ARCHITECTURE.md)
-- [Thiết kế điều khiển và giao diện](docs/DESIGN.md), [định hướng đồ họa](docs/ART_DIRECTION.md)
-- [Kế hoạch kiểm thử 3D](docs/TEST_PLAN_3D.md)
-- [Bản APK 0.2.0, kết quả xác minh và ảnh 3D](docs/VALIDATION_3D.md)
-- Nguồn địa lý: `game3d/data/geography/sources.json` và license đi kèm.
-
-Đây là nền tảng thử nghiệm theo hướng mới, chưa phải bản du lịch toàn quốc đã hoàn thiện. Việc build Android, chạy trên thiết bị và build iOS phải được báo cáo riêng. iOS cần môi trường macOS/Xcode và ký phù hợp khi phân phối.
-
-## Bản cũ
-
-`App.tsx`, `src/`, `android/` và `package.json` thuộc prototype câu đố Expo 0.1. Hướng dẫn cũ được giữ ở [README legacy](docs/legacy/README_QUIZ_PROTOTYPE.md); các kiểm tra Expo không xác nhận chất lượng bản Godot3D.
+Máy đám mây hiện không có Unity Editor; chưa có APK/iOS build được xác nhận từ bản viết lại. Để build Android trên máy cá nhân, cài Android Build Support (SDK/NDK/OpenJDK) trong Unity Hub và dùng menu **VietTrail → Build Android APK**. iOS cần máy macOS với Xcode để đóng gói và ký ứng dụng.
