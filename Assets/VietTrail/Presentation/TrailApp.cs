@@ -78,7 +78,7 @@ namespace VietTrail.Presentation
             {
                 Vector2 previous;if(!pointers.TryGetValue(e.pointerId,out previous))return;Vector2 now=e.position,delta=now-previous;pointers[e.pointerId]=now;gestureDistance+=delta.magnitude;
                 if(screen=="map"&&pointers.Count>=2){float distance=PointerDistance();if(pinchDistance>0)map.Zoom((distance-pinchDistance)*0.025f);pinchDistance=distance;}
-                else if(screen=="map")map.Orbit(delta);else if(screen=="ride"&&!(e.pointerType==PointerType.mouse&&Input.GetMouseButton(1)))rider.AddLook(delta);e.StopPropagation();
+                else if(screen=="map")map.Orbit(delta);else if(screen=="ride"&&!(e.pointerType==UnityEngine.UIElements.PointerType.mouse&&Input.GetMouseButton(1)))rider.AddLook(delta);e.StopPropagation();
             });
             lookPad.RegisterCallback<PointerUpEvent>(e=>
             {
