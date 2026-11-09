@@ -42,28 +42,7 @@ namespace VietTrail.Editor
         public static void Prepare()
         {
             Directory.CreateDirectory(Theme);
-            // Safe Mode can finish compiling scripts before non-script assets have been imported.
-            // Check the source separately, then force import it before requesting a Texture2D.
-            string palettePath = Theme + "/PainterlyPalette.png";
-            if (!File.Exists(palettePath))
-                throw new FileNotFoundException("Palette source is absent. Update codex-work in this project root.", palettePath);
-            AssetDatabase.ImportAsset(palettePath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
-            var palette = AssetDatabase.LoadAssetAtPath<Texture2D>(palettePath);
-            if (palette == null)
-            {
-                var failedImporter = AssetImporter.GetAtPath(palettePath);
-                var mainType = AssetDatabase.GetMainAssetTypeAtPath(palettePath);
-                throw new InvalidOperationException("Palette import failed: importer=" +
-                    (failedImporter == null ? "none" : failedImporter.GetType().FullName) +
-                    ", mainAsset=" + (mainType == null ? "none" : mainType.FullName) +
-                    ". Select the PNG and use Assets > Reimport; inspect earlier Console errors. Path: " + palettePath);
-            }
-            var importer = AssetImporter.GetAtPath(Theme + "/PainterlyPalette.png") as TextureImporter;
-            if (importer != null && (importer.filterMode != FilterMode.Point || importer.mipmapEnabled || importer.textureCompression != TextureImporterCompression.Uncompressed || importer.wrapMode != TextureWrapMode.Clamp || importer.maxTextureSize != 512 || !importer.sRGBTexture || importer.alphaSource != TextureImporterAlphaSource.None))
-            {
-                ConfigurePalette(importer);
-                importer.SaveAndReimport();
-            }
+            Texture2D palette = PreparePalette();
             var renderer = AssetDatabase.LoadAssetAtPath<UniversalRendererData>(RendererPath);
             if (renderer == null)
             {
@@ -120,13 +99,63 @@ namespace VietTrail.Editor
             if (!scenes.Any(scene => scene.path == EntryPath)) scenes.Add(new EditorBuildSettingsScene(EntryPath, true));
             EditorBuildSettings.scenes = scenes.ToArray();
             AssetDatabase.SaveAssets();
+            Debug.Log("VietTrail ready [palette-fallback-v1]. Use VietTrail > Open journey, then Play. Project: " + Application.dataPath);
+        }
+
+        static Texture2D PreparePalette()
+        {
+            string pngPath = Theme + "/PainterlyPalette.png";
+            Texture2D palette = null;
+            try
+            {
+              if (File.Exists(pngPath))
+              {
+                AssetDatabase.ImportAsset(pngPath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
+                palette = AssetDatabase.LoadAssetAtPath<Texture2D>(pngPath);
+                var importer = AssetImporter.GetAtPath(pngPath) as TextureImporter;
+                if (palette != null && importer != null &&
+                    (importer.filterMode != FilterMode.Point || importer.mipmapEnabled ||
+                     importer.textureCompression != TextureImporterCompression.Uncompressed ||
+                     importer.wrapMode != TextureWrapMode.Clamp || importer.maxTextureSize != 512 ||
+                     !importer.sRGBTexture || importer.alphaSource != TextureImporterAlphaSource.None))
+                {
+                    ConfigurePalette(importer);
+                    importer.SaveAndReimport();
+                    palette = AssetDatabase.LoadAssetAtPath<Texture2D>(pngPath);
+                }
+              }
+            }
+            catch (Exception error)
+            {
+                Debug.LogWarning("VietTrail PNG importer: " + error.Message + "; generating palette instead.");
+            }
+            if (palette != null) return palette;
+            string generatedPath = Theme + "/PainterlyPaletteGenerated.asset";
+            palette = AssetDatabase.LoadAssetAtPath<Texture2D>(generatedPath);
+            if (palette == null)
+            {
+                palette = PainterlyPalette.CreateTexture();
+                AssetDatabase.CreateAsset(palette, generatedPath);
+            }
+            Debug.LogWarning("VietTrail: PNG palette unavailable; using the identical 64-colour palette generated directly as a Texture2D asset. Setup can continue.");
+            return palette;
         }
 
         static void CreateMaterial(string name, string shaderName, Texture2D palette)
         {
             string path = Theme + "/" + name + ".mat";
             // Preserve artist changes in materials already created in the Editor.
-            if (AssetDatabase.LoadAssetAtPath<Material>(path) != null) return;
+            var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (existing != null)
+            {
+                // Repair a missing PNG binding without overwriting the artist's other settings.
+                if (palette != null && existing.GetTexture("_Palette") != palette)
+                {
+                    existing.SetTexture("_Palette", palette);
+                    EditorUtility.SetDirty(existing);
+                }
+                return;
+            }
             Shader shader = Shader.Find(shaderName);
             if (shader == null) throw new InvalidOperationException("Missing shader " + shaderName);
             var material = new Material(shader) { name = name };

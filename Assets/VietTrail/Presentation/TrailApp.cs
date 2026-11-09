@@ -16,6 +16,7 @@ namespace VietTrail.Presentation
     {
         [Serializable] sealed class Region {public string id,name,status,subtitle,note,provinceId;public bool sceneAvailable;}
         [Serializable] sealed class Registry {public Region[] provinces,tourismChapters,representativeIslands;public string snapshotDate,snapshotNote,coverageNote;}
+        Texture2D ownedPalette;
         RiderDirector rider;SegmentHost world;JourneyMapView map;Material paint;Light sun;VisualElement root,page,hud,touch;
         Label speed,progress,notification;VisualElement lookPad;readonly Dictionary<int,Vector2> pointers=new Dictionary<int,Vector2>();Vector2 downPosition;float pinchDistance,gestureDistance;Registry registry;string screen="title",notice="";bool allowSave=true;float saveTimer;
         string SavePath {get{return Path.Combine(Application.persistentDataPath,"viettrail-painterly-v1.json");}}
@@ -23,7 +24,11 @@ namespace VietTrail.Presentation
         void Awake()
         {
             Material resource=Resources.Load<Material>("Theme/PainterlyWorld");
-            if(resource!=null)paint=new Material(resource);else{Shader shader=Shader.Find("VietTrail/Painterly Lit");if(shader==null){Debug.LogError("Painterly shader missing; run project setup.");enabled=false;return;}paint=new Material(shader);paint.SetTexture("_Palette",Resources.Load<Texture2D>("Theme/PainterlyPalette"));}
+            if(resource!=null)paint=new Material(resource);else{Shader shader=Shader.Find("VietTrail/Painterly Lit");if(shader==null){Debug.LogError("Painterly shader missing; run project setup.");enabled=false;return;}paint=new Material(shader);}
+            bool ownsPalette;
+            Texture2D paletteTexture=PainterlyPalette.LoadOrCreate(out ownsPalette);
+            if(ownsPalette)ownedPalette=paletteTexture;
+            paint.SetTexture("_Palette",paletteTexture);
             Material sky=Resources.Load<Material>("Theme/PainterlySky");if(sky==null){Shader shader=Shader.Find("VietTrail/Painterly Sky");if(shader!=null)sky=new Material(shader);}if(sky!=null)RenderSettings.skybox=sky;
             RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.ambientLight=new Color(0.67f,0.72f,0.62f);RenderSettings.fog=false;
             GameObject lightObject=new GameObject("Afternoon sun");lightObject.transform.SetParent(transform,false);sun=lightObject.AddComponent<Light>();sun.type=LightType.Directional;sun.transform.rotation=Quaternion.Euler(22,-32,0);sun.color=new Color(1,0.9f,0.74f);sun.intensity=1.05f;sun.shadows=LightShadows.Soft;
@@ -176,5 +181,7 @@ namespace VietTrail.Presentation
         void OnApplicationPause(bool paused){if(paused){ReleaseGesture();Save();}}
         void OnApplicationFocus(bool focused){if(!focused){ReleaseGesture();Save();}}
         void OnApplicationQuit(){Save();}
+        void OnDestroy(){if(paint!=null)Destroy(paint);if(ownedPalette!=null)Destroy(ownedPalette);}
+
     }
 }
