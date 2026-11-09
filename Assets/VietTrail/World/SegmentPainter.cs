@@ -61,6 +61,29 @@ namespace VietTrail.World
             unchecked { uint n = (uint)seed * 747796405u + 2891336453u; n = ((n >> 13) ^ n) * 277803737u; return (n & 65535u) / 65535f; }
         }
 
+        public static Vector3 RoadsideGrassPoint(float s, float lane)
+        {
+            // Match the actual first terrain strip, not an independent height approximation.
+            float a = Mathf.Floor(s / 4f) * 4f, b = Mathf.Min(a + 4f, TrailPath.Length);
+            float t = Mathf.InverseLerp(a, b, s);
+            Vector3 pa, pb;
+            if (lane < 0)
+            {
+                float u = Mathf.InverseLerp(-2.8f, -8f, lane);
+                pa = Vector3.Lerp(GroundPoint(a,-2.8f),GroundPoint(a,-8f),u);
+                pb = Vector3.Lerp(GroundPoint(b,-2.8f),GroundPoint(b,-8f),u);
+            }
+            else
+            {
+                float outward = lane - TrailPath.RightEdge(s);
+                float widthA = 8 + Mathf.Sin(a*.015f)*.28f;
+                float widthB = 8 + Mathf.Sin(b*.015f)*.28f;
+                pa = TrailPath.RoadPoint(a,TrailPath.RightEdge(a)+outward); pa.y -= outward/widthA*.2f;
+                pb = TrailPath.RoadPoint(b,TrailPath.RightEdge(b)+outward); pb.y -= outward/widthB*.2f;
+            }
+            return Vector3.Lerp(pa,pb,t) - Vector3.up*.025f;
+        }
+
         static Vector3 GroundPoint(float s, float lane)
         {
             Vector3 point = TrailPath.RoadPoint(s, lane);

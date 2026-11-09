@@ -74,3 +74,11 @@ Analytic fog is evaluated from world position and camera distance, with height a
 Use irregular multi-cluster tree canopies, layered banks/rock silhouettes and clear warm roads/fields; a palette swap on box characters or flat cliffs does not satisfy the style. Review actual Unity captures at start/corner/vista and a moving third-person segment. Near route and rider must remain legible, terrain elevations must not recolour the rider, shadows must not turn foliage black, and horizon must meet haze without an obvious dark seam.
 
 Gate status: palette PNG generated and pixel/UV mapping testable; shader source authored, **not compiled/rendered in Unity**. Check shader compiler logs, instanced draw shadows/depth, mobile render APIs, XR macros if used, cascade/screen-space shadow modes and depth pass behavior. Then profile on OppoFindX7Ultra/iPhone13. No FPS or native volumetric-fog claim is made. These original shaders/colours contain no marketplace/scan/reference-image content.
+
+## Đồng bộ bản đồ tổng và cảnh chi tiết
+
+`SharedPainterlyLook` áp dụng một global Volume dùng `Theme/PainterlyVolume` cho cả hai chế độ camera. Editor setup tạo profile này một lần (Bloom nhẹ, Color Adjustments, Vignette, Neutral tonemapping); nếu chưa có asset thì runtime dùng cùng một profile tạm. Palette, đèn Directional góc22° và màu haze không đổi khi chuyển chế độ. `RenderSettings.fogColor` đồng bộ với `_HazeColor`; built-in fog tắt để tránh chồng thêm một lớp lên haze do shader xử lý.
+
+Overworld dùng một mesh gộp tán cây bo tròn, không có cỏ chi tiết. Cảnh đường đèo dùng `GrassPatch` theo chunk: tối đa256 bụi/chunk96m, tối đa5 chunk đang giữ; không tạo GameObject/collider cho từng bụi. Material cỏ dùng cùng palette/shader, bật instancing; `_WindStrength` chỉ bật trên material cỏ. Shader biến dạng nhất quán ở forward/depth/shadow, gốc giữ cố định, biên mesh bao gồm độ lay tối đa. Thiết bị không hỗ trợ instancing sẽ bỏ qua cỏ và giữ cảnh chính.
+
+Bản đồ tổng tắt các GrassPatch của tuyến lái xe. Đây là chính sách giới hạn nội dung, chưa phải số đo FPS/draw call/RAM. Cần kiểm Shader compilation, frame debugger, đổi chế độ nhiều lần, hành trình mới và hiệu năng trên Oppo Find X7 Ultra/iPhone13 trong Unity.

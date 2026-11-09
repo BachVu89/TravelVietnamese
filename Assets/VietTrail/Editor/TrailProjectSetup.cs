@@ -9,6 +9,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using VietTrail.Presentation;
+using VietTrail.Rendering;
 
 namespace VietTrail.Editor
 {
@@ -64,10 +65,18 @@ namespace VietTrail.Editor
                 pipeline.supportsCameraOpaqueTexture = false;
                 AssetDatabase.CreateAsset(pipeline, PipelinePath);
             }
+            pipeline.supportsHDR = true;
             GraphicsSettings.defaultRenderPipeline = pipeline;
             QualitySettings.renderPipeline = pipeline;
             CreateMaterial("PainterlyWorld", "VietTrail/Painterly Lit", palette);
             CreateMaterial("PainterlySky", "VietTrail/Painterly Sky", null);
+            string profilePath = Theme + "/PainterlyVolume.asset";
+            if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(profilePath) == null)
+            {
+                var profile = SharedPainterlyLook.CreateProfile();
+                AssetDatabase.CreateAsset(profile, profilePath);
+                foreach (var component in profile.components) AssetDatabase.AddObjectToAsset(component, profile);
+            }
             PlayerSettings.companyName = "VietTrail";
             PlayerSettings.productName = "Phượt Xuyên Việt";
             PlayerSettings.bundleVersion = "0.1.0";

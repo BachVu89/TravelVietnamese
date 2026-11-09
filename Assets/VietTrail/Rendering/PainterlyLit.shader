@@ -3,6 +3,8 @@ Shader "VietTrail/Painterly Lit"
  Properties
  {
   _Palette("Original palette atlas", 2D) = "white" {}
+  _WindStrength("Grass tip sway (world metres)", Range(0,0.3)) = 0
+  _WindSpeed("Grass wind speed", Float) = 1.3
   _ShadowTint("Painted shadow tint", Color) = (0.67,0.73,0.66,1)
   _HeightLowTint("Low terrain tint", Color) = (0.85,0.91,0.82,1)
   _HeightHighTint("High terrain tint", Color) = (1.06,1.01,0.90,1)
@@ -28,16 +30,25 @@ Shader "VietTrail/Painterly Lit"
   TEXTURE2D(_Palette); SAMPLER(sampler_Palette);
   CBUFFER_START(UnityPerMaterial)
    float4 _Palette_ST;
+   float _WindStrength, _WindSpeed;
    half4 _ShadowTint, _HeightLowTint, _HeightHighTint, _HazeColor, _SlopeTint;
    float _HeightMin, _HeightMax, _BandSoftness, _AmbientStrength, _SlopeThreshold;
    float _FogDensity, _FogStart, _FogBaseHeight, _FogHeightFalloff, _FogMax;
   CBUFFER_END
   struct Attributes { float4 positionOS:POSITION; float3 normalOS:NORMAL; float2 uv:TEXCOORD0; half4 color:COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
   struct Varyings { float4 positionCS:SV_POSITION; float3 positionWS:TEXCOORD0; half3 normalWS:TEXCOORD1; float2 uv:TEXCOORD2; half4 color:TEXCOORD3; UNITY_VERTEX_INPUT_INSTANCE_ID UNITY_VERTEX_OUTPUT_STEREO };
+  float3 WindPosition(float3 positionOS)
+  {
+   float3 world=TransformObjectToWorld(positionOS);
+   float phase=dot(TransformObjectToWorld(float3(0,0,0)).xz,float2(0.71,0.43));
+   float tip=saturate(positionOS.y/0.65);
+   world.xz+=float2(1,0.4)*sin(_Time.y*_WindSpeed+phase)*_WindStrength*tip*tip;
+   return world;
+  }
   Varyings Vert(Attributes v)
   {
    Varyings o=(Varyings)0; UNITY_SETUP_INSTANCE_ID(v); UNITY_TRANSFER_INSTANCE_ID(v,o); UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-   VertexPositionInputs p=GetVertexPositionInputs(v.positionOS.xyz); o.positionCS=p.positionCS; o.positionWS=p.positionWS;
+   o.positionWS=WindPosition(v.positionOS.xyz); o.positionCS=TransformWorldToHClip(o.positionWS);
    o.normalWS=TransformObjectToWorldNormal(v.normalOS); o.uv=v.uv; o.color=v.color; return o;
   }
   ENDHLSL
@@ -89,7 +100,7 @@ Shader "VietTrail/Painterly Lit"
    float3 _LightDirection; float3 _LightPosition;
    float4 ShadowVert(Attributes v):SV_POSITION
    {
-    UNITY_SETUP_INSTANCE_ID(v); float3 positionWS=TransformObjectToWorld(v.positionOS.xyz); float3 normalWS=TransformObjectToWorldNormal(v.normalOS);
+    UNITY_SETUP_INSTANCE_ID(v); float3 positionWS=WindPosition(v.positionOS.xyz); float3 normalWS=TransformObjectToWorldNormal(v.normalOS);
     #if defined(_CASTING_PUNCTUAL_LIGHT_SHADOW)
      float3 direction=normalize(_LightPosition-positionWS);
     #else
@@ -113,7 +124,7 @@ Shader "VietTrail/Painterly Lit"
    #pragma vertex DepthVert
    #pragma fragment DepthFrag
    #pragma multi_compile_instancing
-   float4 DepthVert(Attributes v):SV_POSITION { UNITY_SETUP_INSTANCE_ID(v); return TransformObjectToHClip(v.positionOS.xyz); }
+   float4 DepthVert(Attributes v):SV_POSITION { UNITY_SETUP_INSTANCE_ID(v); return TransformWorldToHClip(WindPosition(v.positionOS.xyz)); }
    half4 DepthFrag():SV_Target { return 0; }
    ENDHLSL
   }

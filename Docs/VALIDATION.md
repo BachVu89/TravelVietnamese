@@ -24,3 +24,7 @@ QA phát hiện rule dừng ban đầu cho phép±16m trong khi sân nghỉ đ�
 6. Android/iOS build/sign/install, cold launch offline, actual permissions/save persistence và frame time/RAM/nhiệt. Không có APK/IPA mới hoặc đo FPS/device trong báo cáo này.
 
 Final freeze: chạy lại VerifyProject166 PASS, metadata `--check` PASS và Roslyn11files/0parseerrors sau pause/reset fixes. Không rerun Core không đổi; giữ kết quả actual262 assertions trước đó. Không có Unity API compilation hoặc visual/device acceptance mới.
+
+## Bổ sung đồng bộ hình ảnh và cỏ
+
+Source bổ sung global SharedPainterlyLook/profile dùng chung, tán cây tròn trên overworld, GrassPatch instancing theo chunk và shader gió có neo gốc. Kiểm tra cấu trúc hiện tại:180 PASS; kiểm tra cú pháp cập nhật13 file C# không lỗi parse. Chưa có Unity Editor để compile API/shader, xác nhận post-processing, batching/instancing, bounds culling, gió hoặc FPS trên thiết bị. Các kết quả Core trước đó giữ nguyên vì không sửa quy tắc chơi.

@@ -32,7 +32,7 @@ namespace VietTrail.Presentation
             initialized = true; material = sharedPalette;
             var root = new GameObject("Illustrative S journey — not geographic data");
             contents = root.transform; contents.SetParent(transform, false); contents.position = new Vector3(8000, 0, 0);
-            BuildTerrain(); BuildChapters(); BuildRoute(); BuildClouds();
+            BuildTerrain(); BuildCanopies(); BuildChapters(); BuildRoute(); BuildClouds();
             var bike = new Shape();
             bike.Box(new Vector3(0, .4f, 0), new Vector3(1.1f, .65f, 2), 10);
             bike.Box(new Vector3(0, .85f, .2f), new Vector3(.8f, .25f, 1.2f), 11);
@@ -79,6 +79,21 @@ namespace VietTrail.Presentation
             Create("Raised illustrative terrain with height and slope palette", land);
             var sea = new Shape(); sea.Box(new Vector3(0, -2.8f, 0), new Vector3(110, 1, 150), 16);
             Create("Water-colour diorama plinth", sea);
+        }
+
+        void BuildCanopies()
+        {
+            // Overworld deliberately has no grass: one combined mesh of rounded silhouettes.
+            var grove = new Shape();
+            for (int i = 0; i < 38; i++)
+            {
+                float t = .1f + i / 38f * .8f;
+                float side = i % 2 == 0 ? -.57f : .63f;
+                Vector3 at = Surface(t, side);
+                grove.Box(at + Vector3.up * .65f, new Vector3(.3f,1.3f,.3f),18);
+                grove.Canopy(at + Vector3.up * 2, new Vector3(1.5f,1.9f,1.45f),i % 4 == 0 ? 6 : 3);
+            }
+            Create("Rounded overworld canopy clusters — no detailed grass",grove);
         }
 
         void BuildChapters()
@@ -220,6 +235,19 @@ namespace VietTrail.Presentation
                 Vector3 a = p + new Vector3(-h.x, -h.y, -h.z), b = p + new Vector3(h.x, -h.y, -h.z), c = p + new Vector3(h.x, -h.y, h.z), d = p + new Vector3(-h.x, -h.y, h.z);
                 Vector3 up = Vector3.up * size.y;
                 Quad(a, a + up, b + up, b, id); Quad(b, b + up, c + up, c, id); Quad(c, c + up, d + up, d, id); Quad(d, d + up, a + up, a, id); Quad(a + up, d + up, c + up, b + up, id); Quad(d, a, b, c, id);
+            }
+            public void Canopy(Vector3 center, Vector3 size, int id)
+            {
+                const int rings = 5, sides = 8;
+                for(int r=0;r<rings;r++) for(int side=0;side<sides;side++)
+                {
+                    float a=-Mathf.PI*.5f+r*Mathf.PI/rings, b=a+Mathf.PI/rings;
+                    float u=side*Mathf.PI*2/sides, v=(side+1)*Mathf.PI*2/sides;
+                    Quad(center+Vector3.Scale(size,new Vector3(Mathf.Cos(a)*Mathf.Cos(u),Mathf.Sin(a),Mathf.Cos(a)*Mathf.Sin(u))),
+                         center+Vector3.Scale(size,new Vector3(Mathf.Cos(b)*Mathf.Cos(u),Mathf.Sin(b),Mathf.Cos(b)*Mathf.Sin(u))),
+                         center+Vector3.Scale(size,new Vector3(Mathf.Cos(b)*Mathf.Cos(v),Mathf.Sin(b),Mathf.Cos(b)*Mathf.Sin(v))),
+                         center+Vector3.Scale(size,new Vector3(Mathf.Cos(a)*Mathf.Cos(v),Mathf.Sin(a),Mathf.Cos(a)*Mathf.Sin(v))),id);
+                }
             }
             public void Pyramid(Vector3 p, float radius, float height, int id)
             {

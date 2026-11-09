@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using VietTrail.Core;
 using VietTrail.Gameplay;
 using VietTrail.World;
+using VietTrail.Rendering;
 namespace VietTrail.Presentation
 {
     /// <summary>Fresh offline application and UI. No legacy save file is read.</summary>
@@ -28,6 +29,7 @@ namespace VietTrail.Presentation
             GameObject lightObject=new GameObject("Afternoon sun");lightObject.transform.SetParent(transform,false);sun=lightObject.AddComponent<Light>();sun.type=LightType.Directional;sun.transform.rotation=Quaternion.Euler(22,-32,0);sun.color=new Color(1,0.9f,0.74f);sun.intensity=1.05f;sun.shadows=LightShadows.Soft;
             GameObject terrain=new GameObject("Streamed mountain chapter");terrain.transform.SetParent(transform,false);world=terrain.AddComponent<SegmentHost>();
             TextAsset regions=Resources.Load<TextAsset>("Regions");if(regions!=null)registry=JsonUtility.FromJson<Registry>(regions.text);
+            gameObject.AddComponent<SharedPainterlyLook>().Initialize(null,paint);
             JourneyState state=Load();CreateRider(state);
             GameObject mapObject=new GameObject("Illustrative journey map");mapObject.transform.SetParent(transform,false);map=mapObject.AddComponent<JourneyMapView>();map.Initialize(paint);map.ChapterSelected+=SelectChapter;map.Show(false);
             BuildDocument();Show("title");
@@ -35,7 +37,8 @@ namespace VietTrail.Presentation
         void CreateRider(JourneyState state)
         {
             if(rider!=null)Destroy(rider.gameObject);
-            GameObject actor=new GameObject("Ride and walk");actor.transform.SetParent(transform,false);rider=actor.AddComponent<RiderDirector>();rider.Initialize(paint,world,state);rider.Changed+=OnChanged;rider.Message+=Notify;ApplyOptions();
+            GameObject actor=new GameObject("Ride and walk");actor.transform.SetParent(transform,false);rider=actor.AddComponent<RiderDirector>();rider.Initialize(paint,world,state);rider.Changed+=OnChanged;rider.Message+=Notify;
+            SharedPainterlyLook.ConfigureCamera(rider.ViewCamera,gameObject.layer);ApplyOptions();
         }
         JourneyState Load()
         {
@@ -98,7 +101,7 @@ namespace VietTrail.Presentation
         {
             screen=destination;ReleaseGesture();page.Clear();hud.Clear();touch.Clear();page.style.display=destination=="ride"?DisplayStyle.None:DisplayStyle.Flex;
             page.style.backgroundColor=new Color(0.98f,0.95f,0.85f,0.95f);page.style.paddingLeft=24;page.style.paddingRight=24;page.style.paddingTop=22;page.style.paddingBottom=20;
-            rider.SetPaused(destination!="ride");rider.ShowTitleView(destination!="ride"&&destination!="map");rider.SetMapPresentation(destination=="map");map.Show(destination=="map");
+            rider.SetPaused(destination!="ride");rider.ShowTitleView(destination!="ride"&&destination!="map");rider.SetMapPresentation(destination=="map");map.Show(destination=="map");world.SetVegetationVisible(destination!="map");
             if(destination=="ride"){BuildHud();return;}
             page.Add(Label("PHƯỢT\nXUYÊN VIỆT",34));
             if(destination=="title")

@@ -9,6 +9,14 @@ namespace VietTrail.World
         public const float SegmentMeters = 96f;
         readonly Dictionary<int, GameObject> live = new Dictionary<int, GameObject>();
         Material palette;
+        Material grass;
+        bool vegetationVisible = true;
+        public void SetVegetationVisible(bool visible)
+        {
+            vegetationVisible = visible;
+            foreach (var chunk in live.Values)
+            { var patch = chunk.GetComponent<GrassPatch>(); if(patch!=null) patch.enabled=visible; }
+        }
         int current = -1;
         public int LiveCount { get { return live.Count; } }
 
@@ -16,6 +24,7 @@ namespace VietTrail.World
         {
             Clear();
             palette = worldMat;
+            if(grass==null) { grass=new Material(worldMat) {name="Instanced painterly grass",enableInstancing=true}; grass.SetFloat("_WindStrength",.13f); }
             current = -1;
             Follow(meters);
             Physics.SyncTransforms();
@@ -45,6 +54,9 @@ namespace VietTrail.World
                 chunk.transform.SetParent(transform, false);
                 SegmentPainter.Build(chunk, index * SegmentMeters,
                     Mathf.Min((index + 1) * SegmentMeters, TrailPath.Length), palette);
+                var patch = chunk.AddComponent<GrassPatch>();
+                patch.Initialize(index*SegmentMeters,Mathf.Min((index+1)*SegmentMeters,TrailPath.Length),grass);
+                patch.enabled = vegetationVisible;
                 live.Add(index, chunk);
             }
         }
@@ -74,6 +86,6 @@ namespace VietTrail.World
             live.Clear();
         }
 
-        void OnDestroy() { Clear(); }
+        void OnDestroy() { Clear(); if(grass!=null) Object.Destroy(grass); }
     }
 }
