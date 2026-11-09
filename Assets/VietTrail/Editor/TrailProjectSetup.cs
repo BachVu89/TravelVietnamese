@@ -50,7 +50,14 @@ namespace VietTrail.Editor
             AssetDatabase.ImportAsset(palettePath, ImportAssetOptions.ForceSynchronousImport | ImportAssetOptions.ForceUpdate);
             var palette = AssetDatabase.LoadAssetAtPath<Texture2D>(palettePath);
             if (palette == null)
-                throw new InvalidOperationException("Palette PNG exists but Unity could not import it as Texture2D. Check earlier texture import errors in Console: " + palettePath);
+            {
+                var failedImporter = AssetImporter.GetAtPath(palettePath);
+                var mainType = AssetDatabase.GetMainAssetTypeAtPath(palettePath);
+                throw new InvalidOperationException("Palette import failed: importer=" +
+                    (failedImporter == null ? "none" : failedImporter.GetType().FullName) +
+                    ", mainAsset=" + (mainType == null ? "none" : mainType.FullName) +
+                    ". Select the PNG and use Assets > Reimport; inspect earlier Console errors. Path: " + palettePath);
+            }
             var importer = AssetImporter.GetAtPath(Theme + "/PainterlyPalette.png") as TextureImporter;
             if (importer != null && (importer.filterMode != FilterMode.Point || importer.mipmapEnabled || importer.textureCompression != TextureImporterCompression.Uncompressed || importer.wrapMode != TextureWrapMode.Clamp || importer.maxTextureSize != 512 || !importer.sRGBTexture || importer.alphaSource != TextureImporterAlphaSource.None))
             {

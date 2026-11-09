@@ -32,3 +32,7 @@ Source bổ sung global SharedPainterlyLook/profile dùng chung, tán cây tròn
 ## Sửa setup sau Safe Mode
 
 Ảnh Console từ máy người dùng báo palette không tải được dù PNG nằm trong source. Setup trước đây chạy từ InitializeOnLoad, thời điểm non-script assets có thể chưa import xong. Đổi lịch chạy sang OnPostprocessAllAssets sau domain reload; chờ Editor hết compiling/updating, kiểm tra file nguồn rồi import palette đồng bộ trước khi LoadAssetAtPath. Thông báo mới phân biệt thiếu file với lỗi importer. Kiểm tra cú pháp13 file và cấu trúc180 PASS; chưa tái hiện/kiểm chứng trong Unity Editor tại môi trường này.
+
+## Importer metadata — sửa tiếp lỗi palette
+
+Ảnh Console tiếp theo xác nhận đổi thời điểm setup chưa xử lý được lỗi. PNG nguồn đã decode/verify bằng Pillow,512×512 hợp lệ. Kiểm tra source phát hiện metadata ảnh/shader/material chỉ có header+GUID, không có block importer theo loại asset. Bổ sung TextureImporter/ShaderImporter/NativeFormatImporter/TextScriptImporter và DefaultImporter cho scene; giữ nguyên toàn bộ GUID. Generator mới tạo đúng các block; validator có kiểm tra hồi quy importer. Lượt kiểm tra mới:187 cấu trúc PASS, metadata --check PASS,13 file C# không lỗi parse. Đây là sửa metadata có thể kiểm tra từ source; chưa chạy Unity để khẳng định việc import đã thành công. Lỗi setup hiện báo rõ importer/main-asset type để chẩn đoán tiếp nếu cần.

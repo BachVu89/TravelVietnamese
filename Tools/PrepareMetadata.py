@@ -44,9 +44,24 @@ def metadata(path):
         tail = 'folderAsset: yes\nDefaultImporter:\n  externalObjects: {}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n'
     elif path.suffix == '.cs':
         tail = 'MonoImporter:\n  externalObjects: {}\n  serializedVersion: 2\n  defaultReferences: []\n  executionOrder: 0\n  icon: {instanceID: 0}\n  userData: \n  assetBundleName: \n  assetBundleVariant: \n'
+    elif path.suffix == '.png':
+        tail = ('TextureImporter:\n  internalIDToNameTable: []\n  externalObjects: {}\n'
+                '  serializedVersion: 13\n  mipmaps:\n    mipMapMode: 0\n    enableMipMap: 0\n    sRGBTexture: 1\n'
+                '  isReadable: 0\n  textureFormat: 1\n  maxTextureSize: 512\n'
+                '  textureSettings:\n    serializedVersion: 2\n    filterMode: 0\n    aniso: 1\n    mipBias: 0\n    wrapU: 1\n    wrapV: 1\n    wrapW: 1\n'
+                '  nPOTScale: 0\n  compressionQuality: 50\n  spriteMode: 0\n  alphaUsage: 0\n  alphaIsTransparency: 0\n'
+                '  textureType: 0\n  textureShape: 1\n  platformSettings:\n  - serializedVersion: 3\n'
+                '    buildTarget: DefaultTexturePlatform\n    maxTextureSize: 512\n    resizeAlgorithm: 0\n    textureFormat: -1\n'
+                '    textureCompression: 0\n    compressionQuality: 50\n    crunchedCompression: 0\n'
+                '    allowsAlphaSplitting: 0\n    overridden: 0\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n')
+    elif path.suffix == '.shader':
+        tail = 'ShaderImporter:\n  externalObjects: {}\n  defaultTextures: []\n  nonModifiableTextures: []\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n'
+    elif path.suffix == '.mat':
+        tail = 'NativeFormatImporter:\n  externalObjects: {}\n  mainObjectFileID: 2100000\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n'
+    elif path.suffix == '.json':
+        tail = 'TextScriptImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n'
     else:
-        # Unity creates importer-specific defaults on import while keeping this GUID.
-        tail = ''
+        tail = 'DefaultImporter:\n  externalObjects: {}\n  userData:\n  assetBundleName:\n  assetBundleVariant:\n'
     create(meta, prefix + tail)
 
 app = ASSETS / 'VietTrail/Presentation/TrailApp.cs'

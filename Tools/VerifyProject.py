@@ -28,7 +28,11 @@ for path in assets.rglob('*'):
         if path.suffix!='.meta':need(Path(str(path)+'.meta').is_file(),'stable metadata exists '+path.name)
 guids={}
 for meta in assets.rglob('*.meta'):
-    match=re.search(r'^guid:\s*([a-f0-9]{32})$',meta.read_text(),re.M)
+    metadata=meta.read_text()
+    match=re.search(r'^guid:\s*([a-f0-9]{32})$',metadata,re.M)
+    extension=meta.with_suffix('').suffix
+    expected={'.png':'TextureImporter:', '.shader':'ShaderImporter:', '.mat':'NativeFormatImporter:', '.json':'TextScriptImporter:'}.get(extension)
+    if expected:need(expected in metadata,'explicit Unity importer '+meta.name)
     need(bool(match),'metadata GUID '+str(meta.relative_to(ROOT)))
     if match:
         guid=match[1];need(guid not in guids,'unique GUID '+guid);guids[guid]=meta.with_suffix('')
