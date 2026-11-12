@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "region_id": "island_phu_quoc",
+  "positions": {
+    "hanoi": {"x": 1.0, "y": 0.2, "z": 7.0, "yaw": 0.8, "pitch": -0.5},
+    "island_phu_quoc": {"x": 4.0, "y": 2.0, "z": 10.0, "yaw": -0.4, "pitch": -0.7}
+  },
+  "visited": ["hanoi:lake", "island_phu_quoc:shore"]
+}
